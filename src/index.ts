@@ -5,57 +5,106 @@ import { TextAnalyzer } from './core/nlp/TextAnalyzer';
 const port = process.env.PORT || 3000;
 const gameEngine = new HouseEngine('CASE_HOUSE_001_WILSON');
 
-// --- ÉTAT DU JEU (Mémoire vive du serveur) ---
+// --- ÉTAT DU JEU DYNAMIQUE (Mémoire vive du serveur) ---
 let currentPatient = gameEngine.getInitialPatient();
-let gameLogs: string[] = ["[SYSTEME] Moteur d'évolution en temps réel activé. Le chronomètre clinique a démarré."];
-let isStable = false; // Passe à true si le bon traitement est donné
+let gameLogs: string[] = ["[SYSTEME] Plateforme initialisée. Choisissez une difficulté pour lancer le protocole."];
+let isStable = false; 
 let isGameOver = false;
 
+// Variables dynamiques ajustées par la difficulté
+let hrIncrement = 2;      // De combien le cœur accélère toutes les 10s
+let satDecrement = 0.5;   // De combien l'oxygène chute toutes les 10s
+let difficultyLabel = "Non sélectionnée";
+
 // ----------------------------------------------------------------
-// ⏳ LE MOTEUR D'ÉVOLUTION TEMPOREL (Tourne en tâche de fond)
+// ⏳ LE MOTEUR D'ÉVOLUTION TEMPOREL DYNAMIQUE
 // ----------------------------------------------------------------
 setInterval(() => {
-    if (isGameOver) return;
+    if (isGameOver || isStable) return;
 
-    if (!isStable) {
-        // Le patient s'aggrave toutes les 10 secondes sans traitement ciblé
-        currentPatient.vitals.heartRate += 2; // Le cœur s'emballe
-        currentPatient.vitals.oxygenSaturation = Math.max(75, currentPatient.vitals.oxygenSaturation - 0.5); // L'oxygène chute
+    // Progression de l'agonie clinique selon les taux de la difficulté active
+    currentPatient.vitals.heartRate += hrIncrement;
+    currentPatient.vitals.oxygenSaturation = Math.max(75, currentPatient.vitals.oxygenSaturation - satDecrement);
 
-        // Alertes cliniques autonomes
-        if (currentPatient.vitals.heartRate >= 110 && currentPatient.vitals.heartRate < 113) {
-            gameLogs.push("🚨 [ALERTE] Le patient commence à s'agiter. Tachycardie modérée détectée.");
-        }
-        if (currentPatient.vitals.heartRate >= 130 && currentPatient.vitals.heartRate < 133) {
-            gameLogs.push("🚨 [ALERTE CRITIQUE] Le moniteur s'emballe ! Fréquence cardiaque > 130 bpm ! Reprise thermique suspecte.");
-        }
-        if (currentPatient.vitals.oxygenSaturation <= 92 && currentPatient.vitals.oxygenSaturation > 91) {
-            gameLogs.push("🚨 [ALERTE OXYGÈNE] Clara Lombardi désature ! Saturation sous la barre des 92%. Elle a besoin d'aide.");
-        }
+    // Alertes cliniques autonomes
+    if (currentPatient.vitals.heartRate >= 110 && currentPatient.vitals.heartRate < 110 + hrIncrement) {
+        gameLogs.push("🚨 [ALERTE] Le patient s'agite. Tachycardie modérée détectée.");
+    }
+    if (currentPatient.vitals.heartRate >= 130 && currentPatient.vitals.heartRate < 130 + hrIncrement) {
+        gameLogs.push("🚨 [ALERTE CRITIQUE] Le moniteur s'emballe ! Detresse circulatoire imminente.");
+    }
+    if (currentPatient.vitals.oxygenSaturation <= 92 && currentPatient.vitals.oxygenSaturation > 92 - satDecrement) {
+        gameLogs.push("🚨 [ALERTE OXYGÈNE] Hypoxémie sévère ! Saturation sous la barre des 92%.");
+    }
 
-        // Condition de défaite (Arrêt cardiaque)
-        if (currentPatient.vitals.heartRate >= 160 || currentPatient.vitals.oxygenSaturation <= 80) {
-            isGameOver = true;
-            gameLogs.push("💀 [FIN DE PARTIE] Arrêt cardio-respiratoire. Clara Lombardi a sombré dans le coma. Le protocole a échoué.");
-        }
-    } else {
-        // Récupération progressive sous antibiothérapie
-        if (currentPatient.vitals.heartRate > 72) currentPatient.vitals.heartRate -= 1;
-        if (currentPatient.vitals.oxygenSaturation < 98) currentPatient.vitals.oxygenSaturation += 0.5;
+    // Arrêt cardiaque (Défaite)
+    if (currentPatient.vitals.heartRate >= 160 || currentPatient.vitals.oxygenSaturation <= 80) {
+        isGameOver = true;
+        gameLogs.push(`💀 [FIN DE PARTIE] Arrêt cardio-respiratoire en mode [${difficultyLabel}]. Le protocole a échoué.`);
     }
 }, 10000);
 
 
 
 const server = http.createServer((req, res) => {
-    // --- 1. ROUTE API : Récupérer l'état clinique (Polling) ---
+    // --- 1. ROUTE API : Statut global (Polling) ---
     if (req.url === '/api/status' && req.method === 'GET') {
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ vitals: currentPatient.vitals, logs: gameLogs, isGameOver }));
+        res.end(JSON.stringify({ vitals: currentPatient.vitals, logs: gameLogs, isGameOver, isStable }));
         return;
     }
 
-    // --- 2. ROUTE API : Traiter l'analyse de l'ordre médical (NLP) ---
+    // --- 2. ROUTE API : Lancement / Réinitialisation du Cas avec Difficulté ---
+    if (req.url === '/api/start' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(body);
+                const selectedDifficulty = data.difficulty;
+
+                // Réinitialisation complète de l'état
+                currentPatient = gameEngine.getInitialPatient();
+                isStable = false;
+                isGameOver = false;
+                gameLogs = [];
+
+                // Ajustement clinique des curseurs selon le choix
+                if (selectedDifficulty === 'facile') {
+                    difficultyLabel = "FACILE";
+                    currentPatient.vitals.heartRate = 85;          // Légère tachycardie initiale
+                    currentPatient.vitals.oxygenSaturation = 96;   // Respiration correcte
+                    hrIncrement = 1;                               // Évolution lente
+                    satDecrement = 0.2;
+                    gameLogs.push("🟢 [SYSTÈME] Cas démarré en mode FACILE. Infection débutante. Progression lente.");
+                } 
+                else if (selectedDifficulty === 'modere') {
+                    difficultyLabel = "MODÉRÉ";
+                    currentPatient.vitals.heartRate = 105;         // Tachycardie nette
+                    currentPatient.vitals.oxygenSaturation = 92;   // Hypoxie modérée
+                    hrIncrement = 2;                               // Évolution standard
+                    satDecrement = 0.5;
+                    gameLogs.push("🟡 [SYSTÈME] Cas démarré en mode MODÉRÉ. Sepsis suspecté, le temps presse.");
+                } 
+                else if (selectedDifficulty === 'difficile') {
+                    difficultyLabel = "DIFFICILE";
+                    currentPatient.vitals.heartRate = 125;         // Urgence vitale d'emblée
+                    currentPatient.vitals.oxygenSaturation = 87;   // Désaturation critique
+                    hrIncrement = 4;                               // Le cœur s'emballe très vite
+                    satDecrement = 1.2;                            // Chute drastique de l'oxygène
+                    gameLogs.push("🔴 [SYSTÈME] Cas démarré en mode DIFFICILE. Choc septique imminent ! Réaction immédiate requise.");
+                }
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ vitals: currentPatient.vitals, logs: gameLogs, isGameOver }));
+            } catch (e) {
+                res.writeHead(400); res.end('Erreur initialisation cas');
+            }
+        });
+        return;
+    }
+
+    // --- 3. ROUTE API : Traitement des commandes de jeu (NLP) ---
     if (req.url === '/api/command' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
@@ -76,24 +125,24 @@ const server = http.createServer((req, res) => {
                     case 'TRAITEMENT':
                         if (analysis.target === 'amoxicilline') {
                             isStable = true;
-                            reply = `💉 [SUCCÈS] Injection d'Amoxicilline 1g IV effectuée. L'antibiothérapie cible précisément l'infection. Le patient se stabilise.`;
+                            reply = `💉 [SUCCÈS] Injection d'Amoxicilline 1g IV effectuée. Antibiothérapie efficace. Le patient est stabilisé en mode [${difficultyLabel}].`;
                         } else if (analysis.target === 'paracetamol') {
-                            reply = `💊 [TRAITEMENT] Paracétamol administré. Baisse temporaire des céphalées, mais le foyer infectieux progresse !`;
+                            reply = `💊 [TRAITEMENT] Paracétamol administré. Soulagement antalgique, mais le syndrome infectieux reste inchangé !`;
                         } else {
-                            reply = `⚠️ [TRAITEMENT] Molécule non adaptée ou inconnue. Le moniteur continue de grimper.`;
+                            reply = `⚠️ [TRAITEMENT] Molécule inefficace sur ce foyer. Le moniteur continue de décompenser.`;
                         }
                         break;
 
                     case 'EXAMEN_LABO':
-                        reply = `🧪 [LABO] Bilan reçu : Potassium : ${currentPatient.vitals.potassium} mmol/L, Créatinine : ${currentPatient.vitals.creatinine} µmol/L.`;
+                        reply = `🧪 [LABO] Résultats : Potassium : ${currentPatient.vitals.potassium} mmol/L, Créatinine : ${currentPatient.vitals.creatinine} µmol/L.`;
                         break;
 
                     case 'EXAMEN_CLINIQUE':
-                        reply = `🩺 [CLINIQUE] Constantes au lit du patient : FC ${currentPatient.vitals.heartRate} bpm, Sat : ${currentPatient.vitals.oxygenSaturation}%.`;
+                        reply = `🩺 [CLINIQUE] Auscultation : Fréquence cardiaque à ${currentPatient.vitals.heartRate} bpm, Saturation à ${currentPatient.vitals.oxygenSaturation}%.`;
                         break;
 
                     default:
-                        reply = `❌ [MOTEUR] Ordre non compris. Le temps presse, utilisez des verbes d'action clairs !`;
+                        reply = `❌ [MOTEUR] Action clinique non reconnue. Concentrez-vous sur l'urgence.`;
                 }
 
                 gameLogs.push(`➔ ${userCommand}`);
@@ -102,13 +151,13 @@ const server = http.createServer((req, res) => {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ vitals: currentPatient.vitals, logs: gameLogs, isGameOver }));
             } catch (e) {
-                res.writeHead(400); res.end('Erreur de parsing');
+                res.writeHead(400); res.end('Erreur commande');
             }
         });
         return;
     }
 
-    // --- 3. ROUTE INTERFACE VISUELLE : Tableau de bord EDN ---
+    // --- 4. ROUTE INTERFACE VISUELLE : HTML / CSS / Client JS ---
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.end(`
@@ -118,24 +167,20 @@ const server = http.createServer((req, res) => {
         <meta charset="UTF-8">
         <title>Dr-Hess — Hub de Révision EDN</title>
         <style>
-            /* --- DESIGN GLOBAL SYSTEM --- */
             body { background-color: #0a0f1d; color: #e2e8f0; font-family: 'Courier New', monospace; padding: 20px; margin: 0; }
             header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1f2937; padding-bottom: 15px; margin-bottom: 20px; }
             h1 { color: #00f2fe; margin: 0; font-size: 24px; }
             
-            /* --- BARRE D'ONGLETS (NAVIGATION) --- */
             .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
             .tab-btn { background: #111827; border: 1px solid #1f2937; color: #94a3b8; padding: 12px 20px; font-weight: bold; cursor: pointer; border-radius: 6px; font-family: monospace; transition: all 0.2s; }
             .tab-btn:hover { background: #1f2937; color: #fff; }
             .tab-btn.active { background: #00f2fe; color: #000; border-color: #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.3); }
 
-            /* --- CONTENUS DES PANELS --- */
             .tab-panel { display: none; }
             .tab-panel.active { display: block; }
             .panel-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
             .card { background: #111827; border: 1px solid #1f2937; border-radius: 8px; padding: 20px; }
             
-            /* --- Simulation médicale --- */
             .monitor { border: 2px solid #39ff14; background: #050b05; padding: 15px; color: #39ff14; font-size: 22px; border-radius: 4px; }
             .danger-pulse { animation: red-blink 0.5s infinite !important; border-color: #f43f5e !important; color: #f43f5e !important; }
             .log-box { background: #000; border: 1px solid #334155; padding: 10px; height: 320px; overflow-y: auto; color: #38bdf8; margin-bottom: 15px; border-radius: 4px; }
@@ -143,7 +188,6 @@ const server = http.createServer((req, res) => {
             input[type="text"] { flex: 1; background: #1f2937; border: 1px solid #4b5563; color: #fff; padding: 12px; font-size: 16px; border-radius: 4px; font-family: monospace; }
             .btn-action { background: #00f2fe; color: #000; border: none; padding: 0 25px; font-weight: bold; cursor: pointer; border-radius: 4px; }
             
-            /* --- Référentiel EDN --- */
             .edn-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
             .progress-bar-container { background: #1f2937; height: 10px; width: 100%; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
             .progress-bar-fill { background: #39ff14; height: 100%; width: 0%; transition: width 0.3s ease; }
@@ -152,7 +196,6 @@ const server = http.createServer((req, res) => {
             .edn-item.checked { border-left-color: #39ff14; background: rgba(57, 255, 20, 0.05); }
             .item-info { display: flex; align-items: center; gap: 12px; }
             
-            /* --- Lanceur & Difficultés --- */
             .difficulty-selector { display: flex; gap: 10px; margin: 15px 0; }
             .radio-label { flex: 1; }
             .radio-tile { text-align: center; background: #1e293b; border: 1px solid #334155; padding: 15px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
@@ -174,7 +217,6 @@ const server = http.createServer((req, res) => {
             </div>
         </header>
 
-        <!-- NAVIGATION PAR ONGLETS -->
         <nav class="nav-tabs">
             <button class="tab-btn active" onclick="switchTab('simulation')">🎮 Accueil & Urgences</button>
             <button class="tab-btn" onclick="switchTab('programme')">📚 Référentiel EDN</button>
@@ -204,7 +246,7 @@ const server = http.createServer((req, res) => {
                         </label>
                     </div>
                     
-                    <button class="btn-action" style="width:100%; padding: 15px; margin-bottom: 25px;" onclick="alert('Chargement du moteur dynamique du cas...')">
+                    <button class="btn-action" style="width:100%; padding: 15px; margin-bottom: 25px;" onclick="startNewCase()">
                         LANCER L'URGENCE SÉLECTIONNÉE
                     </button>
 
@@ -247,7 +289,6 @@ const server = http.createServer((req, res) => {
                             </label>
                         </div>
                     </div>
-
                     <div class="edn-item" id="item-232">
                         <div class="item-info">
                             <input type="checkbox" id="chk-232" onchange="toggleItem(232)">
@@ -256,7 +297,6 @@ const server = http.createServer((req, res) => {
                             </label>
                         </div>
                     </div>
-
                     <div class="edn-item" id="item-344">
                         <div class="item-info">
                             <input type="checkbox" id="chk-344" onchange="toggleItem(344)">
@@ -265,7 +305,6 @@ const server = http.createServer((req, res) => {
                             </label>
                         </div>
                     </div>
-
                     <div class="edn-item" id="item-330">
                         <div class="item-info">
                             <input type="checkbox" id="chk-330" onchange="toggleItem(330)">
@@ -283,10 +322,9 @@ const server = http.createServer((req, res) => {
             <div class="card">
                 <h2 style="color: #00f2fe; margin-top:0;">📓 Carnet de Pièges Personnalisé</h2>
                 <p style="color: #94a3b8;">Notes cliniques rédigées suite à un échec thérapeutique en simulation :</p>
-                
                 <div style="background: #1e293b; padding: 15px; border-radius: 6px; border-left: 4px solid #f43f5e; margin-bottom: 15px;">
                     <h4 style="margin: 0 0 5px 0; color: #f43f5e;">⚠️ Rappel Critique — Item 148 (Méningite)</h4>
-                    <p style="margin: 0; font-size: 14px; color: #cbd5e1;">"Ne jamais attendre le bilan biologique si un purpura fulminans est visible ou si la suspicion de méningite à méningocoque est forte. L'antibiothérapie probabiliste immédiate (Amoxicilline / Céfotaxime) prime sur l'attente du laboratoire."</p>
+                    <p style="margin: 0; font-size: 14px; color: #cbd5e1;">"Ne jamais attendre le bilan biologique si un purpura fulminans est visible. L'antibiothérapie probabiliste immédiate (Amoxicilline / Céfotaxime) prime sur le laboratoire."</p>
                 </div>
             </div>
         </div>
@@ -318,7 +356,6 @@ const server = http.createServer((req, res) => {
             function toggleItem(itemId) {
                 const checkbox = document.getElementById('chk-' + itemId);
                 const itemDiv = document.getElementById('item-' + itemId);
-                
                 if (checkbox.checked) {
                     itemDiv.classList.add('checked');
                 } else {
@@ -335,6 +372,24 @@ const server = http.createServer((req, res) => {
                 document.getElementById('checkedCount').innerText = \`\${checkedItems} / \${totalItems} items maîtrisés\`;
                 document.getElementById('progressBar').style.width = percentage + '%';
                 document.getElementById('globalProgressText').innerText = 'EDN : ' + percentage + '%';
+            }
+
+            // Déclencher le démarrage dynamique d'un nouveau cas
+            async function startNewCase() {
+                const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
+                
+                // Réactiver les inputs si bloqués par un Game Over précédent
+                document.getElementById('cmdInput').disabled = false;
+                document.getElementById('sendBtn').disabled = false;
+                document.getElementById('cmdInput').placeholder = "Saisir un ordre (ex: Injecter amoxicilline)...";
+
+                const response = await fetch('/api/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ difficulty: difficulty })
+                });
+                const data = await response.json();
+                updateDisplay(data);
             }
 
             function updateDisplay(data) {
@@ -356,7 +411,7 @@ const server = http.createServer((req, res) => {
                 const logBox = document.getElementById('logBox');
                 logBox.innerHTML = data.logs.map(l => {
                     if(l.includes('🚨') || l.includes('💀')) return \`<div style="color:#f43f5e; font-weight:bold;">\${l}</div>\`;
-                    if(l.includes('💉')) return \`<div style="color:#39ff14;">\${l}</div>\`;
+                    if(l.includes('💉') || l.includes('🟢') || l.includes('🟡') || l.includes('🔴')) return \`<div style="color:#39ff14;">\${l}</div>\`;
                     return \`<div>\${l}</div>\`;
                 }).join('');
             }
