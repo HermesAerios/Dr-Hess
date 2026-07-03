@@ -1,4 +1,4 @@
-export interface Prescription {
+export class Prescription {
     id: string;
     molecule: string;
     dosageMgPerDose: number;
