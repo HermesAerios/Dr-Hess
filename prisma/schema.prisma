@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PlayerProfile {
+  id             String         @id @default(uuid())
+  name           String
+  level          Level          @default(EXTERNE)
+  successRate    Float          @default(0.0)
+  casesPlayed    Int            @default(0)
+  masteryMatrix  ItemMastery[]
+  savedGames     SavedGame[]
+  createdAt      DateTime       @default(now())
+}
+
+enum Level {
+  D1
+  EXTERNE
+  INTERNE
+  ASSISTANT
+  CHEF_DE_CLINIQUE
+}
+
+model EdnItem {
+  id             String         @id
+  number         Int            @unique // Ex: 334
+  title          String         // Ex: "Syndromes infectieux: Sepsis"
+  specialty      String         // Ex: "Maladies infectieuses / Réanimation"
+  masteries      ItemMastery[]
+  pathologies    PathologyTemplate[]
+}
+
+model ItemMastery {
+  id             String         @id @default(uuid())
+  playerId       String
+  ednItemId      String
+  exposureCount  Int            @default(0)
+  failureCount   Int            @default(0)
+  nextReviewDate DateTime?      // Pour l'algorithme de Spaced Repetition (SuperMemo-2)
+  player         PlayerProfile  @relation(fields: [playerId], references: [id])
+  item           EdnItem        @relation(fields: [ednItemId], references: [id])
+
+  @@unique([playerId, ednItemId])
+}
+
+model PathologyTemplate {
+  id             String         @id @default(uuid())
+  ednItemId      String
+  name           String
+  baseParameters Json           // Données JSON pour la génération procédurale
+  item           EdnItem        @relation(fields: [ednItemId], references: [id])
+}
+
+model SavedGame {
+  id             String         @id @default(uuid())
+  playerId       String
+  patientData    Json           // L'état complet du patient (ECS state)
+  timeline       Json           // Historique des actions
+  elapsedTime    Int            // Temps in-game en minutes
+  player         PlayerProfile  @relation(fields: [playerId], references: [id])
+  updatedAt      DateTime       @updatedAt
+}
