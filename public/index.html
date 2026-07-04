@@ -3,76 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protocoles EDN - Simulation Tactique</title>
+    <title>Diagnostics de Génie - Simulateur EDN</title>
     <style>
-        body { background-color: #0d0d0d; color: #00ff66; font-family: 'Courier New', monospace; padding: 20px; max-width: 1200px; margin: 0 auto; }
-        h1, h2, h3 { color: #4da6ff; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        body { background-color: #0f111a; color: #00ff66; font-family: 'Courier New', monospace; padding: 20px; max-width: 1300px; margin: 0 auto; }
+        h1, h2, h3 { color: #00e5ff; border-bottom: 1px solid #222; padding-bottom: 5px; text-transform: uppercase; }
         
         .tabs { display: flex; border-bottom: 2px solid #222; margin-bottom: 20px; }
-        .tab-btn { background: #111; color: #666; border: 1px solid #222; padding: 12px 20px; cursor: pointer; font-family: inherit; }
-        .tab-btn.active { background: #222; color: #4da6ff; border-top: 2px solid #4da6ff; font-weight: bold; }
-        .tab-content { display: none; background: #141414; padding: 20px; border: 1px solid #222; border-top: none; border-radius: 0 0 5px 5px; }
+        .tab-btn { background: #161925; color: #666; border: 1px solid #222; padding: 12px 20px; cursor: pointer; font-family: inherit; font-weight: bold; }
+        .tab-btn.active { background: #1f2335; color: #00ff66; border-top: 2px solid #00ff66; }
+        .tab-content { display: none; background: #161925; padding: 20px; border: 1px solid #222; border-radius: 0 0 5px 5px; }
         .tab-content.active { display: block; }
 
-        /* Le Scope Multitâche */
-        .scope-monitor { background: #000; border: 3px solid #333; border-radius: 10px; padding: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(0,255,102,0.1); }
-        .param { text-align: center; font-size: 2em; font-weight: bold; padding: 10px; background: #050505; border-radius: 5px; }
-        .fc { color: #ff3333; border: 1px solid #551111; }
-        .ta { color: #ffff33; border: 1px solid #555511; }
-        .spo2 { color: #33ff33; border: 1px solid #115511; }
+        /* Scope de Réanimation */
+        .scope-monitor { background: #000; border: 3px solid #333; border-radius: 10px; padding: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        .param { text-align: center; font-size: 2.2em; font-weight: bold; padding: 10px; background: #050505; border-radius: 5px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
+        .fc { color: #ff3333; border: 1px solid #441111; }
+        .ta { color: #ffff33; border: 1px solid #444411; }
+        .spo2 { color: #00ff66; border: 1px solid #114411; }
 
-        /* Console de logs */
-        .terminal-log { background: #050505; border: 1px solid #333; height: 250px; overflow-y: auto; padding: 15px; margin-bottom: 15px; border-radius: 5px; font-size: 0.9em; color: #e0e0e0; }
-        .terminal-log p { margin: 5px 0; border-left: 3px solid #4da6ff; padding-left: 8px; }
+        /* Layout Étiologique */
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        
+        .whiteboard { background: #ffffff; color: #000; padding: 15px; border-radius: 5px; box-shadow: 6px 6px 0px #00e5ff; min-height: 200px; }
+        .whiteboard h3 { color: #111; border-bottom: 2px solid #111; }
+        
+        .terminal-log { background: #050505; border: 1px solid #333; height: 250px; overflow-y: auto; padding: 15px; margin-bottom: 15px; border-radius: 5px; font-size: 0.95em; color: #e0e0e0; }
+        .terminal-log p { margin: 5px 0; border-left: 3px solid #00e5ff; padding-left: 8px; }
 
-        .dr-hess-box { background: #200c0c; border-left: 5px solid #ff3333; padding: 15px; color: #ff9999; margin-bottom: 25px; border-radius: 4px; }
+        .dr-house-box { background: #251616; border-left: 5px solid #ff3333; padding: 15px; color: #ff9999; margin-bottom: 25px; border-radius: 4px; font-style: italic; }
         
         .input-line { display: flex; gap: 10px; margin-bottom: 15px; }
-        input[type="text"], select { flex-grow: 1; padding: 12px; background: #000; color: #fff; border: 1px solid #444; font-family: inherit; font-size: 1.1em; }
-        button { padding: 12px 25px; background: #4da6ff; border: none; color: #000; font-weight: bold; cursor: pointer; font-family: inherit; font-size: 1em; }
-        button:hover { background: #338bcc; }
+        input[type="text"], select { flex-grow: 1; padding: 12px; background: #000; color: #fff; border: 1px solid #444; font-family: inherit; font-size: 1.1em; border-radius: 4px; }
+        button { padding: 12px 25px; background: #00e5ff; border: none; color: #000; font-weight: bold; cursor: pointer; font-family: inherit; font-size: 1em; border-radius: 4px; }
+        button:hover { background: #00b3cc; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; border-bottom: 1px solid #222; text-align: left; }
-        th { color: #4da6ff; background: #000; }
-        progress { width: 100%; height: 12px; background: #222; }
+        th { color: #00e5ff; background: #000; }
+        progress { width: 100%; height: 12px; }
     </style>
 </head>
 <body>
 
-    <h1>⚡ CLINICAL EMERGENCY CORE: EDN SIMULATOR</h1>
+    <h1>💊 SIMULATOR CORE: DIAGNOSTICS DE GÉNIE</h1>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('gestion-cas')">1. Configurer l'Admission</button>
-        <button class="tab-btn" onclick="switchTab('simulation')">2. Box de Déchocage Actif</button>
-        <button class="tab-btn" onclick="switchTab('items-edn')">3. Suivi & Score EDN (>300)</button>
+        <button class="tab-btn active" onclick="switchTab('gestion-cas')">1. Admission & Items EDN</button>
+        <button class="tab-btn" onclick="switchTab('simulation')">2. Unité de Soins Intensifs</button>
     </div>
 
-    <!-- ONGLET CONFIGURATION -->
+    <!-- ONGLET 1 : ADMISSION -->
     <div id="gestion-cas" class="tab-content active">
-        <h2>Paramétrage du Scénario Réaliste</h2>
-        <div style="background: #1a1a1a; padding: 20px; border-radius: 5px; border: 1px solid #333;">
-            <p style="color: #888;">Sélectionnez une thématique EDN réglementaire. L'algorithme va injecter un patient en décompensation critique aux urgences.</p>
-            
-            <label style="font-weight: bold;">Cibler l'Item EDN :</label><br><br>
-            <select id="edn-select" style="margin-bottom: 20px;"></select>
-            
-            <label style="font-weight: bold;">Niveau de Stress de la Garde (Difficulté) :</label><br><br>
-            <select id="difficulty" style="margin-bottom: 25px;">
-                <option value="easy">Externe (Moniteur stable, erreurs tolérées)</option>
-                <option value="medium" selected>Interne de garde (Temps de réponse réaliste)</option>
-                <option value="hard">Mode Chef de Clinique Hess (Crash cardio imminent)</option>
+        <h2>Sélectionner un dossier clinique réglementaire</h2>
+        <div style="background: #1f2335; padding: 20px; border-radius: 5px; border: 1px solid #333;">
+            <label style="font-weight: bold; color: #00e5ff;">Cibler un Item Clinique :</label><br><br>
+            <select id="edn-select">
+                <option value="158">Item 158 - Sepsis et choc septique (Mme Joly)</option>
+                <option value="339">Item 339 - Syndrome Coronarien Aigu (M. Kovac)</option>
             </select>
-            
-            <button onclick="startMedicalCase()" style="width: 100%; padding: 15px; font-size: 1.2em;">ADMETTRE LE PATIENT EN SALLE DE DÉCHOCAGE</button>
+            <br><br>
+            <label style="font-weight: bold; color: #00e5ff;">Niveau de Stress de la Garde :</label><br><br>
+            <select id="difficulty">
+                <option value="easy">Externe (Erreurs tolérées)</option>
+                <option value="medium" selected>Interne (Réaliste)</option>
+                <option value="hard">Chef de Clinique (Crash imminent)</option>
+            </select>
+            <br><br>
+            <button onclick="startMedicalCase()" style="width: 100%; padding: 15px; font-size: 1.2em;">PRENDRE EN CHARGE LE PATIENT</button>
         </div>
     </div>
 
-    <!-- ONGLET SIMULATION TERMINAL -->
+    <!-- ONGLET 2 : SIMULATION ACTIVE -->
     <div id="simulation" class="tab-content">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2>Salle de Déchocage - Statut : <span id="pat-status" style="color:red;">Aucun Patient</span></h2>
-            <div>⏱️ Temps écoulé : <span id="timer">00:00</span></div>
+            <h2>Statut Patient : <span id="pat-status" style="color:red;">Aucun dossier</span></h2>
+            <div>⏱️ Chrono Diagnostic : <span id="timer" style="color:#ffff33; font-weight:bold;">00:00</span></div>
         </div>
 
         <!-- Le Scope Physiologique -->
@@ -82,148 +87,58 @@
             <div class="param spo2">SpO2: <span id="scope-spo2">--</span> %</div>
         </div>
 
-        <!-- Le Chef de Service (Dr Hess) -->
-        <div class="dr-hess-box">
-            <strong>📋 Dr Hess :</strong> <span id="hess-feedback">En attente d'évaluation d'un dossier. Installez un cas clinique depuis l'onglet 1.</span>
-        </div>
-<!-- Insérer cette section juste au-dessus du Journal des Événements Cliniques dans l'onglet Simulation -->
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-    
-    <!-- LE TABLEAU BLANC -->
-    <div style="background: #ffffff; color: #000; padding: 15px; border-radius: 5px; box-shadow: 5px 5px 0px #333;">
-        <h3 style="color: #c00; border-bottom: 2px solid #000; margin-top:0;">📋 TABLEAU BLANC (Diagnostics Différentiels)</h3>
-        <p style="font-size: 0.85em; font-style: italic; color: #555;">Éliminez ou confirmez vos pistes. Ne traitez pas à l'aveugle.</p>
-        <ul id="whiteboard-list" style="font-weight: bold; font-size: 1.1em; list-style-type: square; padding-left: 20px;">
-            <!-- Rempli dynamiquement -->
-        </ul>
-        <div style="display:flex; gap: 5px; margin-top: 15px;">
-            <input type="text" id="hypothesis-input" placeholder="Inscrire une suspicion (ex: Lupus)" style="background:#fff; color:#000; border: 1px solid #000;">
-            <button onclick="addHypothesis()" style="background:#000; color:#fff;">Poser</button>
-        </div>
-    </div>
+        <!-- Layout dynamique : Tableau blanc + Description -->
+        <div class="grid-layout">
+            <!-- LE TABLEAU BLANC -->
+            <div class="whiteboard">
+                <h3>📋 LE TABLEAU BLANC</h3>
+                <ul id="whiteboard-list"></ul>
+                <div style="display:flex; gap: 5px; margin-top: 15px;">
+                    <input type="text" id="hypothesis-input" placeholder="Inscrire un diagnostic différentiel..." style="background:#fff; color:#000; border: 1px solid #000;">
+                    <button onclick="addHypothesis()" style="background:#000; color:#fff;">Poser</button>
+                </div>
+            </div>
 
-    <!-- STATUT DU PATIENT -->
-    <div style="background: #111; border: 1px solid #333; padding: 15px; border-radius: 5px;">
-        <h3 style="color: #4da6ff; margin-top:0;">🩺 Observation Clinique</h3>
-        <div id="patient-presentation" style="color: #ccc; font-size: 0.95em; line-height: 1.4;">
-            Sélectionnez un cas EDN pour commencer les investigations...
-        </div>
-    </div>
-</div>
-        <h3>Journal des Événements Cliniques</h3>
-        <div class="terminal-log" id="clinical-log">
-            <p style="color:#777;">[Système] Moniteur prêt. En attente de données patient.</p>
+            <!-- PRÉSENTATION CLINIQUE -->
+            <div style="background: #1f2335; border: 1px solid #333; padding: 15px; border-radius: 5px;">
+                <h3 style="color: #00ff66; margin-top:0;">🩺 Rapport des Urgences</h3>
+                <p id="patient-presentation" style="color: #e0e0e0; line-height: 1.5; font-size: 1.05em;"></p>
+            </div>
         </div>
 
-        <!-- Ligne de Commande Clinique Libres -->
-        <h3>prescrire une action (Langage naturel ou protocoles)</h3>
-        <p style="font-size: 0.85em; color: #888;">Exemples fonctionnels : "Injecter de l'adrénaline", "Poser l'oxygène", "Interroger", "Délivrer un choc".</p>
-        <div class="input-line">
-            <input type="text" id="action-input" placeholder="Tapez votre ordre médical ici... (Ex: Poser oxygène)" onkeydown="if(event.key==='Enter') sendClinicalAction()">
-            <button onclick="sendClinicalAction()">Exécuter</button>
+        <!-- Dr House Feedback -->
+        <div class="dr-house-box">
+            <strong>👨‍⚕️ Dr House :</strong> <span id="house-feedback">En attente d'un patient. Ne restez pas planté là.</span>
         </div>
 
-        <!-- Poser un Diagnostic Final -->
-        <h3 style="margin-top: 30px; color:#ffcc00;">🏁 Soumettre l'Hypothèse Diagnostique Finale</h3>
-        <div class="input-line">
-            <input type="text" id="diag-input" placeholder="Entrez le diagnostic exact (Ex: ACR choquable, Choc anaphylactique...)">
-            <button onclick="submitFinalDiagnosis()" style="background:#ffcc00;">Valider et Clôturer l'Item</button>
+        <!-- PRESCRIPTION EXAMENS EDN (Étape 2) -->
+        <div style="background: #000; border: 1px solid #00e5ff; padding: 15px; margin-bottom: 25px; border-radius: 5px;">
+            <h3 style="color: #00e5ff; margin-top: 0;">🔬 PRESCRIPTION LABO & IMAGERIE (Rigueur HAS)</h3>
+            <p style="font-size: 0.85em; color: #888; margin-bottom: 12px;">Exemples requis par le programme : "ecg", "lactates", "hemocultures", "gaze du sang"...</p>
+            <div class="input-line">
+                <input type="text" id="exam-input" placeholder="Prescrire un examen clé (ex: ecg)..." onkeydown="if(event.key==='Enter') sendPrescription()">
+                <button onclick="sendPrescription()" style="background: #00e5ff; color: #000;">Lancer l'Examen</button>
+            </div>
         </div>
-    </div>
 
-    <!-- ONGLET SUIVI DES >300 ITEMS -->
-    <div id="items-edn" class="tab-content">
-        <h2>Registre National des Items EDN</h2>
-        <input type="text" id="search-edn" onkeyup="filterEdn()" placeholder="Filtrer instantanément par mot-clé (ex: 331, Choc, Conduite)..." style="margin-bottom: 15px;">
+        <!-- JOURNAL CLINIQUE & ORDRES DE RÉA -->
+        <h3>📜 Journal des interventions & Ordres d'Urgence</h3>
+        <div class="terminal-log" id="clinical-log"></div>
         
-        <div style="max-height: 450px; overflow-y: auto; border: 1px solid #222;">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 10%;">N° Item</th>
-                        <th style="width: 60%;">Intitulé Thérapeutique</th>
-                        <th style="width: 15%;">Dernière Note</th>
-                        <th style="width: 15%;">Progression</th>
-                    </tr>
-                </thead>
-                <tbody id="edn-rows">
-                    <!-- Rempli en JS via la liste issue du JSON verbatim -->
-                </tbody>
-            </table>
+        <div class="input-line">
+            <input type="text" id="action-input" placeholder="Action thérapeutique libre (ex: Oxygène, Anticoagulant)..." onkeydown="if(event.key==='Enter') sendClinicalAction()">
+            <button onclick="sendClinicalAction()">Administrer</button>
+        </div>
+
+        <!-- SOUMISSION DIAGNOSTIC FINAL -->
+        <h3 style="margin-top: 40px; color:#ffff33;">🏁 SOUMETTRE LE DIAGNOSTIC FINAL (CLÔTURE)</h3>
+        <div class="input-line">
+            <input type="text" id="diag-input" placeholder="Entrez la pathologie exacte requise (ex: Sepsis grave, SCA ST+)...">
+            <button onclick="submitFinalDiagnosis()" style="background:#ffff33; color:#000;">Valider le dossier</button>
         </div>
     </div>
 
     <script>
-        // Intégration verbatim des sources de la liste des items EDN[cite: 1]
-        const rawEdnList = {
-          "1": {"titre": "La relation médecin-malade."},
-          "2": {"titre": "Les valeurs professionnelles du médecin et des autres professions de santé"},
-          "3": {"titre": "Le raisonnement et la décision en médecine."},
-          "4": {"titre": "Qualité et sécurité des soins."},
-          "5": {"titre": "La gestion des erreurs et des plaintes ; l'aléa thérapeutique"},
-          "145": {"titre": "Surveillance des maladies infectieuses transmissibles"},
-          "158": {"titre": "Sepsis et choc septique"},
-          "230": {"titre": "Douleur thoracique"},
-          "331": {"titre": "ACR (Arrêt Cardio-Respiratoire)"},
-          "332": {"titre": "Choc"},
-          "339": {"titre": "SCA (Syndrome Coronarien Aigu)"},
-          "360": {"titre": "Pneumothorax"}
-          // Note : Le script charge dynamiquement toutes les clés de ton fichier complet.
-        };
-// Fonctions JS à ajouter/mettre à jour dans vos balises <script>
-async function addHypothesis() {
-    const input = document.getElementById('hypothesis-input');
-    const hypothesis = input.value.trim();
-    if(!hypothesis) return;
-
-    const res = await fetch('/api/whiteboard/add', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ hypothesis })
-    });
-    const data = await res.json();
-
-    // Mettre à jour le tableau blanc visuel
-    const list = document.getElementById('whiteboard-list');
-    list.innerHTML = "";
-    data.activeSim.whiteboard.forEach(h => {
-        list.innerHTML += `<li>${h}</li>`;
-    });
-
-    document.getElementById('hess-feedback').innerText = data.feedback;
-    input.value = "";
-}
-
-// Modifier la fonction existante sendClinicalAction pour pointer vers /api/execute
-async function sendClinicalAction() {
-    const input = document.getElementById('action-input');
-    const order = input.value.trim();
-    if(!order) return;
-
-    const res = await fetch('/api/execute', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ order })
-    });
-    const data = await res.json();
-
-    const logBox = document.getElementById('clinical-log');
-    logBox.innerHTML += `<p style="color:#ffcc00;">> ${order}</p>`;
-    logBox.innerHTML += `<p style="color:#fff;">${data.outcome}</p>`;
-    logBox.scrollTop = logBox.scrollHeight;
-
-    document.getElementById('scope-fc').innerText = data.activeSim.patient.fc;
-    document.getElementById('scope-ta').innerText = data.activeSim.patient.ta;
-    document.getElementById('pat-status').innerText = data.activeSim.patient.status;
-    document.getElementById('hess-feedback').innerText = data.hessQuote;
-
-    input.value = "";
-}
-        // Ajout des données réelles du fichier edn_list.json fourni au démarrage
-        const fullEdnData = {
-            "1": {"titre": "La relation médecin-malade."}, "2": {"titre": "Les valeurs professionnelles du médecin et des autres professions de santé"}, "3": {"titre": "Le raisonnement et la décision en médecine."}, "4": {"titre": "Qualité et sécurité des soins."}, "5": {"titre": "La gestion des erreurs et des plaintes ; l'aléa thérapeutique"}, "6": {"titre": "L'organisation de l'exercice clinique et les méthodes qui permettent de sécuriser le parcours du patient"}, "7": {"titre": "Les droits individuels et collectifs du patient"}, "8": {"titre": "Les discriminations"}, "9": {"titre": "Introduction à l’éthique médicale"}, "10": {"titre": "Approches transversales du corps"}, "11": {"titre": "Violences et santé"}, "12": {"titre": "Violences sexuelles"}, "13": {"titre": "Certificats médicaux. Décès et législation."}, "14": {"titre": "La mort"}, "15": {"titre": "Soins psychiatriques sans consentement"}, "16": {"titre": "Organisation du système de soins. Sa régulation. Les indicateurs. Parcours de soins."}, "17": {"tel": "Télémédecine, télésanté et téléservices en santé"}, "18": {"titre": "Santé et numérique"}, "19": {"titre": "La sécurité sociale. L'assurance maladie."}, "20": {"titre": "La méthodologie de la recherche en santé"}, "21": {"titre": "Mesure de l'état de santé de la population"}, "22": {"titre": "Maladies rares"}, "23": {"titre": "Grossesse normale"}, "24": {"titre": "Principales complications de la grossesse"}, "25": {"titre": "Grossesse extra-utérine (GEU)"}, "26": {"titre": "Douleur abdominale aiguë chez une femme enceinte"}, "27": {"titre": "Prévention des risques fœtaux : infection, médicaments, toxiques, irradiation"}, "28": {"titre": "Connaître les particularités de l'infection urinaire au cours de la grossesse"}, "29": {"titre": "Connaître les principaux risques professionnels pour la maternité, liés au travail de la mère"}, "30": {"titre": "Prématurité et retard de croissance intra-utérin (RCIU) : facteurs de risque et prévention"}, "31": {"titre": "Accouchement, délivrance et suites de couches normales"}, "32": {"titre": "Évaluation et soins du nouveau-né à terme"}, "33": {"titre": "Allaitement maternel"}, "34": {"titre": "Suites de couches pathologiques : pathologie maternelle dans les 40 jours"}, "35": {"titre": "Anomalies du cycle menstruel et métrorragies"}, "36": {"titre": "Contraception"}, "37": {"titre": "Interruption volontaire de grossesse (IVG)"}, "38": {"titre": "Infertilité du couple : conduite de la première consultation"}, "39": {"titre": "Assistance médicale à la procréation (AMP) : principaux aspects biologiques, médicaux et éthiques"}, "40": {"titre": "Algies pelviennes chez la femme"}, "41": {"titre": "Endométriose"}, "42": {"titre": "Aménorrhée"}, "43": {"titre": "Hémorragie génitale chez la femme"}, "44": {"titre": "Tuméfaction pelvienne chez la femme"}, "45": {"titre": "Spécificités des maladies génétiques"}, "46": {"titre": "Médecine génomique"}, "47": {"titre": "Suivi d'un nourrisson, d'un enfant et d'un adolescent normal."}, "48": {"titre": "Alimentation et besoins nutritionnels du nourrisson et de l'enfant"}, "49": {"titre": "Puberté normale et pathologique"}, "50": {"titre": "Pathologie génito-scrotale chez le garçon et chez l'homme"}, "51": {"titre": "Troubles de la miction chez l'enfant"}, "52": {"titre": "Strabisme et amblyopie de l'enfant"}, "53": {"titre": "Retard de croissance staturo-pondérale"}, "54": {"titre": "Boiterie chez l'enfant"}, "55": {"titre": "Développement psychomoteur du nourrisson et de l'enfant"}, "56": {"titre": "L'enfant handicapé"}, "57": {"titre": "Maltraitance, enfants en danger, protection maternelle et infantile"}, "58": {"titre": "Sexualité normale et ses troubles"}, "59": {"titre": "Sujets en situation de précarité"}, "60": {"titre": "Connaître les facteurs de risque, prévention, dépistage des troubles psychiques de l'enfant à la personne âgée"}, "61": {"titre": "Connaître les bases des classifications des troubles mentaux de l'enfant à la personne âgée"}, "62": {"titre": "Décrire l'organisation de l'offre de soins en psychiatrie, de l'enfant à la personne âgée"}, "63": {"titre": "Trouble schizophrénique"}, "64": {"titre": "Trouble bipolaire"}, "65": {"titre": "Trouble délirant persistant"}, "66": {"titre": "Diagnostiquer : trouble dépressif, trouble anxieux généralisé (TAG),"}, "67": {"titre": "Troubles envahissants du développement (TED)"}, "68": {"titre": "Troubles du comportement de l'adolescent"}, "69": {"titre": "Troubles psychiques de la grossesse et du post-partum"}, "70": {"titre": "Troubles psychiques du sujet âgé"}, "71": {"titre": "Troubles des conduites alimentaires (TCA)"}, "72": {"titre": "Troubles à symptomatologie somatique et apparentés"}, "73": {"titre": "Différents types de techniques psychothérapeutiques"}, "74": {"titre": "Prescription et surveillance des psychotropes"}, "75": {"titre": "Addiction au tabac"}, "76": {"titre": "Addiction à l'alcool"}, "77": {"titre": "Addiction aux médicaments psychotropes"}, "78": {"titre": "Addiction au cannabis, cocaïne, amphétamines, opiacés, drogues de synthèse"}, "79": {"titre": "Addictions comportementales"}, "80": {"titre": "Dopage et conduites dopantes"}, "81": {"titre": "Altération chronique de la vision"}, "82": {"titre": "Altération aiguë de la vision"}, "83": {"titre": "Infections et inflammations oculaires"}, "84": {"titre": "Glaucomes"}, "85": {"titre": "Troubles de la réfraction"}, "86": {"titre": "Pathologie des paupières"}, "87": {"titre": "Epistaxis"}, "88": {"titre": "Trouble aigu de la parole et dysphonie"}, "89": {"titre": "Altération de la fonction auditive"}, "90": {"titre": "Pathologie des glandes salivaires"}, "91": {"titre": "Déficit neurologique récent"}, "92": {"titre": "Déficit moteur et/ou sensitif des membres"}, "93": {"titre": "Compression médullaire non traumatique et syndrome de la queue de cheval"}, "94": {"titre": "Rachialgie"}, "95": {"titre": "Radiculalgie et syndrome canalaire"}, "96": {"titre": "Neuropathies périphériques"}, "97": {"titre": "Polyradiculonévrite aiguë inflammatoire (syndrome de Guillain-Barré)"}, "98": {"titre": "Myasthénie"}, "99": {"titre": "Migraine, névralgie du trijumeau et algies de la face"}, "100": {"titre": "Céphalée inhabituelle aiguë et chronique"}, "101": {"titre": "Paralysie faciale"}, "102": {"titre": "Diplopie"}, "103": {"titre": "Vertige"}, "104": {"titre": "Sclérose en plaques (SEP)"}, "105": {"titre": "Épilepsie"}, "106": {"titre": "Maladie de Parkinson"}, "107": {"titre": "Mouvements anormaux"}, "108": {"titre": "Confusion, démences"}, "109": {"titre": "Troubles de la marche et de l'équilibre"}, "110": {"titre": "Troubles du sommeil"}, "111": {"titre": "Dermatoses faciales : acné, rosacée, dermatite séborrhéique"}, "112": {"titre": "Dermatose bulleuse"}, "113": {"titre": "Hémangiomes et malformations vasculaires cutanées"}, "114": {"titre": "Exanthème et érythrodermie"}, "115": {"titre": "Toxidermies"}, "116": {"titre": "Prurit"}, "117": {"titre": "Psoriasis"}, "118": {"titre": "La personne handicapée : bases de l'évaluation fonctionnelle et thérapeutique"}, "119": {"titre": "Soin et accompagnement dans la maladie chronique et le handicap"}, "120": {"titre": "Complications de l'immobilité et du décubitus. Prévention et prise en charge"}, "121": {"titre": "Handicap psychique"}, "122": {"titre": "Principales techniques de rééducation et de réadaptation"}, "123": {"titre": "Vieillissement normal : aspects biologiques, fonctionnels et relationnels."}, "124": {"titre": "Ménopause, insuffisance ovarienne prématurée, andropause, déficit androgénique lié à l’âge"}, "125": {"titre": "Troubles de la miction et incontinence urinaire de l'adulte et du sujet âgé"}, "126": {"titre": "Trouble de l'érection"}, "127": {"titre": "Hypertrophie bénigne de la prostate (HBP)"}, "128": {"titre": "Ostéopathies fragilisantes"}, "129": {"titre": "Arthrose"}, "130": {"titre": "La personne âgée malade : particularités sémiologiques, psychologiques et thérapeutiques"}, "131": {"titre": "Troubles de la marche et de l'équilibre"}, "132": {"titre": "Troubles cognitifs du sujet âgé"}, "133": {"titre": "Autonomie et dépendance chez le sujet âgé"}, "134": {"titre": "Bases neurophysiologiques, mécanismes physiopathologiques d'une douleur aiguë et d'une douleur chronique"}, "135": {"titre": "Thérapeutiques antalgiques, médicamenteuses et non médicamenteuses"}, "136": {"titre": "Anesthésie locale, locorégionale et générale"}, "137": {"titre": "Douleur chez l'enfant : évaluation et traitements antalgiques"}, "138": {"titre": "Douleur chez la personne vulnérable"}, "139": {"titre": "Soins palliatifs pluridisciplinaires (1)"}, "140": {"titre": "Soins palliatifs pluridisciplinaires (2)"}, "141": {"titre": "Sédation, euthanasie, suicide assisté"}, "142": {"titre": "Soins palliatifs en pédiatrie"}, "143": {"titre": "Soins palliatifs en réanimation"}, "144": {"titre": "Deuil normal et pathologique"}, "145": {"titre": "Surveillance des maladies infectieuses transmissibles"}, "146": {"titre": "Vaccinations"}, "147": {"titre": "Fièvre aiguë chez l'enfant et l'adulte"}, "148": {"titre": "Infections naso-sinusiennes de l'adulte et de l'enfant"}, "149": {"titre": "Angines de l'adulte et de l'enfant et rhinopharyngites de l'enfant"}, "150": {"titre": "Otites infectieuses de l'adulte et de l'enfant"}, "151": {"titre": "Méningite, méningoencéphalite, abcès cérébral chez l'adulte et l'enfant"}, "152": {"titre": "Endocardite infectieuse"}, "153": {"titre": "Surveillance des porteurs de valve et prothèses vasculaires"}, "154": {"titre": "Infections broncho-pulmonaires communautaires de l'adulte et de l'enfant"}, "155": {"titre": "Infections cutanées de l'adulte et de l'enfant"}, "156": {"titre": "Infections ostéo-articulaires"}, "157": {"titre": "Septicémie / Bactériémie / Fongémie"}, "158": {"titre": "Sepsis et choc septique"}, "159": {"titre": "Tuberculose"}, "160": {"titre": "Tétanos"}, "161": {"titre": "Infections urinaires"}, "162": {"titre": "IST"}, "163": {"titre": "Coqueluche"}, "164": {"titre": "Exanthèmes fébriles"}, "165": {"titre": "Oreillons"}, "166": {"titre": "Grippe"}, "167": {"titre": "Hépatites virales"}, "168": {"titre": "Herpès"}, "169": {"titre": "VIH"}, "170": {"titre": "Paludisme"}, "171": {"titre": "Gale et pédiculose"}, "172": {"titre": "Parasitoses digestives"}, "173": {"titre": "Zoonoses"}, "174": {"titre": "Pathologie infectieuse chez les migrants"}, "175": {"titre": "Voyage en zone tropicale"}, "176": {"titre": "Diarrhées infectieuses"}, "177": {"titre": "Anti-infectieux"}, "178": {"titre": "Risques émergents et bioterrorisme"}, "179": {"titre": "Toxi-infections alimentaires"}, "180": {"titre": "Radioprotection"}, "181": {"titre": "Sécurité sanitaire des produits de santé"}, "182": {"titre": "Santé au travail"}, "183": {"titre": "Médecine du travail"}, "184": {"titre": "Maladies professionnelles"}, "185": {"titre": "Inflammation"}, "186": {"titre": "Allergies"}, "187": {"titre": "Allergies cutanées"}, "188": {"titre": "Allergies respiratoires"}, "189": {"titre": "Déficits immunitaires"}, "190": {"titre": "Fièvre prolongée"}, "191": {"titre": "Fièvre immunodéprimé"}, "192": {"titre": "Maladies auto-immunes"}, "193": {"titre": "Vascularites"}, "194": {"titre": "Lupus et SAPL"}, "195": {"titre": "Artérite à cellules géantes"}, "196": {"titre": "Polyarthrite rhumatoïde"}, "197": {"titre": "Spondyloarthrites"}, "198": {"titre": "Arthropathies microcristallines"}, "199": {"titre": "Syndrome douloureux régional complexe"}, "200": {"titre": "Arthrites aiguës"}, "201": {"titre": "Transplantation"}, "202": {"titre": "Biothérapies"}, "203": {"titre": "Dyspnée"}, "204": {"titre": "Toux"}, "205": {"titre": "Hémoptysie"}, "206": {"titre": "Épanchement pleural"}, "207": {"titre": "Masses thoraciques"}, "208": {"titre": "Insuffisance respiratoire chronique"}, "209": {"titre": "BPCO"}, "210": {"titre": "PID"}, "211": {"titre": "Sarcoïdose"}, "212": {"titre": "Hémogramme"}, "213": {"titre": "Anémies"}, "214": {"titre": "Thrombopénies"}, "215": {"titre": "Purpuras"}, "216": {"titre": "Syndrome hémorragique"}, "217": {"titre": "Mononucléose"}, "218": {"titre": "Éosinophilie"}, "219": {"titre": "Troubles du fer"}, "220": {"titre": "Adénopathies"}, "221": {"titre": "Athérome"}, "222": {"titre": "Risques cardiovasculaires"}, "223": {"titre": "Dyslipidémies"}, "224": {"titre": "HTA"}, "225": {"titre": "AOMI"}, "226": {"titre": "TVP et EP"}, "227": {"titre": "Insuffisance veineuse"}, "228": {"titre": "Ulcère de jambe"}, "229": {"titre": "Abords veineux"}, "230": {"titre": "Douleur thoracique"}, "231": {"titre": "ECG"}, "232": {"titre": "Fibrillation atriale"}, "233": {"titre": "Valvulopathies"}, "234": {"titre": "Insuffisance cardiaque"}, "235": {"titre": "Péricardite"}, "236": {"titre": "Troubles conduction"}, "237": {"titre": "Palpitations"}, "238": {"titre": "Souffle cardiaque enfant"}, "239": {"titre": "Raynaud"}, "240": {"titre": "Hypoglycémie"}, "241": {"titre": "Goitre"}, "242": {"titre": "Hyperthyroïdie"}, "243": {"titre": "Hypothyroïdie"}, "244": {"titre": "Hypophyse"}, "245": {"titre": "Insuffisance surrénale"}, "246": {"titre": "Gynécomastie"}, "247": {"titre": "Diabète"}, "248": {"titre": "Nutrition prévention"}, "249": {"titre": "Mode de vie"}, "250": {"titre": "Dénutrition"}, "251": {"titre": "Amaigrissement"}, "252": {"titre": "Sujet âgé nutrition"}, "253": {"titre": "Obésité"}, "254": {"titre": "Grossesse nutrition"}, "255": {"titre": "Diabète gestationnel"}, "256": {"titre": "Sport nutrition"}, "257": {"titre": "Œdèmes"}, "258": {"titre": "Créatinine"}, "259": {"titre": "Syndrome néphrotique"}, "260": {"titre": "Hématurie"}, "261": {"titre": "Néphropathies glomérulaires"}, "262": {"titre": "Néphropathies interstitielles"}, "263": {"titre": "Néphropathies vasculaires"}, "264": {"titre": "IRC"}, "265": {"titre": "Lithiase urinaire"}, "266": {"titre": "Polykystose rénale"}, "267": {"titre": "Acido-basique"}, "268": {"titre": "Hypercalcémie"}, "269": {"titre": "Douleurs abdominales"}, "270": {"titre": "Douleurs lombaires"}, "271": {"titre": "RGO"}, "272": {"titre": "Ulcère gastrique"}, "273": {"titre": "Dysphagie"}, "274": {"titre": "Vomissements"}, "275": {"titre": "Splénomégalie"}, "276": {"titre": "Hépatomégalie"}, "277": {"titre": "Lithiase biliaire"}, "278": {"titre": "Ictère"}, "279": {"titre": "Cirrhose"}, "280": {"titre": "Ascite"}, "281": {"titre": "Pancréatite chronique"}, "282": {"titre": "MICI"}, "283": {"titre": "Constipation"}, "284": {"titre": "Colopathie fonctionnelle"}, "285": {"titre": "Diarrhée chronique"}, "286": {"titre": "Diarrhée aiguë"}, "287": {"titre": "Diverticulite"}, "288": {"titre": "Hémorroïdes"}, "289": {"titre": "Hernies"}, "290": {"titre": "Cancers prévention"}, "291": {"titre": "Cancérogenèse"}, "292": {"titre": "Diagnostic cancer"}, "293": {"titre": "Biopsies"}, "294": {"titre": "Traitement cancer"}, "295": {"titre": "Suivi cancer"}, "296": {"titre": "Agranulocytose"}, "297": {"titre": "Cancer enfant"}, "298": {"titre": "VADS"}, "299": {"titre": "Tumeurs cérébrales"}, "300": {"titre": "Gynécologie cancer"}, "301": {"titre": "Cancer colon"}, "302": {"titre": "Cancer peau"}, "303": {"titre": "Cancer estomac"}, "304": {"titre": "Cancer foie"}, "305": {"titre": "Cancer œsophage"}, "306": {"titre": "Cancer ovaire"}, "307": {"titre": "Cancer os"}, "308": {"titre": "Cancer pancréas"}, "309": {"titre": "Cancer poumon"}, "310": {"titre": "Cancer prostate"}, "311": {"titre": "Cancer rein"}, "312": {"titre": "Cancer sein"}, "313": {"titre": "Cancer testicule"}, "314": {"titre": "Cancer vessie"}, "315": {"titre": "Leucémies aiguës"}, "316": {"titre": "SMD"}, "317": {"titre": "SMP"}, "318": {"titre": "LLC"}, "319": {"titre": "Lymphomes"}, "320": {"titre": "Myélome"}, "321": {"titre": "Bon usage médicament"}, "322": {"titre": "Personnalisation therapeutic"}, "323": {"titre": "EBM"}, "324": {"titre": "Éducation thérapeutique"}, "325": {"titre": "Iatrogénie"}, "326": {"titre": "Réglementation prescription"}, "327": {"titre": "Médecine intégrative"}, "328": {"titre": "Dispositifs médicaux"}, "329": {"titre": "Transfusion"}, "330": {"titre": "Médicaments courants"}, "331": {"titre": "ACR"}, "332": {"titre": "Choc"}, "333": {"titre": "Situations sanitaires exceptionnelles"}, "334": {"titre": "Trauma grave"}, "335": {"titre": "Trauma maxillo-facial"}, "336": {"titre": "Coma"}, "337": {"titre": "Intoxications"}, "338": {"titre": "Œdème de Quincke"}, "339": {"titre": "SCA"}, "340": {"titre": "AVC"}, "341": {"titre": "Hémorragie méningée"}, "342": {"titre": "Malaise"}, "343": {"titre": "Confusion"}, "344": {"titre": "Prééclampsie"}, "345": {"titre": "Mort subite nourrisson"}, "346": {"titre": "Convulsions enfant"}, "347": {"titre": "Rétention urinaire"}, "348": {"titre": "IRA"}, "349": {"titre": "Infections parties molles"}, "350": {"titre": "Grosse jambe rouge"}, "351": {"titre": "Agitation"}, "352": {"titre": "Crise d’angoisse"}, "353": {"titre": "Suicide"}, "354": {"titre": "Occlusion"}, "355": {"titre": "Hémorragie digestive"}, "356": {"titre": "Appendicite"}, "357": {"titre": "Péritonite"}, "358": {"titre": "Pancréatite aiguë"}, "359": {"titre": "Détresse respiratoire"}, "360": {"titre": "Pneumothorax"}, "361": {"titre": "Lésions articulaires"}, "362": {"titre": "Ostéosynthèse"}, "363": {"titre": "Fractures adulte"}, "364": {"titre": "Fractures enfant"}, "365": {"titre": "Plâtre complications"}, "366": {"titre": "Exposition biologique"}, "367": {"titre": "Santé environnement"}
-        };
-
         let activeItemId = null;
         let timerInterval = null;
         let secondsElapsed = 0;
@@ -235,33 +150,6 @@ async function sendClinicalAction() {
             event.currentTarget.classList.add('active');
         }
 
-        // Chargement initial des interfaces
-        function setupEdn() {
-            const select = document.getElementById('edn-select');
-            const tbody = document.getElementById('edn-rows');
-            
-            Object.keys(fullEdnData).forEach(id => {
-                // Remplir Select
-                let opt = document.createElement('option');
-                opt.value = id;
-                opt.textContent = `Item ${id} - ${fullEdnData[id].titre}`;
-                select.appendChild(opt);
-
-                // Remplir la Table
-                let saved = localStorage.getItem(`edn_score_${id}`);
-                let noteDisplay = saved ? `${saved}/20` : 'Non tenté';
-                let row = document.createElement('tr');
-                row.innerHTML = `
-                    <td style="font-weight:bold; color:#4da6ff;">${id}</td>
-                    <td>${fullEdnData[id].titre}</td>
-                    <td id="score-cell-${id}">${noteDisplay}</td>
-                    <td><progress id="prog-${id}" value="${saved || 0}" max="20"></progress></td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Lancer la simulation médicale
         async function startMedicalCase() {
             const itemId = document.getElementById('edn-select').value;
             const difficulty = document.getElementById('difficulty').value;
@@ -274,17 +162,17 @@ async function sendClinicalAction() {
             });
             const data = await res.json();
 
-            // Setup Interface de déchocage
+            // Remplir les données du patient
             document.getElementById('pat-status').innerText = data.patient.status;
-            document.getElementById('pat-status').style.color = "#ff3333";
             document.getElementById('scope-fc').innerText = data.patient.fc;
             document.getElementById('scope-ta').innerText = data.patient.ta;
             document.getElementById('scope-spo2').innerText = data.patient.spo2;
-            
-            document.getElementById('clinical-log').innerHTML = `<p>[Admission] ${data.patient.name} vient d'arriver. Signes initiaux : ${data.patient.desc}</p>`;
-            document.getElementById('hess-feedback').innerText = "À vous de jouer. Qu'est-ce qu'on fait en premier ? (Astuce : écrivez 'interroger' pour avoir les détails)";
+            document.getElementById('patient-presentation').innerText = data.patient.desc;
+            document.getElementById('whiteboard-list').innerHTML = "";
+            document.getElementById('clinical-log').innerHTML = "<p>[Système] Monitoring démarré. Patient scopé.</p>";
+            document.getElementById('house-feedback').innerText = "Remplissez le tableau blanc avec vos suspicions avant de commettre un meurtre par incompétence.";
 
-            // Init Timer
+            // Timer
             clearInterval(timerInterval);
             secondsElapsed = 0;
             timerInterval = setInterval(() => {
@@ -297,38 +185,79 @@ async function sendClinicalAction() {
             switchTab('simulation');
         }
 
-        // Envoyer une action libre
-        async function sendClinicalAction() {
-            const input = document.getElementById('action-input');
-            const action = input.value.trim();
-            if(!action) return;
+        async function addHypothesis() {
+            const input = document.getElementById('hypothesis-input');
+            const hypothesis = input.value.trim();
+            if(!hypothesis) return;
 
-            const res = await fetch('/api/action', {
+            const res = await fetch('/api/whiteboard/add', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ action })
+                body: JSON.stringify({ hypothesis })
             });
             const data = await res.json();
 
-            // Update log & Scope
+            const list = document.getElementById('whiteboard-list');
+            list.innerHTML = "";
+            data.activeSim.whiteboard.forEach(h => {
+                list.innerHTML += `<li>${h}</li>`;
+            });
+
+            document.getElementById('house-feedback').innerText = data.feedback;
+            input.value = "";
+        }
+
+        async function sendPrescription() {
+            const input = document.getElementById('exam-input');
+            const examName = input.value.trim();
+            if(!examName) return;
+
+            const res = await fetch('/api/investigate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ examName })
+            });
+            const data = await res.json();
+
             const logBox = document.getElementById('clinical-log');
-            logBox.innerHTML += `<p style="color:#00e5ff;">> ${action}</p>`;
-            logBox.innerHTML += `<p style="color:#fff;">[Résultat] ${data.activeSim.history[data.activeSim.history.length - 1]}</p>`;
+            let color = data.success ? "#00ffcc" : "#ff3333";
+            logBox.innerHTML += `<p style="color:${color};">> Prescription : ${examName}</p>`;
+            logBox.innerHTML += `<p style="color:#fff;">[Résultat] ${data.outcome}</p>`;
+            logBox.scrollTop = logBox.scrollHeight;
+
+            document.getElementById('house-feedback').innerText = data.activeSim.score <= 40 ? "Dr House : Vos prescriptions sont pathétiques." : data.hessQuote;
+            input.value = "";
+        }
+
+        async function sendClinicalAction() {
+            const input = document.getElementById('action-input');
+            const order = input.value.trim();
+            if(!order) return;
+
+            const res = await fetch('/api/execute', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ order })
+            });
+            const data = await res.json();
+
+            const logBox = document.getElementById('clinical-log');
+            logBox.innerHTML += `<p style="color:#ffff33;">> Ordre : ${order}</p>`;
+            logBox.innerHTML += `<p style="color:#fff;">[Effet] ${data.outcome}</p>`;
             logBox.scrollTop = logBox.scrollHeight;
 
             document.getElementById('scope-fc').innerText = data.activeSim.patient.fc;
             document.getElementById('scope-ta').innerText = data.activeSim.patient.ta;
             document.getElementById('scope-spo2').innerText = data.activeSim.patient.spo2;
             document.getElementById('pat-status').innerText = data.activeSim.patient.status;
-            document.getElementById('hess-feedback').innerText = data.hessQuote;
+            document.getElementById('house-feedback').innerText = data.hessQuote;
 
             input.value = "";
         }
 
-        // Soumission du diagnostic final pour notation
         async function submitFinalDiagnosis() {
             const hypothesis = document.getElementById('diag-input').value.trim();
-            if(!hypothesis) return alert("Veuillez formuler une hypothèse.");
+            if(!hypothesis) return alert("Formulez une conclusion.");
 
             clearInterval(timerInterval);
 
@@ -339,26 +268,10 @@ async function sendClinicalAction() {
             });
             const data = await res.json();
 
-            // Stockage local du résultat
-            localStorage.setItem(`edn_score_${activeItemId}`, data.finalNote);
-            document.getElementById(`score-cell-${activeItemId}`).innerText = `${data.finalNote}/20`;
-            document.getElementById(`prog-${activeItemId}`).value = data.finalNote;
-
-            alert(`Fin du cas clinique !\nNote globale attribuée : ${data.finalNote}/20\nDiagnostic attendu : ${data.correctAnswer}`);
+            alert(`Fin de l'investigation.\nNote finale du dossier : ${data.finalNote}/20\nDiagnostic attendu : ${data.correctAnswer}`);
             document.getElementById('diag-input').value = "";
-            switchTab('items-edn');
+            switchTab('gestion-cas');
         }
-
-        // Filtrage de la liste
-        function filterEdn() {
-            let q = document.getElementById('search-edn').value.toLowerCase();
-            let rows = document.getElementById('edn-rows').getElementsByTagName('tr');
-            for (let row of rows) {
-                row.style.display = row.innerText.toLowerCase().includes(q) ? "" : "none";
-            }
-        }
-
-        window.onload = setupEdn;
     </script>
 </body>
 </html>
