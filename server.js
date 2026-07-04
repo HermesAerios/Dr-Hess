@@ -9,88 +9,70 @@ app.use(express.static('public'));
 
 let activeSim = {};
 
-// CATALOGUE UNIVERSEL DES EXAMENS (Pour la justification HAS / EDN)
+// CATALOGUE UNIVERSEL ET EXHAUSTIF DES EXAMENS (Captures 1000020296 à 1000020307)
 const EXAM_CATALOG = {
-    // Clinique / Immédiat
-    "ecg": "Électrocardiogramme 12 dérivations (Objectif < 10 min en cas de suspicion de SCA).",
-    "gaze_du_sang": "Gazométrie artérielle avec mesure du pH, pO2, pCO2 et des bicarbonates.",
-    "lactates": "Lactatémie capillaire ou artérielle (Reflet direct de l'hypoperfusion tissulaire périphérique).",
-    // Biologie Standard
-    "nfs": "Numération Formule Sanguine (Recherche d'hyperleucocytose, d'anémie ou de thrombopénie).",
-    "crp": "Protéine C Réactive (Marqueur d'inflammation systémique).",
-    "ionogramme": "Iono sanguin complet (Évaluation de la fonction rénale, kaliémie, natrémie).",
-    "troponine": "Troponine I ou T ultra-sensible (Marqueur de nécrose myocardique).",
-    "hemocultures": "Hémocultures (2 paires, indispensables avant toute antibiothérapie systémique si suspicion de sepsis).",
-    "ecbu": "Examen Cytobactériologique des Urines (Recherche d'une infection du tractus urinaire).",
-    "bnh": "Bilan Hépatique Complet (ASAT, ALAT, PAL, Bilirubine pour évaluer un retentissement ou une étiologie biliaire).",
-    // Imagerie
-    "radio_thorax": "Radiographie du thorax de face (Recherche d'un foyer pulmonaire, d'un épanchement ou d'un pneumothorax).",
-    "angio_scanner": "Angioscanner thoracique (Examen de référence pour exclure une embolie pulmonaire ou une dissection aortique).",
-    "echo_coeur": "Échocardiographie transthoracique (ETT - Évaluation de la cinétique segmentaire et de la fonction systolique).",
-    "tdm_abdomen": "Scanner abdomino-pelvien injecté (Recherche d'un foyer profond, abcès ou d'un obstacle des voies urinaires)."
+    // 1. EXAMENS PHYSIQUES
+    "exam_vias": "Examen des voies aériennes supérieures (liberté des voies)",
+    "exam_resp": "Examen de la respiration / ventilation",
+    "exam_circ": "Examen circulatoire (hémodynamique, pouls, temps de recoloration cutanée)",
+    "exam_head": "Examen Tête, Yeux, Oreilles, Nez, Gorge",
+    "exam_neck": "Examen du cou (souplesse, thyroïde, aires ganglionnaires)",
+    "exam_cardio": "Examen cardiovasculaire (auscultation cardiaque, recherche d'œdèmes)",
+    "exam_pulm": "Examen pulmonaire / pleuropulmonaire (auscultation)",
+    "exam_abd": "Examen abdominal (palpation, percussion, inspection)",
+    "exam_gu": "Examen génito-urinaire",
+    "exam_back": "Examen du dos et des flancs (recherche d'une douleur à la percussion lombaire)",
+    "exam_loco": "Examen de l'appareil locomoteur / musculosquelettique",
+    "exam_skin": "Examen cutané (recherche d'éruptions, purpura, lésions)",
+    "exam_neuro": "Examen neurologique complet",
+    "exam_psych": "Examen psychiatrique / état psychologique",
+
+    // 2. TESTS AU LIT & ECHOGRAPHIES CIBLÉES
+    "ecg": "Électrocardiogramme (ECG)",
+    "hgt": "Glycémie capillaire (au bout du doigt)",
+    "dep": "Mesure du débit expiratoire de pointe (DEP)",
+    "echo_aorte": "Échographie de l'aorte",
+    "echo_coeur_foc": "Échographie cardiaque focalisée",
+    "echo_fast": "Échographie FAST (recherche d'épanchement intrapéritonéal ou péricardique)",
+    "echo_tvp": "Échographie veineuse des membres inférieurs (recherche de TVP)",
+    "echo_pulm": "Échographie pleuropulmonaire",
+    "echo_renal": "Échographie rénale et des voies urinaires",
+    "echo_hépato": "Échographie du quadrant supérieur droit / de l'hypochondre droit (foie, vésicule, voies biliaires)",
+    "echo_mou": "Échographie des tissus mous",
+
+    // 3. EXAMENS BIOLOGIQUES (LABORATOIRE)
+    "gds": "Gaz du sang artériel (GDS)",
+    "ionogramme": "Ionogramme sanguin standard (Sodium, Potassium, Chlore, Bicarbonates, Urée, Créatinine, Glucose)",
+    "groupage_rai": "Groupage sanguin et Recherche d'Anticorps Irréguliers (RAI)",
+    "calcemie_ion": "Calcémie ionisée",
+    "calcemie_tot": "Calcémie totale",
+    "hemostase": "Bilan de l'hémostase / coagulation (TP, TCA, INR)",
+    "nfs": "Numération Formule Sanguine (NFS) / Hémogramme",
+    "ddimeres": "D-Dimères",
+    "lactates": "Lactates sanguins",
+    "lipasemie": "Lipasémie",
+    "bilan_hepatique": "Bilan hépatique complet (ASAT, ALAT, PAL, Bilirubine, GGT)",
+    "magnesemie": "Dosage du magnésium (Magnésémie)",
+    "phosphatemie": "Dosage du phosphore (Phosphatémie)",
+    "probnp": "pro-BNP (Peptide natriurétique)",
+    "troponine_t": "Troponine T",
+    "paracetamol": "Dosage du paracétamol (Acétaminophénémie)",
+    "amylasemie": "Amylasémie",
+    "crp": "Protéine C-Réactive (CRP)",
+    "cpk": "Créatine Kinase (CK / CPK)",
+    "alcoolemie": "Alcoolémie / Dosage de l'éthanol",
+    "hemocultures": "Hémocultures (2 flacons/prélèvements)",
+    "analyse_urine": "Analyse d'urine (bandelette urinaire / sédiment)",
+    
+    // LIQUIDE CÉPHALO-RACHIEN (LCR)
+    "lcr_num": "Numération cellulaire du LCR (Cytologie)",
+    "lcr_glyco": "Glycorachie (glucose dans le LCR)",
+    "lcr_gram": "Coloration de Gram sur le LCR (recherche directe de bactéries)",
+    "lcr_proteino": "Protéinorachie (protéines dans le LCR)"
 };
 
+// Base de données des scénarios EDN
 const ednScenarios = {
-   "24": { 
-        name: "Amandine L., 26 ans", 
-        type: "Fièvre et contractions au 3ème trimestre (Items 23 / 24)",
-        desc: "Amenée par le SAMU à 31 SA + 4 jours pour de violentes douleurs abdominales intermittentes et des vomissements. Elle déclare : 'C'est juste une vilaine grippe, j'ai de la fièvre depuis ce matin. Ne touchez pas à mon ventre, j'ai trop mal.'", 
-        // Constantes Hospitalières Réalistes (Rigueur ECN)
-        fc: 118, 
-        ta: "148/95", // HTA sous-jacente masquée par la douleur
-        spo2: 95, 
-        fr: 24, 
-        temp: 38.6, 
-        dextro: 5.2, 
-        aspect: "Faciès prostré, angoissé, sueurs profuses. Hauteur utérine mesurée à 31 cm (normale pour le terme). Utérus sensible entre les contractions.",
-        correctDiag: "Chorioamniotite", // Diagnostic EDN attendu
-        lethalWrongDiags: ["Appendicite aiguë", "Hématome rétroplacentaire"],
-        
-        // Étape 3 : Non-linéarité et secrets (Everybody Lies)
-        patientSecret: "C'est juste une vilaine grippe, j'ai de la fièvre depuis ce matin.",
-        interrogateEffect: (sim) => {
-            if (!sim.liesDiscovered) {
-                sim.liesDiscovered = true;
-                sim.patient.fr = 28; // Polypnée aggravée
-                sim.patient.fc = 135; // Tachycardie réflexe
-                return {
-                    outcome: "[ANAMNÈSE AGRESSIVE] Vous la poussez à bout. En larmes, elle avoue : 'D'accord ! J'ai rompu ma poche des eaux avant-hier soir à la maison... Je n'ai rien dit parce que je fume beaucoup de cannabis et j'avais peur qu'on me retire mon bébé à la maternité !'",
-                    hess: "Dr Hess : Magique. Une Rupture Prématurée des Membranes (RPM) cachée depuis 48h à 31 SA (Item 24). La barrière stérile est rompue, les bactéries vaginales ont colonisé l'amnios. Vous avez un incendie microbiologique intra-utérin à éteindre d'urgence !"
-                };
-            }
-            return { outcome: "[Anamnèse] La patiente gémit et refuse de parler davantage, focalisée sur ses vagues utérines.", hess: "Dr Hess : Vous connaissez son secret. Arrêtez de bavarder, agissez." };
-        },
-        searchEffect: (sim) => {
-            if (!sim.searchedHome) {
-                sim.searchedHome = true;
-                sim.score += 5;
-                return {
-                    outcome: "[PERQUISITION DOMICILE] Votre externe fouille son sac de maternité resté dans le couloir : il y trouve un pochon de têtes de cannabis (FR d'accouchement prématuré) et des serviettes hygiéniques totalement trempées d'un liquide teinté, d'odeur fétide.",
-                    hess: "Dr Hess : Du liquide amniotique fétide dans le sac. Ça confirme la rupture prolongée des membranes. Le piège se referme."
-                };
-            }
-            return { outcome: "[Perquisition] Rien de plus.", hess: "Dr Hess : Inutile de fouiller deux fois." };
-        },
-        
-        // Étape 4 : L'Épiphanie de Hess
-        epiphany: "Vous observez un externe qui essaie de refermer un bocal de cornichons dont le joint en caoutchouc s'est liquéfié : le vinaigre coule et empeste la pièce. Flash mental. L'utérus d'Amandine n'est pas en train de faire une simple crise contractile idiopathique, c'est son liquide amniotique protecteur qui a été infecté à cause du joint rompu (la RPM) ! La fièvre et la douleur permanente, c'est l'infection de l'œuf ! (Item 24 / Chorioamniotite). Tocolyser ce vagin est un arrêt de mort pour le fœtus !",
-        
-        // Matrice Para-clinique Exhaustive (Régulation HAS)
-        usefulExams: {
-            "ecg": { tier: 2, res: "Tachycardie sinusale à 118 bpm, pas de trouble de conduction.", justification: "PEU UTILE : Examen de routine devant une tachycardie, mais n'oriente pas la pathologie obstétricale." },
-            "lactates": { tier: 2, res: "Lactates à 1.8 mmol/L.", justification: "UTILE : Élimine un état de choc systémique profond (Sepsis-3) pour le moment." },
-            "bu": { tier: 2, res: "Traces de leucocytes, nitrites négatifs, pas de protéinurie.", justification: "ÉCARTÉ : Permet d'éliminer une pyélonéphrite aiguë (principal diagnostic différentiel de fièvre au 3ème trimestre)." },
-            "nfs": { tier: 1, res: "Hémoglobine à 11.2 g/dL (normal pour le 3e trimestre), Leucocytes à 16 500/mm3 avec hyperleucocytose à PNN.", justification: "CRITIQUE : Confirme le syndrome infectieux biologique, même si une hyperleucocytose modérée est physiologique en fin de grossesse." },
-            "crp": { tier: 1, res: "CRP élevée à 84 mg/L.", justification: "CRITIQUE : Confirme le syndrome inflammatoire aigu majeur en miroir de la fièvre clinique." },
-            "gaze_du_sang": { tier: 2, res: "pH 7.41, pCO2 32 mmHg (hyperventilation adaptative), HCO3- 21 mmol/L.", justification: "PEU UTILE : Confirme la compensation respiratoire de la grossesse, sans valeur d'orientation." },
-            "hemocultures": { tier: 1, res: "En cours... (Recherche de Listeria monocytogenes et germes vaginaux lancée).", justification: "INDISPENSABLE : Devant toute fièvre in utero non étiquetée, les hémocultures sont obligatoires avant l'antibiothérapie." },
-            "ecbu": { tier: 2, res: "Culture stérile, absence de leucocyturie significative.", justification: "ÉCARTÉ : Confirme l'absence de colonisation ou d'infection urinaire active." },
-            "radio_thorax": { tier: 2, res: "Parenchyme pulmonaire libre, pas de foyer infectieux.", justification: "PEU UTILE : Élimine une pneumopathie aiguë communautaire, mais fait perdre du temps." },
-            "angio_scanner": { tier: 3, res: "Irradiation pelvienne injustifiée.", justification: "FAUTE GRAVE : Injecter et irradier un fœtus de 31 SA sans aucun signe d'embolie pulmonaire ou de dissection aortique est une erreur majeure." },
-            "echo_coeur": { tier: 2, res: "Fraction d'éjection préservée, pas de végétation d'endocardite.", justification: "INUTILE : Perte de temps totale en salle de déchocage." },
-            "tdm_abdomen": { tier: 3, res: "Examen non contributif, utérus gravide volumineux.", justification: "FAUTE GRAVE : Demander un scanner abdominal pour une douleur utérine fébrile retarde la prise en charge et expose à une irradiation fœtale inutile." }
-        }
-    },
     "158": { 
         name: "Mme Joly, 74 ans", 
         type: "Choc septique d'origine urinaire (Item 158)",
@@ -101,72 +83,42 @@ const ednScenarios = {
         interrogateEffect: (sim) => {
             if (!sim.liesDiscovered) {
                 sim.liesDiscovered = true;
-                sim.patient.fc = 138;
-                sim.patient.ta = "72/40"; 
-                sim.score -= 5;
+                sim.patient.fc = 138; sim.patient.ta = "72/40"; sim.score -= 5;
                 return {
-                    outcome: "[CRASH CLINIQUE] En insistant agressivement, la patiente s'effondre. Sa fille avoue enfin : 'Elle avait des brûlures urinaires atroces depuis 4 jours mais refusait les antibiotiques !'",
-                    hess: "Dr Hess : Félicitations Sherlock, vous avez fait cracher le morceau à la gamine, mais le cœur de la vieille lâche. Remplissez-moi ce lit de macromolécules !"
+                    outcome: "[CRASH CLINIQUE] En insistant agressivement, la patiente s'effondre. Sa fille avoue : 'Elle avait des brûlures urinaires atroces depuis 4 jours mais refusait les antibiotiques !'",
+                    hess: "Dr Hess : Félicitations Sherlock, vous avez fait cracher le morceau à la gamine, mais sa tension s'effondre. Remplissez-moi ce lit de macromolécules !"
                 };
             }
-            return { outcome: "[Anamnèse] Patiente obnubilée, aucune réponse possible.", hess: "Dr Hess : Elle glisse vers le coma. Arrêtez de lui parler." };
+            return { outcome: "[Anamnèse] Patiente obnubilée, aucune réponse possible.", hess: "Dr Hess : Elle glisse vers le coma. Laissez-la souffler." };
         },
         searchEffect: (sim) => {
             if (!sim.searchedHome) {
-                sim.searchedHome = true;
-                sim.score += 10;
+                sim.searchedHome = true; sim.score += 10;
                 return {
                     outcome: "[Perquisition] Votre externe trouve des protections urinaires souillées de sang et une boîte de paracétamol vide dans sa poubelle.",
-                    hess: "Dr Hess : La porte d'entrée est urinaire, l'infection a colonisé le sang. C'est une pyélonéphrite obstructive ou maligne."
+                    hess: "Dr Hess : La porte d'entrée est urinaire, l'infection a colonisé le sang. C'est une urosepsis (Item 158)."
                 };
             }
             return { outcome: "[Perquisition] Aucun autre élément.", hess: "Dr Hess : Vous perdez votre temps." };
         },
-        epiphany: "Les marbrures, la fièvre, la confusion, l'hypotension persistante... Ce n'est pas une panne cardiogénique, c'est la tuyauterie systémique qui s'effondre sous l'effet des endotoxines bactériennes ! Traitez le contenant et ciblez le foyer urinaire.",
+        epiphany: "Les marbrures, la fièvre, la confusion, l'hypotension persistante... Ce n'est pas une panne de pompe, c'est la tuyauterie systémique qui s'effondre sous l'effet des endotoxines bactériennes ! Ciblez le foyer urinaire.",
         usefulExams: {
-            "lactates": { tier: 1, res: "Lactatémie à 4.5 mmol/L.", justification: "CRITIQUE : Confirme l'hypoperfusion tissulaire systémique et valide le diagnostic de choc septique selon les critères Sepsis-3." },
-            "hemocultures": { tier: 1, res: "Positives à Bacilles Gram Négatif (E. Coli).", justification: "INDISPENSABLE : Permet d'isoler le germe. Doit être réalisé sans attendre mais sans retarder l'antibiothérapie d'urgence." },
-            "ecbu": { tier: 1, res: "Leucocyturie majeure, nitrites +, hématurie.", justification: "JUSTIFIÉ : Oriente immédiatement vers le foyer infectieux initial (Uro-sepsis)." },
-            "gaze_du_sang": { tier: 1, res: "Acidose métabolique sévère (pH 7.28, HCO3- 15 mmol/L).", justification: "UTILE : Évalue la gravité de la défaillance d'organe (rénale/métabolique)." },
-            "nfs": { tier: 1, res: "Hyperleucocytose à 19 000/mm3.", justification: "UTILE : Confirme la réponse inflammatoire d'origine infectieuse." },
-            "crp": { tier: 2, res: "CRP à 220 mg/L.", justification: "PEU UTILE : Confirme le syndrome inflammatoire mais n'apporte aucune valeur ajoutée en situation d'extrême urgence réanimatoire." },
-            "ionogramme": { tier: 2, res: "Urée : 14 mmol/L, Créatinine : 145 µmol/L.", justification: "UTILE : Met en évidence une insuffisance rénale aiguë fonctionnelle liée à l'hypotension." },
-            "radio_thorax": { tier: 2, res: "Pas de foyer parenchymateux visible.", justification: "ÉCARTÉ : Permet d'éliminer un foyer pulmonaire associé, mais n'est pas la priorité." },
-            "tdm_abdomen": { tier: 2, res: "Infiltration péri-rénale gauche, pas d'obstacle lithiasique.", justification: "UTILE : À faire dans un second temps pour éliminer un abcès ou une pyélonéphrite obstructive requérant un drainage." },
-            "troponine": { tier: 3, res: "Troponine I légèrement positive à 45 ng/L.", justification: "INUTILE : Positivité aspécifique liée à la souffrance myocardique fonctionnelle en contexte de tachycardie et de choc." },
-            "angio_scanner": { tier: 3, res: "Pas d'embolie pulmonaire.", justification: "FAUTE : Irresponsable d'injecter un produit de contraste néphrotoxique chez une patiente en choc avec insuffisance rénale sans suspicion forte d'EP." }
-        }
-    },
-    "339": { 
-        name: "M. Kovac, 52 ans", 
-        type: "Syndrome Coronarien Aigu (SCA) (Item 339)",
-        desc: "Douleur thoracique rétrosternale, constructive, irradiant la mâchoire depuis 45 min. En sueur intense.", 
-        fc: 98, ta: "145/92", spo2: 95, fr: 20, temp: 36.9, dextro: 5.5, aspect: "Pâleur cutanée, sueurs profuses, angoisse majeure de mort imminente.",
-        correctDiag: "SCA ST+",
-        lethalWrongDiags: ["Dissection aortique", "Pneumothorax"],
-        interrogateEffect: (sim) => {
-            sim.liesDiscovered = true;
-            return {
-                outcome: "[Anamnèse] Le patient avoue : 'J'ai fumé deux paquets aujourd'hui à cause du stress alors que j'avais arrêté depuis 5 ans.'",
-                hess: "Dr Hess : Tabagisme massif aigu et stress. Le combo idéal pour fissurer une plaque d'athérome."
-            };
-        },
-        searchEffect: (sim) => {
-            sim.searchedHome = true;
-            sim.score -= 10;
-            return {
-                outcome: "[Fausse Piste Domicile] Vos externes ramènent des boîtes de tisane pour le foie et des vitamines.",
-                hess: "Dr Hess : Bravo, vous avez perdu 10 points de temps précieux pendant que ses cellules myocardiques étouffent."
-            };
-        },
-        epiphany: "Le temps c'est du muscle ! Arrêtez de chercher des causes ésotériques. Une douleur typique, serrée, chez un homme de la cinquantaine coronaropathe potentiel... L'interrupteur électrique du cœur est bloqué. Il faut l'ECG immédiat !",
-        usefulExams: {
-            "ecg": { tier: 1, res: "Sus-décalage franc du segment ST de 4mm en D2, D3, aVF avec image en miroir.", justification: "CRITIQUE : Pose le diagnostic immédiat d'Infarctus du Myocarde (SCA ST+ inférieur). Indication de reperfusion immédiate (Coronarographie)." },
-            "troponine": { tier: 2, res: "Troponine en cours (Résultat d'ici 45 min).", justification: "DANGEREUX : Devant un ST+, on n'attend JAMAIS les résultats de la biologie pour agir. Chaque minute perdue détruit du myocarde." },
-            "ionogramme": { tier: 2, res: "Potassium : 4.0 mmol/L, Sodium : 139 mmol/L.", justification: "UTILE : Évalue la kaliémie pour prévenir les troubles du rythme ventriculaire malins." },
-            "nfs": { tier: 2, res: "Normal.", justification: "PEU UTILE : Bilan pré-opératoire standard mais ne doit pas retarder le transfert." },
-            "gaze_du_sang": { tier: 2, res: "Normal.", justification: "INUTILE : Le patient ne présente pas de signe d'insuffisance respiratoire ou d'acidose." },
-            "angio_scanner": { tier: 3, res: "Pas d'anomalie de l'aorte.", justification: "FAUTE LETHALE : Envoyer un patient suspect de SCA ST+ passer un angioscanner au lieu de l'adresser directement en salle de cathétérisme coronaire est une perte de chance majeure." }
+            "exam_vias": { tier: 1, res: "Voies aériennes supérieures libres, pas d'encombrement.", justification: "Examen initial systématique en réanimation (Airway)." },
+            "exam_resp": { tier: 1, res: "Polypnée superficielle à 26/min, pas de tirage.", justification: "Évalue le retentissement respiratoire du sepsis (critère qSOFA)." },
+            "exam_circ": { tier: 1, res: "Pouls radial filant, tachycardie à 125 bpm, temps de recoloration cutanée (TRC) allongé à 4 secondes.", justification: "Mise en évidence directe d'une insuffisance circulatoire aiguë." },
+            "exam_abd": { tier: 1, res: "Abdomen souple, dépressible, sensibilité diffuse sans défense.", justification: "Élimine une urgence chirurgicale abdominale d'emblée." },
+            "exam_back": { tier: 1, res: "Douleur vive déclenchée à la percussion de la fosse lombaire gauche.", justification: "Signe clinique de pyélonéphrite aiguë homolatérale." },
+            "exam_skin": { tier: 1, res: "Marbrures violacées localisées aux genoux. Pas de purpura.", justification: "Évalue la sévérité du choc (reflet de la dysfonction microvasculaire)." },
+            "analyse_urine": { tier: 1, res: "Bandelette urinaire : Leucocytes +++, Nitrites +, pas de protéinurie.", justification: "INDISPENSABLE (Item 158) : Confirme l'infection urinaire aiguë et la porte d'entrée." },
+            "lactates": { tier: 1, res: "Lactatémie à 4.5 mmol/L.", justification: "CRITIQUE : Confirme l'hypoperfusion tissulaire périphérique (seuil Sepsis-3 > 2 mmol/L)." },
+            "hemocultures": { tier: 1, res: "Positives à Bacilles Gram Négatif (E. Coli).", justification: "OBLIGATOIRE : Isole le germe causal avant de guider l'antibiothérapie définitive." },
+            "ionogramme": { tier: 1, res: "Sodium 138 mmol/L, Potassium 4.6 mmol/L, Créatinine 155 µmol/L, Urée 14 mmol/L.", justification: "INDISPENSABLE : Révèle une insuffisance rénale aiguë fonctionnelle liée à l'hypoperfusion." },
+            "gds": { tier: 1, res: "Acidose métabolique sévère (pH 7.28, HCO3- 15 mmol/L).", justification: "UTILE : Indique la sévérité biologique de la défaillance métabolique." },
+            "nfs": { tier: 1, res: "Hyperleucocytose à 19 000/mm3 à polynucléaires neutrophiles.", justification: "UTILE : Signe la réponse inflammatoire systémique d'origine bactérienne." },
+            "crp": { tier: 2, res: "CRP à 220 mg/L.", justification: "PEU CONTRIBUTIF : Confirme l'inflammation majeure mais n'aide pas à la réanimation d'urgence." },
+            "echo_renal": { tier: 2, res: "Infiltration péri-rénale gauche, pas de dilatation des cavités pyélocalicielles.", justification: "UTILE : Élimine un obstacle sur les voies urinaires nécessitant un drainage médico-chirurgical urgent." },
+            "troponine_t": { tier: 3, res: "Troponine T légèrement augmentée à 38 ng/L.", justification: "NON CONTRIBUTIF : Souffrance myocardique fonctionnelle liée au choc et à la tachycardie." },
+            "lcr_num": { tier: 3, res: "Liquide clair, formule normale.", justification: "ERREUR GRAVE : Ponction lombaire injustifiée et dangereuse sur un choc septique urologique évident." }
         }
     }
 };
@@ -182,6 +134,7 @@ app.post('/api/start-case', (req, res) => {
         patient: {
             name: sc.name,
             type: sc.type,
+            status: "Détresse Initiale",
             fc: Math.round(sc.fc * multiplier),
             ta: sc.ta,
             spo2: Math.min(100, Math.max(75, Math.round(sc.spo2 / (multiplier * 0.98)))),
@@ -225,25 +178,20 @@ app.post('/api/search-home', (req, res) => {
 app.post('/api/vicodin', (req, res) => {
     const sc = ednScenarios[activeSim.itemId];
     if (activeSim.vicodinDoses <= 0) {
-        return res.json({ activeSim, outcome: "[Flacon vide]", hessQuote: "Dr Hess : Plus de pilules. Réfléchissez par vous-même.", success: false });
+        return res.json({ activeSim, outcome: "[Flacon vide]", hessQuote: "Dr Hess : Plus de pilules. Réfléchissez.", success: false });
     }
     activeSim.vicodinDoses--;
     activeSim.turns++;
     let outcome = "";
-    let hessQuote = "";
-
     if (!activeSim.epiphanyUsed) {
-        activeSim.epiphanyUsed = true;
-        activeSim.score -= 5;
+        activeSim.epiphanyUsed = true; activeSim.score -= 5;
         outcome = `[💊 ÉPIPHANIE DE HESS] ${sc.epiphany}`;
-        hessQuote = "Dr Hess : *Avale sa pilule*... C'était pourtant sous vos yeux depuis le début.";
     } else {
         activeSim.score -= 15;
-        outcome = "[Addiction] Dose superflue. Aucun effet thérapeutique sur votre logique.";
-        hessQuote = "Dr Hess : Vous devenez dépendant et le patient est toujours en train de mourir.";
+        outcome = "[Addiction] Dose superflue. Aucun effet thérapeutique.";
     }
     activeSim.history.push(outcome);
-    res.json({ activeSim, outcome, hessQuote, success: true });
+    res.json({ activeSim, outcome, hessQuote: "Dr Hess : C'était pourtant sous vos yeux.", success: true });
 });
 
 app.post('/api/whiteboard/add', (req, res) => {
@@ -253,17 +201,17 @@ app.post('/api/whiteboard/add', (req, res) => {
         activeSim.whiteboard.push(hypothesis);
         activeSim.history.push(`Hypothèse : ${hypothesis}`);
         if (activeSim.lethalWrongDiags.some(d => hypothesis.toLowerCase().includes(d.toLowerCase()))) {
-            feedback = `Dr Hess : "${hypothesis} ? Si vous injectez le traitement de ça à l'aveugle, vous le tuez."`;
-            activeSim.score -= 10; // Le tableau blanc a de l'importance ! Poser des diagnostics mortels pénalise le score.
+            feedback = `Dr Hess : "${hypothesis} ? Erreur. Si vous injectez le traitement à l'aveugle, vous le tuez."`;
+            activeSim.score -= 10;
         } else if (hypothesis.toLowerCase().includes(activeSim.correctDiag.toLowerCase())) {
             feedback = `Dr Hess : "${hypothesis} ? C'est sur la bonne voie. Prouvez-le maintenant."`;
             activeSim.score += 5;
         } else {
-            feedback = `Dr Hess : "${hypothesis} ? Une théorie digne d'une fiction."`;
+            feedback = `Dr Hess : "${hypothesis} ? Une théorie étrange."`;
             activeSim.score -= 4;
         }
     } else {
-        feedback = `Dr Hess : "Déjà listé."`;
+        feedback = `Dr Hess : "Déjà noté."`;
     }
     res.json({ activeSim, feedback });
 });
@@ -272,41 +220,34 @@ app.post('/api/investigate', (req, res) => {
     const { examKey } = req.body;
     activeSim.turns++;
     
-    // Vérifier si l'examen existe dans le catalogue du cas actif
     if (activeSim.usefulExams && activeSim.usefulExams[examKey]) {
         let match = activeSim.usefulExams[examKey];
         if (match.tier === 1) {
             activeSim.score += 5;
-            let logMsg = `[CRITIQUE] ${EXAM_CATALOG[examKey]} -> ${match.res} (${match.justification})`;
-            activeSim.history.push(logMsg);
-            return res.json({ activeSim, outcome: match.res, justification: match.justification, hessQuote: "Dr Hess : Examen parfait. Recommandations HAS respectées.", success: true });
+            activeSim.history.push(`[Examen Clé] ${EXAM_CATALOG[examKey]} : ${match.res}`);
+            return res.json({ activeSim, outcome: match.res, justification: match.justification, success: true });
         } else if (match.tier === 2) {
             activeSim.score -= 3;
-            let logMsg = `[SECONDE LIGNE] ${EXAM_CATALOG[examKey]} -> ${match.res} (${match.justification})`;
-            activeSim.history.push(logMsg);
-            return res.json({ activeSim, outcome: match.res, justification: match.justification, hessQuote: "Dr Hess : Utile, mais non prioritaire dans l'immédiat.", success: true });
+            activeSim.history.push(`[Examen non prioritaire] ${EXAM_CATALOG[examKey]} : ${match.res}`);
+            return res.json({ activeSim, outcome: match.res, justification: match.justification, success: true });
         } else {
             activeSim.score -= 20;
-            activeSim.patient.fc += 15; // Aggravation
-            let logMsg = `[⚠️ FAUTE GRAVE] ${EXAM_CATALOG[examKey]} -> ${match.res} (${match.justification})`;
-            activeSim.history.push(logMsg);
-            return res.json({ activeSim, outcome: match.res, justification: match.justification, hessQuote: "Dr Hess : C'est une faute lourde par rapport au référentiel !", success: false });
+            activeSim.patient.status = "AGGRAVATION SÉVÈRE";
+            activeSim.history.push(`[⚠️ FAUTE] ${EXAM_CATALOG[examKey]} : ${match.res}`);
+            return res.json({ activeSim, outcome: match.res, justification: match.justification, success: false });
         }
     } else {
-        // L'examen est hors sujet pour ce cas
         activeSim.score -= 5;
         let info = EXAM_CATALOG[examKey] || "Examen inconnu";
-        let justification = "NON CONTRIBUTIF : Cet examen n'apporte aucune donnée d'orientation pour les symptômes de ce patient et retarde indûment la prise en charge étiologique.";
-        let logMsg = `[INUTILE] ${info} -> Non contributif.`;
-        activeSim.history.push(logMsg);
-        return res.json({ activeSim, outcome: "Résultats non significatifs ou normaux.", justification, hessQuote: "Dr Hess : Arrêtez de dilapider l'argent de la sécurité sociale.", success: false });
+        let justification = "NON CONTRIBUTIF : Cet examen n'apporte aucune donnée d'orientation diagnostique pour le tableau clinique actuel de ce patient et retarde indûment la prise en charge étiologique requise par le référentiel.";
+        activeSim.history.push(`[Inutile] ${info} : Non contributif.`);
+        return res.json({ activeSim, outcome: "Résultats physiologiques ou normaux.", justification, success: false });
     }
 });
 
 app.post('/api/execute', (req, res) => {
     const { order } = req.body;
     let outcome = "";
-    let hessQuote = "";
     const cleanOrder = order.toLowerCase();
     activeSim.turns++;
 
@@ -314,60 +255,42 @@ app.post('/api/execute', (req, res) => {
         activeSim.patient.spo2 = Math.min(100, activeSim.patient.spo2 + 6);
         activeSim.patient.fr = Math.max(14, activeSim.patient.fr - 4);
         outcome = "Oxygénothérapie initiée au masque à haute concentration.";
-        hessQuote = "Dr Hess : On remonte le scope. Mais l'oxygène ne traite pas la cause.";
     } else if (cleanOrder.includes("remplissage") || cleanOrder.includes("sérum")) {
         if (activeSim.itemId === "158") {
-            activeSim.patient.ta = "105/65";
-            activeSim.patient.fc = 105;
-            activeSim.score += 10;
+            activeSim.patient.ta = "105/65"; activeSim.patient.fc = 105; activeSim.score += 10;
             outcome = "Remplissage vasculaire par 500 ml de Cristalloïdes.";
-            hessQuote = "Dr Hess : Correct. Restaurer la pression de perfusion est indispensable face à ce choc.";
         } else {
-            activeSim.patient.fc += 10;
-            activeSim.patient.spo2 -= 8;
-            activeSim.score -= 15;
+            activeSim.patient.fc += 10; activeSim.patient.spo2 -= 8; activeSim.score -= 15;
             outcome = "Remplissage vasculaire effectué à tort.";
-            hessQuote = "Dr Hess : Bravo, vous êtes en train de le noyer en provoquant un œdème aigu du poumon.";
         }
     } else if (cleanOrder.includes("antibiothérapie") || cleanOrder.includes("antibiotique")) {
         if (activeSim.itemId === "158") {
             activeSim.score += 10;
-            outcome = "Injection d'une C3G (Ceftriaxone) IV après hémocultures.";
-            hessQuote = "Dr Hess : Le traitement étiologique de l'urosepsis est en route.";
+            outcome = "Injection d'une C3G (Ceftriaxone) IV après réalisation des prélèvements bactériologiques.";
         } else {
             outcome = "Antibiothérapie administrée sans cible active.";
-            hessQuote = "Dr Hess : Un infarctus ne se soigne pas à l'amoxicilline.";
         }
     } else {
         outcome = `Action clinique entreprise : "${order}"`;
-        hessQuote = "Dr Hess : Pourquoi pas, mais ça ne règle pas l'urgence.";
     }
-
     activeSim.history.push(outcome);
-    res.json({ activeSim, outcome, hessQuote });
-});
-
-// Route d'état de synchronisation pour le Tableau Blanc (Front-End)
-app.get('/api/get-current-sim', (req, res) => {
-    res.json(activeSim);
+    res.json({ activeSim, outcome, hessQuote: "Dr Hess : Ordre consigné." });
 });
 
 app.post('/api/diagnose', (req, res) => {
     const { hypothesis } = req.body;
     let success = false;
     let finalNote = 0;
-
     if (activeSim.correctDiag && hypothesis.toLowerCase().includes(activeSim.correctDiag.toLowerCase())) {
-        success = true;
-        finalNote = Math.round(activeSim.score / 5);
-        if (finalNote > 20) finalNote = 20;
-        if (finalNote < 0) finalNote = 0;
+        success = true; finalNote = Math.round(activeSim.score / 5);
+        if (finalNote > 20) finalNote = 20; if (finalNote < 0) finalNote = 0;
     } else {
         finalNote = Math.max(0, Math.round((activeSim.score - 50) / 5));
         if (finalNote > 5) finalNote = 4;
     }
-
     res.json({ success, finalNote, correctAnswer: activeSim.correctDiag });
 });
+
+app.get('/api/get-current-sim', (req, res) => { res.json(activeSim); });
 
 app.listen(PORT, () => console.log(`Serveur prêt sur le port ${PORT}`));
