@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScribECN - Plateforme de Révision & Simulation</title>
+    <title>ScribECN - Simulateur Clinique Haute Fidélité</title>
     <style>
         :root {
             --bg-main: #0b0f17;
@@ -19,101 +19,42 @@
 
         body {
             margin: 0; padding: 0;
-            background-color: var(--bg-main);
-            color: var(--text-light);
+            background-color: var(--bg-main); color: var(--text-light);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            overflow: hidden; height: 100vh; display: flex; flex-direction: column;
         }
 
-        /* Barre de Navigation Principale Supérieure */
-        .main-navbar {
-            background-color: #0c1017;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            height: 50px;
-        }
-        .nav-logo {
-            font-weight: bold; color: var(--accent-cyan); letter-spacing: 1px; font-size: 1.2em;
-        }
-        .nav-tabs {
-            display: flex; gap: 5px; height: 100%; align-items: flex-end;
-        }
-        .nav-tab-btn {
-            background: transparent; border: none; color: var(--text-muted);
-            padding: 10px 20px; font-weight: 600; font-size: 0.9em; cursor: pointer;
-            border-bottom: 3px solid transparent; transition: all 0.2s ease;
-        }
+        .main-navbar { background-color: #0c1017; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 50px; }
+        .nav-logo { font-weight: bold; color: var(--accent-cyan); letter-spacing: 1px; font-size: 1.2em; }
+        .nav-tabs { display: flex; gap: 5px; height: 100%; align-items: flex-end; }
+        .nav-tab-btn { background: transparent; border: none; color: var(--text-muted); padding: 10px 20px; font-weight: 600; font-size: 0.9em; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s ease; }
         .nav-tab-btn:hover { color: #fff; }
-        .nav-tab-btn.active {
-            color: var(--accent-cyan);
-            border-bottom-color: var(--accent-cyan);
-            background: rgba(0, 229, 255, 0.05);
-        }
+        .nav-tab-btn.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); background: rgba(0, 229, 255, 0.05); }
 
-        /* Vues de l'application */
-        .app-view {
-            display: none; flex: 1; height: calc(100vh - 50px); overflow: hidden;
-        }
+        .app-view { display: none; flex: 1; height: calc(100vh - 50px); overflow: hidden; }
         .app-view.active { display: flex; }
 
-        /* ==================== 1. STYLE DU DASHBOARD D'ACCUEIL ==================== */
-        .dashboard-container {
-            flex: 1; overflow-y: auto; padding: 30px; display: grid;
-            grid-template-columns: 2fr 1fr; gap: 25px; max-width: 1400px; margin: 0 auto; width: 100%;
-            box-sizing: border-box;
-        }
-        .dashboard-card {
-            background: var(--bg-interface); border: 1px solid var(--border-color);
-            border-radius: 8px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        .card-title {
-            margin-top: 0; margin-bottom: 15px; font-size: 1.1em; color: #fff;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border-color); padding-bottom: 8px;
-        }
-        .stat-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;
-        }
-        .stat-box {
-            background: #0b0f17; padding: 15px; border-radius: 6px; text-align: center; border: 1px solid #1e293b;
-        }
+        .dashboard-container { flex: 1; overflow-y: auto; padding: 30px; display: grid; grid-template-columns: 2fr 1fr; gap: 25px; max-width: 1400px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+        .dashboard-card { background: var(--bg-interface); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .card-title { margin-top: 0; margin-bottom: 15px; font-size: 1.1em; color: #fff; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: #0b0f17; padding: 15px; border-radius: 6px; text-align: center; border: 1px solid #1e293b; }
         .stat-val { font-size: 1.8em; font-weight: bold; color: var(--accent-cyan); }
         .stat-lbl { font-size: 0.75em; color: var(--text-muted); text-transform: uppercase; margin-top: 5px; }
-        
-        /* Liste de suivi des items */
-        .item-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px; border-bottom: 1px solid #1a2332; font-size: 0.9em;
-        }
-        .item-badge {
-            padding: 3px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold;
-        }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #1a2332; font-size: 0.9em; }
+        .item-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
         .badge-done { background: rgba(16,185,129,0.15); color: var(--accent-green); }
         .badge-review { background: rgba(245,158,11,0.15); color: var(--accent-yellow); }
 
-        /* ==================== 2. STYLE DU SIMULATEUR CLINIQUE ==================== */
-        .top-bar {
-            background-color: #0f141c; border-bottom: 2px solid #ff7a00;
-            padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 30px;
-        }
+        .top-bar { background-color: #0f141c; border-bottom: 2px solid #ff7a00; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 30px; }
         .case-number { font-weight: bold; color: #ff7a00; font-family: monospace; font-size: 1.1em; }
         .case-title { font-weight: 600; font-size: 0.95em; }
         .simulation-container { flex: 1; display: flex; position: relative; height: 100%; width: 100%; }
         
-        .sidebar-tabs-left, .sidebar-tabs-right {
-            width: 45px; background-color: #0c1017; display: flex; flex-direction: column; gap: 8px; padding-top: 15px; z-index: 10; border-right: 1px solid var(--border-color);
-        }
+        .sidebar-tabs-left, .sidebar-tabs-right { width: 45px; background-color: #0c1017; display: flex; flex-direction: column; gap: 8px; padding-top: 15px; z-index: 10; border-right: 1px solid var(--border-color); }
         .sidebar-tabs-right { border-right: none; border-left: 1px solid var(--border-color); }
 
-        .v-tab {
-            background: #1a2333; color: var(--text-muted); border: 1px solid var(--border-color); padding: 25px 5px; cursor: pointer; font-size: 0.75em; font-weight: bold; text-transform: uppercase; writing-mode: vertical-lr; transform: rotate(180deg); text-align: center; border-radius: 4px 0 0 4px; transition: all 0.2s ease;
-        }
+        .v-tab { background: #1a2333; color: var(--text-muted); border: 1px solid var(--border-color); padding: 25px 5px; cursor: pointer; font-size: 0.75em; font-weight: bold; text-transform: uppercase; writing-mode: vertical-lr; transform: rotate(180deg); text-align: center; border-radius: 4px 0 0 4px; transition: all 0.2s ease; }
         .sidebar-tabs-right .v-tab { border-radius: 0 4px 4px 0; transform: rotate(0deg); writing-mode: vertical-lr; }
         .v-tab:hover { color: #fff; background: #243249; }
         .v-tab.active { background: #0284c7; color: #fff; border-color: #38bdf8; }
@@ -121,9 +62,8 @@
         .center-stage { flex: 1; position: relative; background: #111622; display: flex; flex-direction: column; }
         .patient-room { flex: 1.2; background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; border-bottom: 1px solid var(--border-color); }
         .patient-avatar-box { text-align: center; }
-        .patient-silhouette { width: 120px; height: 120px; background: #334155; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5em; border: 4px solid var(--accent-cyan); box-shadow: 0 0 20px rgba(0,229,255,0.2); }
+        .patient-silhouette { width: 110px; height: 120px; background: #334155; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5em; border: 4px solid var(--accent-cyan); box-shadow: 0 0 20px rgba(0,229,255,0.2); }
 
-        /* Scope */
         .scope-overlay { position: absolute; top: 15px; width: 90%; background: rgba(0,0,0,0.85); border: 1px solid #222; border-radius: 6px; padding: 8px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; font-family: 'Courier New', monospace; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .scope-param { text-align: center; }
         .scope-val { font-size: 1.3em; font-weight: bold; }
@@ -139,10 +79,8 @@
         .console-log-panel { flex: 0.8; background: #090d14; display: flex; flex-direction: column; border-top: 1px solid var(--border-color); }
         .console-tabs { background: #111622; display: flex; border-bottom: 1px solid var(--border-color); }
         .console-tab-btn { background: transparent; border: none; color: var(--text-muted); padding: 8px 16px; font-size: 0.8em; font-weight: bold; }
-        .console-tab-btn.active { color: var(--accent-cyan); border-bottom: 2px solid var(--accent-cyan); background: #0b0f17; }
         .console-terminal { flex: 1; padding: 12px; font-family: monospace; font-size: 0.85em; overflow-y: auto; color: #a3b3c9; line-height: 1.5; }
 
-        /* Recherche & Accordéons (Investigations comme photos 1000020284.jpg / 1000020285.jpg) */
         .search-box { position: relative; margin-bottom: 15px; }
         .search-input { width: 100%; padding: 10px 10px 10px 35px; background: #0b0f17; border: 1px solid var(--border-color); border-radius: 6px; color: #fff; box-sizing: border-box; }
         .search-icon { position: absolute; left: 10px; top: 11px; color: var(--text-muted); }
@@ -153,20 +91,17 @@
         .exam-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 0.85em; }
         .exam-row:hover { background: #1a2332; }
         .btn-order { background: #0284c7; border: none; color: #fff; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
-        .btn-order:hover { background: #0369a1; }
         
-        /* Tableau blanc */
         .whiteboard-box { background: #f8fafc; color: #0f172a; padding: 12px; border-radius: 6px; border-left: 5px solid var(--accent-cyan); margin-bottom: 15px; }
         .whiteboard-box h4 { margin: 0 0 8px 0; color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
         .wb-tag { background: #e2e8f0; color: #334155; padding: 3px 8px; font-weight: bold; border-radius: 4px; display: inline-block; margin: 3px; font-size: 0.8em; font-family: monospace; }
         
-        /* Configuration initiale de la partie */
         .setup-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; width: 100%; background: #0f141c; }
     </style>
 </head>
 <body>
 
-    <!-- BARRE DE NAVIGATION COMMUNE -->
+    <!-- NAV BARRE DU RECOMPTEUR -->
     <div class="main-navbar">
         <div class="nav-logo">ScribECN <span style="font-size:0.6em; color:var(--text-muted);">v2.0</span></div>
         <div class="nav-tabs">
@@ -176,85 +111,64 @@
         <div style="font-size: 0.85em; color: var(--text-muted);">Session : Externe de Garde</div>
     </div>
 
-    <!-- ==================== ONGLET 1 : TABLEAU DE BORD D'ACCUEIL ==================== -->
+    <!-- ONGLET DASHBOARD ACCUEIL -->
     <div id="view-dashboard" class="app-view active">
         <div class="dashboard-container">
-            
-            <!-- Colonne de gauche : Perfs et Suivi -->
             <div style="display: flex; flex-direction: column; gap: 20px;">
-                <!-- Bloc Performances -->
                 <div class="dashboard-card">
-                    <h3 class="card-title">📈 Vos Performances Récentes</h3>
+                    <h3 class="card-title">📈 Vos Performances</h3>
                     <div class="stat-grid">
                         <div class="stat-box"><div class="stat-val">16.4/20</div><div class="stat-lbl">Moyenne Générale</div></div>
                         <div class="stat-box"><div class="stat-val">89%</div><div class="stat-lbl">Précision Diag</div></div>
                         <div class="stat-box"><div class="stat-val">4 cas</div><div class="stat-lbl">Dossiers Clôturés</div></div>
                     </div>
                 </div>
-
-                <!-- Suivi des items du programme -->
                 <div class="dashboard-card">
-                    <h3 class="card-title">📋 Suivi des Items du Programme ECN</h3>
+                    <h3 class="card-title">📋 Suivi des Items du Programme</h3>
                     <div style="max-height: 350px; overflow-y: auto;">
-                        <div class="item-row"><span>Item 158 - Choc Septique / Infections urinaires</span><span class="item-badge badge-done">Validé (18/20)</span></div>
-                        <div class="item-row"><span>Item 339 - Syndrome Coronarien Aigu (SCA)</span><span class="item-badge badge-review">À Réviser</span></div>
-                        <div class="item-row"><span>Item 204 - Insuffisance Cardiaque Aiguë</span><span class="item-badge badge-review">Non tenté</span></div>
-                        <div class="item-row"><span>Item 326 - Insuffisance Rénale Aiguë</span><span class="item-badge badge-review">Non tenté</span></div>
+                        <div class="item-row"><span>Item 158 - Sepsis et choc septique</span><span class="item-badge badge-done">Validé (18/20)</span></div>
                     </div>
                 </div>
             </div>
-
-            <!-- Colonne de droite : Dernières notes & Objectifs -->
             <div style="display: flex; flex-direction: column; gap: 20px;">
                 <div class="dashboard-card" style="flex: 1;">
                     <h3 class="card-title">📝 Dernières Notes Clini-Jeux</h3>
                     <ul style="padding-left: 20px; color: var(--text-light); line-height: 1.8; font-size: 0.9em;">
-                        <li><strong>Dossier #158 (Mme Joly)</strong> : <span style="color:var(--accent-green)">18/20</span> <span style="color:var(--text-muted); font-size:0.8em;">(il y a 2h)</span></li>
-                        <li><strong>Dossier #339 (M. Kovac)</strong> : <span style="color:var(--accent-yellow)">14.8/20</span> <span style="color:var(--text-muted); font-size:0.8em;">(hier)</span></li>
+                        <li><strong>Dossier #158 (Mme Joly)</strong> : <span style="color:var(--accent-green)">18/20</span></li>
                     </ul>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- ==================== ONGLET 2 : CAS CLINIQUE SIMULÉ (L'INTERFACE DEMANDÉE) ==================== -->
+    <!-- ONGLET SIMULATION COMPLET -->
     <div id="view-simulation" class="app-view" style="flex-direction: column;">
-        
-        <!-- Écran de configuration interne du cas (S'affiche avant de lancer) -->
         <div id="simulation-setup" class="setup-screen">
             <div style="background:var(--bg-interface); border:1px solid var(--border-color); padding:30px; border-radius:8px; max-width:450px; width:100%;">
-                <h2 style="margin-top:0; color:var(--accent-cyan);">Salle de Déchocage Virtuelle</h2>
-                <p style="font-size:0.9em; color:var(--text-muted); margin-bottom: 20px;">Choisissez un dossier réglementaire pour débuter la simulation immersive :</p>
-                
-                <select id="case-select" style="width:100%; padding:12px; background:#0b0f17; color:#fff; border:1px solid var(--border-color); border-radius:6px; margin-bottom:20px; font-size:0.95em;">
+                <h2 style="margin-top:0; color:var(--accent-cyan);">Salle de Déchocage</h2>
+                <select id="case-select" style="width:100%; padding:12px; background:#0b0f17; color:#fff; border:1px solid var(--border-color); border-radius:6px; margin-bottom:20px;">
                     <option value="158">Item 158 - Choc Septique d'Origine Urinaire (Mme Joly)</option>
-                    <option value="339">Item 339 - Syndrome Coronarien Aigu SCA ST+ (M. Kovac)</option>
                 </select>
-                
-                <button onclick="startLocalGameSimulation()" style="width:100%; padding:14px; background:var(--accent-cyan); border:none; color:#000; font-weight:bold; border-radius:6px; cursor:pointer; font-size:1em; letter-spacing:0.5px;">INITIER LA PRISE EN CHARGE</button>
+                <button onclick="startLocalGameSimulation()" style="width:100%; padding:14px; background:var(--accent-cyan); border:none; color:#000; font-weight:bold; border-radius:6px; cursor:pointer;">INITIER LA PRISE EN CHARGE</button>
             </div>
         </div>
 
-        <!-- L'interface de simulation (Invisible tant que "Initier" n'est pas cliqué) -->
         <div id="simulation-gameplay" style="display: none; flex-direction: column; flex: 1; height: 100%;">
             <div class="top-bar">
                 <div>
                     <span class="case-number" id="case-display-id">Case #158</span>
-                    <span class="case-title" id="case-display-title">Lower abdominal pain and vomiting</span>
+                    <span class="case-title" id="case-display-title">--</span>
                 </div>
                 <div style="font-family: monospace; color: var(--accent-yellow);" id="timer-display">TIME: 00:00</div>
             </div>
 
             <div class="simulation-container">
-                <!-- ONGLETS DE GAUCHE -->
                 <div class="sidebar-tabs-left">
                     <div class="v-tab" id="tab-patient" onclick="handleTabClick('patient', 'left')">Patient</div>
                     <div class="v-tab" id="tab-exam" onclick="handleTabClick('exam', 'left')">Exam</div>
                     <div class="v-tab" id="tab-differential" onclick="handleTabClick('differential', 'left')">Differential</div>
                 </div>
 
-                <!-- TIROIR GAUCHE -->
                 <div class="action-drawer left-side" id="drawer-left">
                     <div class="drawer-header">
                         <h3 id="drawer-left-title" style="margin:0; font-size:1em;">Menu</h3>
@@ -263,7 +177,6 @@
                     <div class="drawer-content" id="drawer-left-content"></div>
                 </div>
 
-                <!-- ZONE CENTRALE (PATIENT & MONITORING) -->
                 <div class="center-stage">
                     <div class="patient-room">
                         <div class="scope-overlay">
@@ -274,21 +187,18 @@
                             <div class="scope-param"><div class="scope-lbl">Temp</div><div class="scope-val" id="scope-temp" style="color:#f97316;">--</div></div>
                             <div class="scope-param"><div class="scope-lbl">Dextro</div><div class="scope-val" id="scope-dextro" style="color:var(--accent-cyan);">--</div></div>
                         </div>
-
                         <div class="patient-avatar-box">
                             <div class="patient-silhouette">👤</div>
-                            <h3 id="patient-name-label" style="margin-top:15px; letter-spacing:1px;">--</h3>
+                            <h3 id="patient-name-label" style="margin-top:15px;">--</h3>
                             <p id="patient-aspect-label" style="font-size:0.85em; color:var(--text-muted); max-width:400px; margin:0 auto;"></p>
                         </div>
                     </div>
-
                     <div class="console-log-panel">
-                        <div class="console-tabs"><div class="console-tab-btn active">JOURNAL CLINIQUE D'URGENCE</div></div>
+                        <div class="console-tabs"><div class="console-tab-btn active">JOURNAL CLINIQUE D'URGENCE & ANALYSES HÉMOC</div></div>
                         <div class="console-terminal" id="terminal-output"></div>
                     </div>
                 </div>
 
-                <!-- TIROIR DROITE -->
                 <div class="action-drawer right-side" id="drawer-right">
                     <div class="drawer-header">
                         <h3 id="drawer-right-title" style="margin:0; font-size:1em;">Menu</h3>
@@ -297,7 +207,6 @@
                     <div class="drawer-content" id="drawer-right-content"></div>
                 </div>
 
-                <!-- ONGLETS DE DROITE -->
                 <div class="sidebar-tabs-right">
                     <div class="v-tab" id="tab-investigations" onclick="handleTabClick('investigations', 'right')">Investigations</div>
                     <div class="v-tab" id="tab-interventions" onclick="handleTabClick('interventions', 'right')">Interventions</div>
@@ -307,35 +216,79 @@
         </div>
     </div>
 
-    <!-- ENGINE LOGIQUE DU SIMULATEUR CLINIQUE (AUTONOME) -->
     <script>
         let gameState = { activeCase: null, whiteboard: [], totalSeconds: 0 };
         let currentActiveLeftTab = null, currentActiveRightTab = null, timerInterval = null;
 
-        const CASES_DB = {
-            "158": { id: "158", title: "Douleur abdominale basse et vomissements", name: "Mme Joly, 74 ans", aspect: "Somnolente, couchée en chien de fusil, se plaint de frissons intenses.", fc: 124, ta: "85/42", spo2: 93, fr: 26, temp: "39.4°C", dextro: "5.8 mmol/L" },
-            "339": { id: "339", title: "Douleur thoracique constructive aiguë", name: "M. Kovac, 58 ans", aspect: "Anxieux, en sueurs, main posée sur la poitrine (signe de Levine).", fc: 92, ta: "145/88", spo2: 96, fr: 18, temp: "36.8°C", dextro: "6.1 mmol/L" }
-        };
-
+        // BASE DE DONNÉES INTEGRALE DES DROPDOWNS D'INVESTIGATIONS (Captures d'écran transmises)
         const EXAM_DATABASE = {
             bedside: [
-                { id: "ecg", name: "ECG 12 Dérivations", outcome: "SCA exclu si Item 158. FA rapide si sepsis.", justification: "Systématique devant toute détresse vitale." },
-                { id: "hgt", name: "Hémoglucotest / Dextro", outcome: "Normal.", justification: "Élimine une urgence métabolique mimétique." },
-                { id: "bu", name: "Bandelette Urinaire (BU)", outcome: "Leucocytes +++, Nitrites ++", justification: "Oriente immédiatement vers l'origine urinaire du sepsis." }
+                { id: "ecg", name: "Électrocardiogramme (ECG)" },
+                { id: "hgt", name: "Glycémie capillaire (au bout du doigt)" },
+                { id: "dep", name: "Mesure du débit expiratoire de pointe (DEP)" },
+                { id: "echo_aorte", name: "Échographie de l'aorte" },
+                { id: "echo_coeur_foc", name: "Échographie cardiaque focalisée" },
+                { id: "echo_fast", name: "Échographie FAST (épanchements)" },
+                { id: "echo_tvp", name: "Échographie veineuse des MI (Thrombose)" },
+                { id: "echo_pulm", name: "Échographie pleuropulmonaire" },
+                { id: "echo_renal", name: "Échographie rénale et des voies urinaires" },
+                { id: "echo_hépato", name: "Échographie du quadrant sup droit / hépato-biliaire" },
+                { id: "echo_mou", name: "Échographie des tissus mous" }
             ],
             biology: [
-                { id: "nfs", name: "NFS / Hémogramme Complet", outcome: "Hyperleucocytose à 17 000 /mm3.", justification: "Confirme le syndrome de réponse inflammatoire." },
-                { id: "lactates", name: "Lactatémie Artérielle", outcome: "Mesurée à 4.2 mmol/L (Alerte rouge !)", justification: "Marqueur de souffrance tissulaire globale, affirme le choc." }
+                { id: "gds", name: "Gaz du sang artériel (GDS)" },
+                { id: "ionogramme", name: "Ionogramme sanguin standard (Chem 7)" },
+                { id: "groupage_rai", name: "Groupage sanguin et Recherche de RAI" },
+                { id: "calcemie_ion", name: "Calcémie ionisée" },
+                { id: "calcemie_tot", name: "Calcémie totale" },
+                { id: "hemostase", name: "Bilan de l'hémostase (TP, TCA, INR)" },
+                { id: "nfs", name: "Numération Formule Sanguine (NFS) / Hémogramme" },
+                { id: "ddimeres", name: "D-Dimères" },
+                { id: "lactates", name: "Lactates sanguins" },
+                { id: "lipasemie", name: "Lipasémie" },
+                { id: "bilan_hepatique", name: "Bilan hépatique complet (ASAT, ALAT, PAL, GGT)" },
+                { id: "magnesemie", name: "Dosage du magnésium (Magnésémie)" },
+                { id: "phosphatemie", name: "Dosage du phosphore (Phosphatémie)" },
+                { id: "probnp", name: "pro-BNP (Peptide natriurétique)" },
+                { id: "troponine_t", name: "Troponine T" },
+                { id: "paracetamol", name: "Dosage du paracétamol" },
+                { id: "amylasemie", name: "Amylasémie" },
+                { id: "crp", name: "Protéine C-Réactive (CRP)" },
+                { id: "cpk", name: "Créatine Kinase (CK / CPK)" },
+                { id: "alcoolemie", name: "Alcoolémie / Dosage éthanol" }
             ],
-            imaging: [
-                { id: "tdm_abdomen", name: "Scanner Abdomino-pelvien", outcome: "Infiltration péri-rénale gauche, calcul obstructif.", justification: "Indispensable pour documenter la pyélonéphrite obstructive." }
+            microbio: [
+                { id: "hemocultures", name: "Hémocultures (2 flacons/prélèvements)" },
+                { id: "analyse_urine", name: "Analyse d'urine (bandelette / sédiment)" }
+            ],
+            lcr: [
+                { id: "lcr_num", name: "Numération cellulaire du LCR (Cytologie)" },
+                { id: "lcr_glyco", name: "Glycorachie (glucose dans le LCR)" },
+                { id: "lcr_gram", name: "Coloration de Gram sur le LCR" },
+                { id: "lcr_proteino", name: "Protéinorachie (protéines dans le LCR)" }
             ]
         };
+
+        const PHYSICAL_EXAMS = [
+            { id: "exam_vias", name: "V.A.S. (liberté des voies aériennes)" },
+            { id: "exam_resp", name: "Respiration / ventilation" },
+            { id: "exam_circ", name: "Examen circulatoire (pouls, TRC, hémodynamique)" },
+            { id: "exam_head", name: "Tête, Yeux, Oreilles, Nez, Gorge (HEENT)" },
+            { id: "exam_neck", name: "Examen du cou (souplesse, aires ganglionnaires)" },
+            { id: "exam_cardio", name: "Examen cardiovasculaire (auscultation, œdèmes)" },
+            { id: "exam_pulm", name: "Examen pulmonaire (auscultation)" },
+            { id: "exam_abd", name: "Examen abdominal (palpation, percussion)" },
+            { id: "exam_gu", name: "Examen génito-urinaire" },
+            { id: "exam_back", name: "Examen du dos et des flancs (percussion lombaire)" },
+            { id: "exam_loco", name: "Appareil locomoteur / musculosquelettique" },
+            { id: "exam_skin", name: "Examen cutané (éruptions, purpura)" },
+            { id: "exam_neuro", name: "Examen neurologique complet" },
+            { id: "exam_psych", name: "Examen psychiatrique / état psychologique" }
+        ];
 
         function switchMainView(viewId) {
             document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
-            
             if(viewId === 'dashboard') {
                 document.getElementById('view-dashboard').classList.add('active');
                 document.getElementById('main-nav-dash').classList.add('active');
@@ -345,44 +298,44 @@
             }
         }
 
-        function startLocalGameSimulation() {
-            const caseId = document.getElementById('case-select').value;
-            const chosenCase = CASES_DB[caseId];
-            
-            gameState.activeCase = chosenCase;
+        async function startLocalGameSimulation() {
+            const itemId = document.getElementById('case-select').value;
+            const res = await fetch('/api/start-case', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ itemId, difficulty: 'medium' })
+            });
+            const data = await res.json();
+            gameState.activeCase = data.patient;
             gameState.whiteboard = [];
             gameState.totalSeconds = 0;
 
-            // Mise en page switch
             document.getElementById('simulation-setup').style.display = 'none';
             document.getElementById('simulation-gameplay').style.display = 'flex';
+            document.getElementById('case-display-id').innerText = `Case #${data.itemId}`;
+            document.getElementById('case-display-title').innerText = data.patient.type;
+            document.getElementById('patient-name-label').innerText = data.patient.name;
+            document.getElementById('patient-aspect-label').innerText = data.patient.aspect;
 
-            // Injection textuelle
-            document.getElementById('case-display-id').innerText = `Case #${chosenCase.id}`;
-            document.getElementById('case-display-title').innerText = chosenCase.title;
-            document.getElementById('patient-name-label').innerText = chosenCase.name;
-            document.getElementById('patient-aspect-label').innerText = chosenCase.aspect;
-
-            updateScopeValues(chosenCase);
-
-            document.getElementById('terminal-output').innerHTML = `<p style="color:var(--accent-green)">[Système] Prise en charge lancée aux urgences. Le moniteur est branché.</p>`;
+            updateScope(data.patient);
+            document.getElementById('terminal-output').innerHTML = `<p style="color:var(--accent-green)">[Système] Prise en charge démarrée. Patient monitoré.</p>`;
 
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 gameState.totalSeconds++;
-                let mins = String(Math.floor(gameState.totalSeconds / 60)).padStart(2, '0');
-                let secs = String(gameState.totalSeconds % 60).padStart(2, '0');
-                document.getElementById('timer-display').innerText = `TIME: ${mins}:${secs}`;
+                let m = String(Math.floor(gameState.totalSeconds / 60)).padStart(2, '0');
+                let s = String(gameState.totalSeconds % 60).padStart(2, '0');
+                document.getElementById('timer-display').innerText = `TIME: ${m}:${s}`;
             }, 1000);
         }
 
-        function updateScopeValues(obj) {
-            document.getElementById('scope-fc').innerText = obj.fc;
-            document.getElementById('scope-ta').innerText = obj.ta;
-            document.getElementById('scope-spo2').innerText = obj.spo2;
-            document.getElementById('scope-fr').innerText = obj.fr;
-            document.getElementById('scope-temp').innerText = obj.temp;
-            document.getElementById('scope-dextro').innerText = obj.dextro;
+        function updateScope(p) {
+            document.getElementById('scope-fc').innerText = p.fc;
+            document.getElementById('scope-ta').innerText = p.ta;
+            document.getElementById('scope-spo2').innerText = p.spo2;
+            document.getElementById('scope-fr').innerText = p.fr;
+            document.getElementById('scope-temp').innerText = p.temp;
+            document.getElementById('scope-dextro').innerText = p.dextro;
         }
 
         function handleTabClick(tabId, side) {
@@ -391,13 +344,13 @@
                 if(currentActiveLeftTab === tabId) { closeDrawer('left'); return; }
                 currentActiveLeftTab = tabId;
                 document.getElementById(`tab-${tabId}`).classList.add('active');
-                openDrawerContent('left', tabId);
+                openDrawer('left', tabId);
             } else {
                 document.querySelectorAll('.sidebar-tabs-right .v-tab').forEach(t => t.classList.remove('active'));
                 if(currentActiveRightTab === tabId) { closeDrawer('right'); return; }
                 currentActiveRightTab = tabId;
                 document.getElementById(`tab-${tabId}`).classList.add('active');
-                openDrawerContent('right', tabId);
+                openDrawer('right', tabId);
             }
         }
 
@@ -407,99 +360,145 @@
             else { document.querySelectorAll('.sidebar-tabs-right .v-tab').forEach(t => t.classList.remove('active')); currentActiveRightTab = null; }
         }
 
-        function openDrawerContent(side, tabId) {
+        function openDrawer(side, tabId) {
             const drawer = document.getElementById(`drawer-${side}`);
             const content = document.getElementById(`drawer-${side}-content`);
             document.getElementById(`drawer-${side}-title`).innerText = tabId.toUpperCase();
             drawer.classList.add('show');
 
             if(tabId === 'patient') {
-                content.innerHTML = `<p style="color:var(--text-muted)">Anamnèse :</p><div style="background:#0b0f17; padding:10px; border-radius:4px; font-size:0.9em; border:1px solid var(--border-color);">${gameState.activeCase.aspect}</div>`;
-            } 
-            else if(tabId === 'exam') {
                 content.innerHTML = `
-                    <div style="display:flex; flex-direction:column; gap:6px;">
-                        <button onclick="logExam('CIRCULATION', 'Marbrures franches étendant aux genoux. TRC = 4s.')" style="text-align:left; padding:10px; background:#1a2332; border:1px solid var(--border-color); color:#fff; cursor:pointer;">CIRCULATION - Examen cardiovasculaire</button>
-                        <button onclick="logExam('ABDOMEN', 'Sensibilité lombaire gauche à la percussion.')" style="text-align:left; padding:10px; background:#1a2332; border:1px solid var(--border-color); color:#fff; cursor:pointer;">ABDOMEN - Palpation abdominale</button>
-                    </div>`;
+                    <p style="color:var(--text-muted); font-size:0.85em;">Anamnèse initiale :</p>
+                    <div style="background:#0b0f17; padding:12px; border-radius:6px; border:1px solid var(--border-color); font-size:0.9em; margin-bottom:15px; color:#fff;">${gameState.activeCase.desc}</div>
+                    <button onclick="triggerAction('/api/interrogate')" style="width:100%; padding:10px; background:none; border:1px solid var(--accent-orange); color:var(--accent-orange); font-weight:bold; cursor:pointer; border-radius:4px;">🕵️ Pousser l'interrogatoire</button>
+                    <button onclick="triggerAction('/api/search-home')" style="width:100%; padding:10px; background:none; border:1px solid #9b59b6; color:#9b59b6; font-weight:bold; cursor:pointer; border-radius:4px; margin-top:8px;">🏚️ Perquisitionner le domicile</button>
+                    <button onclick="triggerAction('/api/vicodin')" style="width:100%; padding:10px; background:var(--accent-red); border:none; color:#fff; font-weight:bold; cursor:pointer; border-radius:4px; margin-top:20px;">💊 Vicodine Intuition</button>
+                `;
+            }
+            else if(tabId === 'exam') {
+                // Remplissage dynamique de tous les examens physiques requis
+                let rows = PHYSICAL_EXAMS.map(e => `
+                    <div class="exam-row" data-name="${e.name.toLowerCase()}">
+                        <span style="font-weight:600; color:#fff; font-size:0.9em;">${e.name}</span>
+                        <button class="btn-order" onclick="prescribeExam('${e.id}', '${e.name}')">Pratiquer</button>
+                    </div>
+                `).join('');
+                content.innerHTML = `<div class="search-box"><span class="search-icon">🔍</span><input type="text" id="exam-search" oninput="filterRows()" placeholder="Rechercher un appareil..." class="search-input"></div><div id="exam-rows-container">${rows}</div>`;
             }
             else if(tabId === 'investigations') {
+                // Remplissage de toutes les catégories d'examens demandées avec barres de recherche
                 content.innerHTML = `
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="exam-search" oninput="filterExams()" placeholder="Rechercher un examen (GDS, BU, ECG)..." class="search-input">
-                    </div>
-                    <div class="accordion-item">
-                        <button class="accordion-trigger" onclick="document.getElementById('b1').classList.toggle('open')">⚡ Bedside Tests <span>▼</span></button>
-                        <div class="accordion-content open" id="b1">${renderRows(EXAM_DATABASE.bedside)}</div>
-                    </div>
-                    <div class="accordion-item">
-                        <button class="accordion-trigger" onclick="document.getElementById('b2').classList.toggle('open')">🔬 Labo / Biologie <span>▼</span></button>
-                        <div class="accordion-content open" id="b2">${renderRows(EXAM_DATABASE.biology)}</div>
-                    </div>
-                    <div class="accordion-item">
-                        <button class="accordion-trigger" onclick="document.getElementById('b3').classList.toggle('open')">☢️ Imagerie <span>▼</span></button>
-                        <div class="accordion-content open" id="b3">${renderRows(EXAM_DATABASE.imaging)}</div>
-                    </div>`;
+                    <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="exam-search" oninput="filterRows()" placeholder="Rechercher un examen, bio, LCR..." class="search-input"></div>
+                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-bedside')">⚡ Bedside Tests & Échographies <span>▼</span></button><div class="accordion-content open" id="c-bedside">${renderCategoryRows(EXAM_DATABASE.bedside)}</div></div>
+                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-biology')">🔬 Biologie Générale & Urgence <span>▼</span></button><div class="accordion-content open" id="c-biology">${renderCategoryRows(EXAM_DATABASE.biology)}</div></div>
+                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-microbio')">🧫 Microbiologie & Urines <span>▼</span></button><div class="accordion-content open" id="c-microbio">${renderCategoryRows(EXAM_DATABASE.microbio)}</div></div>
+                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-lcr')">🧠 Analyse du Liquide Céphalo-Rachidien <span>▼</span></button><div class="accordion-content open" id="c-lcr">${renderCategoryRows(EXAM_DATABASE.lcr)}</div></div>
+                `;
             }
             else if(tabId === 'differential') {
                 let tags = gameState.whiteboard.map(t => `<span class="wb-tag">📌 ${t}</span>`).join('');
                 content.innerHTML = `
-                    <div class="whiteboard-box"><h4>Diagnostics Différentiels Posés</h4><div id="wb-list">${tags || 'Aucun.'}</div></div>
-                    <div style="display:flex; gap:4px;"><input type="text" id="wb-in" style="flex:1; padding:8px; background:#0b0f17; border:1px solid var(--border-color); color:#fff; border-radius:4px;"><button onclick="addWb()" style="background:var(--accent-cyan); border:none; padding:8px; border-radius:4px; cursor:pointer;">Ajouter</button></div>`;
+                    <div class="whiteboard-box"><h4>TABLEAU BLANC DIAGNOSTIQUE</h4><div id="wb-tags-box">${tags || 'Aucun.'}</div></div>
+                    <div style="display:flex; gap:5px;"><input type="text" id="wb-in" placeholder="Inscrire une hypothèse..." style="flex:1; padding:8px; background:#0b0f17; border:1px solid var(--border-color); color:#fff; border-radius:4px;"><button onclick="submitWb()" style="background:var(--accent-cyan); border:none; padding:8px; font-weight:bold; color:#000; border-radius:4px; cursor:pointer;">Poser</button></div>
+                `;
             }
             else if(tabId === 'interventions') {
-                content.innerHTML = `<button onclick="actionTherapeutic('Remplissage vasculaire massif initié')" style="width:100%; padding:10px; background:var(--accent-cyan); border:none; border-radius:4px; font-weight:bold; cursor:pointer;">💧 Lancer le Remplissage (Cristalloïdes)</button>`;
+                content.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <button onclick="executeTherapeutic('Oxygène')" style="padding:10px; background:#1e293b; color:#fff; border:1px solid var(--border-color); text-align:left; cursor:pointer;">⚡ Administrer Oxygénothérapie (Haut débit)</button>
+                        <button onclick="executeTherapeutic('Remplissage')" style="padding:10px; background:#1e293b; color:#fff; border:1px solid var(--border-color); text-align:left; cursor:pointer;">💧 Lancer Remplissage Vasculaire</button>
+                        <button onclick="executeTherapeutic('Antibiothérapie')" style="padding:10px; background:#1e293b; color:#fff; border:1px solid var(--border-color); text-align:left; cursor:pointer;">💊 Injecter Antibiothérapie Probabiliste</button>
+                    </div>`;
             }
             else if(tabId === 'handoff') {
                 content.innerHTML = `
-                    <input type="text" id="diag-final" placeholder="Saisir la pathologie principale..." style="width:100%; padding:10px; background:#0b0f17; border:1px solid var(--border-color); color:#fff; border-radius:4px; margin-bottom:10px;">
-                    <button onclick="finishCase()" style="width:100%; padding:12px; background:var(--accent-green); border:none; color:#fff; font-weight:bold; border-radius:4px; cursor:pointer;">VALIDER ET QUITTER LE DOSSIER</button>`;
+                    <p style="color:var(--text-muted); font-size:0.85em;">Formulez votre diagnostic final de sortie :</p>
+                    <input type="text" id="diag-final" placeholder="ex: Sepsis grave..." style="width:100%; padding:10px; background:#0b0f17; border:1px solid var(--border-color); color:#fff; border-radius:4px; margin-bottom:12px; box-sizing:border-box;">
+                    <button onclick="closeCase()" style="width:100%; padding:12px; background:var(--accent-green); border:none; color:#fff; font-weight:bold; cursor:pointer; border-radius:4px;">VALIDER ET CLOSER L'ÉPISODE</button>
+                `;
             }
         }
 
-        function renderRows(arr) {
-            return arr.map(i => `<div class="exam-row" data-name="${i.name.toLowerCase()}"><span>${i.name}</span><button class="btn-order" onclick="prescribe('${i.id}','${i.name}','${i.outcome}','${i.justification}')">Prescrire</button></div>`).join('');
+        function renderCategoryRows(arr) {
+            return arr.map(i => `<div class="exam-row" data-name="${i.name.toLowerCase()}"><span>${i.name}</span><button class="btn-order" onclick="prescribeExam('${i.id}', '${i.name}')">Prescrire</button></div>`).join('');
         }
 
-        function filterExams() {
-            let q = document.getElementById('exam-search').value.toLowerCase();
-            document.querySelectorAll('.exam-row').forEach(r => {
-                r.style.display = r.getAttribute('data-name').includes(q) ? 'flex' : 'none';
+        function toggleAccordion(id) { document.getElementById(id).classList.toggle('open'); }
+
+        function filterRows() {
+            let query = document.getElementById('exam-search').value.toLowerCase();
+            document.querySelectorAll('.exam-row').forEach(row => {
+                row.style.display = row.getAttribute('data-name').includes(query) ? 'flex' : 'none';
             });
         }
 
-        function prescribe(id, name, out, just) {
+        async function triggerAction(url) {
+            const res = await fetch(url, { method: 'POST' });
+            const data = await res.json();
             const term = document.getElementById('terminal-output');
-            term.innerHTML += `<p style="color:var(--accent-green)">> <b>Prescription : ${name}</b><br><span style="color:#fff">➜ Résultat : ${out}</span><br><span style="color:var(--text-muted); font-size:0.9em; font-style:italic">Recommandation : ${just}</span></p>`;
+            term.innerHTML += `<p style="color:var(--accent-yellow)">> ${data.outcome}</p>`;
+            term.innerHTML += `<p style="color:#ffb3b3; font-style:italic;">➜ ${data.hessQuote}</p>`;
             term.scrollTop = term.scrollHeight;
+            updateScope(data.activeSim.patient);
         }
 
-        function logExam(title, desc) {
+        async function prescribeExam(examKey, examName) {
+            const res = await fetch('/api/investigate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ examKey })
+            });
+            const data = await res.json();
             const term = document.getElementById('terminal-output');
-            term.innerHTML += `<p style="color:var(--accent-cyan)"><b>[Examen] ${title} :</b> ${desc}</p>`;
+            let color = data.success ? 'var(--accent-green)' : 'var(--accent-red)';
+            term.innerHTML += `
+                <p style="color:${color}">📊 <strong>[Prescription] ${examName}</strong></p>
+                <p style="color:#fff; margin-left:10px;">➜ Résultat clinique : ${data.outcome}</p>
+                <p style="color:var(--text-muted); font-size:0.9em; margin-left:10px; font-style:italic;">👉 Justification ECN : ${data.justification}</p>
+            `;
             term.scrollTop = term.scrollHeight;
+            updateScope(data.activeSim.patient);
         }
 
-        function addWb() {
-            let val = document.getElementById('wb-in').value.trim();
-            if(!val) return;
-            gameState.whiteboard.push(val);
-            openDrawerContent('left', 'differential');
-        }
-
-        function actionTherapeutic(msg) {
+        async function executeTherapeutic(order) {
+            const res = await fetch('/api/execute', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ order })
+            });
+            const data = await res.json();
             const term = document.getElementById('terminal-output');
-            term.innerHTML += `<p style="color:var(--accent-yellow)">⚡ Action : ${msg}</p>`;
+            term.innerHTML += `<p style="color:var(--accent-yellow)">⚡ <strong>Action : ${order}</strong> -> ${data.outcome}</p>`;
             term.scrollTop = term.scrollHeight;
+            updateScope(data.activeSim.patient);
         }
 
-        function finishCase() {
+        async function submitWb() {
+            const input = document.getElementById('wb-in');
+            const hypothesis = input.value.trim();
+            if(!hypothesis) return;
+
+            const res = await fetch('/api/whiteboard/add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ hypothesis })
+            });
+            const data = await res.json();
+            gameState.whiteboard = data.activeSim.whiteboard;
+            openDrawer('left', 'differential');
+        }
+
+        async function closeCase() {
+            const hypothesis = document.getElementById('diag-final').value.trim();
+            const res = await fetch('/api/diagnose', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ hypothesis })
+            });
+            const data = await res.json();
             clearInterval(timerInterval);
-            alert("Dossier transmis au réanimateur de garde ! Votre performance a été enregistrée sur votre tableau de bord.");
-            document.getElementById('simulation-gameplay').style.display = 'none';
-            document.getElementById('simulation-setup').style.display = 'flex';
-            switchMainView('dashboard');
+            alert(`Fin de la simulation.\nNote de l'épisode : ${data.finalNote}/20\nDiagnostic requis : ${data.correctAnswer}`);
+            window.location.reload();
         }
     </script>
 </body>
