@@ -1,18 +1,9 @@
-{{
-  "name": "dr-hess-game",
+{
+  "name": "simulateur-dechocage",
   "version": "1.0.0",
-  "main": "src/index.ts",
-  "dependencies": {
-    "@prisma/client": "^5.0.0"
-  },
-  "devDependencies": {
-    "typescript": "^5.4.0",
-    "ts-node": "^10.9.2",
-    "@types/node": "^20.0.0",
-    "prisma": "^5.0.0"
-  },
+  "description": "Simulateur du Dr Hess",
+  "main": "server.js",
   "scripts": {
-    "build": "prisma generate",
-    "start": "ts-node src/index.ts"
+    "start": "node server.js"
   }
 }
