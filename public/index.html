@@ -3,75 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur Déchocage - Dr Hess</title>
+    <title>Protocoles EDN - Dr Hess</title>
     <style>
-        body { background-color: #1a1a1a; color: #e0e0e0; font-family: 'Courier New', Courier, monospace; padding: 20px; max-width: 800px; margin: 0 auto; }
+        body { background-color: #1a1a1a; color: #e0e0e0; font-family: 'Courier New', Courier, monospace; padding: 20px; max-width: 1000px; margin: 0 auto; }
         h1, h2, h3 { color: #4da6ff; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        
+        /* Système d'Onglets */
+        .tabs { display: flex; border-bottom: 2px solid #333; margin-bottom: 20px; }
+        .tab-btn { background: #222; color: #888; border: 1px solid #333; border-bottom: none; padding: 12px 20px; cursor: pointer; font-size: 1em; font-family: inherit; margin-right: 5px; border-radius: 5px 5px 0 0; }
+        .tab-btn.active { background: #333; color: #4da6ff; border-top: 2px solid #4da6ff; font-weight: bold; }
+        .tab-content { display: none; background: #222; padding: 20px; border-radius: 0 0 5px 5px; border: 1px solid #333; border-top: none; }
+        .tab-content.active { display: block; }
+
+        /* Style Box Déchocage (Simulateur) */
         .monitor { background-color: #000; border: 2px solid #333; border-radius: 8px; padding: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; }
         .vital { font-size: 1.5em; }
         .vital-fc { color: #ff4d4d; }
         .vital-ta { color: #ffff4d; }
         .vital-spo2 { color: #4dff4d; }
-        .dr-hess { background-color: #2b0000; border-left: 5px solid #ff0000; padding: 15px; margin-bottom: 20px; font-size: 1.2em; font-style: italic; }
+        .dr-hess { background-color: #2b0000; border-left: 5px solid #ff0000; padding: 15px; margin-bottom: 20px; font-size: 1.1em; font-style: italic; }
         .actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        button { background-color: #333; color: #fff; border: 1px solid #555; padding: 15px; cursor: pointer; font-size: 1em; font-family: 'Courier New', Courier, monospace; transition: 0.2s; }
-        button:hover { background-color: #555; }
+        button.action-btn { background-color: #333; color: #fff; border: 1px solid #555; padding: 15px; cursor: pointer; font-family: inherit; }
+        button.action-btn:hover { background-color: #555; }
         button:disabled { background-color: #111; color: #444; cursor: not-allowed; }
-        .errors { background-color: #111; padding: 15px; border: 1px solid #333; }
+
+        /* Listes et Dossiers */
         .error-item { color: #ff9999; margin-bottom: 5px; }
+        .case-card { background: #111; border: 1px solid #444; padding: 15px; margin-bottom: 15px; border-radius: 4px; }
+        .case-card button { background: #4da6ff; color: black; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; }
+        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .stat-card { background: #111; padding: 20px; border-radius: 5px; border-left: 4px solid #4da6ff; }
+        textarea { width: 100%; height: 150px; background: #000; color: #4dff4d; border: 1px solid #333; padding: 10px; font-family: inherit; resize: none; }
     </style>
 </head>
 <body>
-    <h1>Déchocage - Salle 1</h1>
-    <div class="dr-hess">
-        <strong>Dr Hess :</strong> <span id="hess-quote">Bienvenue en déchocage. Essayez de ne pas tuer ce patient en moins de 5 minutes...</span>
+
+    <h1>🩺 Diagnostica: EDN Protocol</h1>
+
+    <!-- Onglets de Navigation -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('accueil')">Accueil & Stats</button>
+        <button class="tab-btn" onclick="switchTab('cas')">Cas Cliniques</button>
+        <button class="tab-btn" onclick="switchTab('simulation')">Box de Déchocage</button>
+        <button class="tab-btn" onclick="switchTab('notes')">Suivi des Notes</button>
     </div>
-    <div class="monitor">
-        <div class="vital vital-fc">FC: <span id="fc">130</span> bpm</div>
-        <div class="vital vital-ta">TA: <span id="ta">80/50</span></div>
-        <div class="vital vital-spo2">SpO2: <span id="spo2">88</span>%</div>
+
+    <!-- ONGLET 1: ACCUEIL & STATS -->
+    <div id="accueil" class="tab-content active">
+        <h2>Tableau de Bord du Praticien</h2>
+        <p>Bienvenue sur l'environnement de simulation critique. Vos performances sont enregistrées pour validation du protocole EDN.</p>
+        <div class="stat-grid">
+            <div class="stat-card">
+                <h3>Statistiques Générales</h3>
+                <p>🔹 Taux de survie actuel : <span id="stat-survival">75%</span></p>
+                <p>🔹 Cas cliniques résolus : <span id="stat-resolved">3 / 4</span></p>
+                <p>🔹 Score global Dr Hess : <span id="stat-score">12/20</span> ("Peut mieux faire")</p>
+            </div>
+            <div class="stat-card">
+                <h3>Dernières Remarques du Service</h3>
+                <p style="color: #ff9999; font-style: italic;">"Arrêtez de choquer les patients en rythme sinusal, par pitié." — Dr Hess</p>
+            </div>
+        </div>
     </div>
-    <div id="patient-status" style="text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 1.2em;">Statut : VIVANT</div>
-    <div class="actions">
-        <button id="btn-oxygen" onclick="sendAction('oxygen')">Oxygène (Masque HC)</button>
-        <button id="btn-adrenaline" onclick="sendAction('adrenaline')">Adrénaline 1mg</button>
-        <button id="btn-shock" onclick="sendAction('shock')">Choc 200J</button>
+
+    <!-- ONGLET 2: CAS CLINIQUES -->
+    <div id="cas" class="tab-content">
+        <h2>Sélectionner un Cas Critique</h2>
+        
+        <div class="case-card">
+            <h3>Cas #1 : Choc Cardiogénique secondaire à un IDM</h3>
+            <p><strong>Présentation :</strong> Patient de 64 ans se plignant d'une douleur thoracique constrictive depuis 3h. Dyspnée majeure.</p>
+            <button onclick="selectCase(1)">Prendre en charge le lit 1</button>
+        </div>
+
+        <div class="case-card">
+            <h3>Cas #2 : Choc Anaphylactique Grade IV</h3>
+            <p><strong>Présentation :</strong> Patiente de 22 ans admise suite à l'injection d'un antibiotique. Hypotension majeure et sifflements respiratoires.</p>
+            <button onclick="selectCase(2)" style="background:#555; cursor:not-allowed;" disabled>Verrouillé (Niveau requis insuffisant)</button>
+        </div>
     </div>
-    <div class="errors">
-        <h3>Dossier d'erreurs (Mortalité & Morbidité)</h3>
-        <ul id="error-list"><li>Aucune erreur documentée... pour l'instant.</li></ul>
+
+    <!-- ONGLET 3: SIMULATION DE DÉCHOCAGE -->
+    <div id="simulation" class="tab-content">
+        <h2>Déchocage - Salle 1</h2>
+        <div class="dr-hess">
+            <strong>Dr Hess :</strong> <span id="hess-quote">Bienvenue en déchocage. Essayez de ne pas tuer ce patient en moins de 5 minutes...</span>
+        </div>
+
+        <div class="monitor">
+            <div class="vital vital-fc">FC: <span id="fc">130</span> bpm</div>
+            <div class="vital vital-ta">TA: <span id="ta">80/50</span></div>
+            <div class="vital vital-spo2">SpO2: <span id="spo2">88</span>%</div>
+        </div>
+        <div id="patient-status" style="text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 1.2em;">Statut : VIVANT</div>
+
+        <div class="actions">
+            <button id="btn-oxygen" class="action-btn" onclick="sendAction('oxygen')">Oxygène (Masque HC)</button>
+            <button id="btn-adrenaline" class="action-btn" onclick="sendAction('adrenaline')">Adrénaline 1mg</button>
+            <button id="btn-shock" class="action-btn" onclick="sendAction('shock')">Choc 200J</button>
+        </div>
+
+        <div class="errors">
+            <h3>Dossier d'erreurs (Mortalité & Morbidité)</h3>
+            <ul id="error-list">
+                <li>Aucune erreur documentée... pour l'instant.</li>
+            </ul>
+        </div>
     </div>
+
+    <!-- ONGLET 4: SUIVI DES NOTES -->
+    <div id="notes" class="tab-content">
+        <h2>Carnet d'Observations Cliniques</h2>
+        <p>Prenez vos notes de révision EDN ou consignez ici vos observations sur les erreurs passées :</p>
+        <textarea id="user-notes" placeholder="Ex: Toujours vérifier le scope avant d'envoyer 200 Joules... L'adrénaline pure accélère la FC..."></textarea>
+        <br><br>
+        <button onclick="saveNotes()" style="padding: 10px 20px; background: #4da6ff; border:none; color:black; font-weight:bold; cursor:pointer;">Enregistrer les notes</button>
+        <span id="save-confirm" style="margin-left:15px; color:#4dff4d;"></span>
+    </div>
+
     <script>
+        // Gestion des Onglets
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Sauvegarde locale des notes
+        function saveNotes() {
+            const notes = document.getElementById('user-notes').value;
+            localStorage.setItem('edn_notes', notes);
+            const conf = document.getElementById('save-confirm');
+            conf.innerText = "Notes sauvegardées en local !";
+            setTimeout(() => conf.innerText = "", 2000);
+        }
+
+        // Charger les notes au démarrage
+        if(localStorage.getItem('edn_notes')) {
+            document.getElementById('user-notes').value = localStorage.getItem('edn_notes');
+        }
+
+        function selectCase(id) {
+            alert("Chargement du cas clinique #" + id + "... Patient transféré au Box de Déchocage.");
+            switchTab('simulation');
+            // Met en surbrillance l'onglet déchocage
+            document.querySelectorAll('.tab-btn')[2].click();
+        }
+
+        // Boucles de rafraîchissement automatique
         setInterval(fetchVitals, 2000);
         setInterval(fetchErrors, 5000);
+
         function updateMonitor(patient) {
             document.getElementById('fc').innerText = patient.heartRate;
             document.getElementById('ta').innerText = patient.bloodPressure;
             document.getElementById('spo2').innerText = patient.oxygen;
+            
             const statusDiv = document.getElementById('patient-status');
             if (!patient.isAlive) {
                 statusDiv.innerText = "Statut : DÉCÉDÉ";
                 statusDiv.style.color = "#ff0000";
                 disableButtons();
-            } else { statusDiv.innerText = "Statut : VIVANT"; statusDiv.style.color = "#4dff4d"; }
+            } else {
+                statusDiv.innerText = "Statut : VIVANT";
+                statusDiv.style.color = "#4dff4d";
+            }
         }
+
         function disableButtons() {
             document.getElementById('btn-oxygen').disabled = true;
             document.getElementById('btn-adrenaline').disabled = true;
             document.getElementById('btn-shock').disabled = true;
         }
+
         async function fetchVitals() {
             try {
                 const response = await fetch('/api/vitals');
                 const patient = await response.json();
                 updateMonitor(patient);
-            } catch (err) { console.error("Erreur de connexion au moniteur", err); }
+            } catch (err) { console.error("Erreur moniteur", err); }
         }
+
         async function fetchErrors() {
             try {
                 const response = await fetch('/api/errors');
                 const errors = await response.json();
                 const list = document.getElementById('error-list');
+                
                 if (errors.length > 0) {
                     list.innerHTML = '';
                     errors.forEach(err => {
@@ -81,8 +201,9 @@
                         list.appendChild(li);
                     });
                 }
-            } catch (err) { console.error("Erreur de récupération du dossier", err); }
+            } catch (err) { console.error("Erreur dossier", err); }
         }
+
         async function sendAction(actionType) {
             try {
                 const response = await fetch('/api/action', {
@@ -94,7 +215,7 @@
                 if (data.quote) { document.getElementById('hess-quote').innerText = data.quote; }
                 updateMonitor(data.patient);
                 fetchErrors();
-            } catch (err) { console.error("Erreur lors de l'action", err); }
+            } catch (err) { console.error("Erreur action", err); }
         }
     </script>
 </body>
