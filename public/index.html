@@ -5,153 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulateur Déchocage - Dr Hess</title>
     <style>
-        body {
-            background-color: #1a1a1a;
-            color: #e0e0e0;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        h1, h2, h3 {
-            color: #4da6ff;
-            border-bottom: 1px solid #333;
-            padding-bottom: 5px;
-        }
-        .monitor {
-            background-color: #000;
-            border: 2px solid #333;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .vital {
-            font-size: 1.5em;
-        }
+        body { background-color: #1a1a1a; color: #e0e0e0; font-family: 'Courier New', Courier, monospace; padding: 20px; max-width: 800px; margin: 0 auto; }
+        h1, h2, h3 { color: #4da6ff; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .monitor { background-color: #000; border: 2px solid #333; border-radius: 8px; padding: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+        .vital { font-size: 1.5em; }
         .vital-fc { color: #ff4d4d; }
         .vital-ta { color: #ffff4d; }
         .vital-spo2 { color: #4dff4d; }
-        
-        .dr-hess {
-            background-color: #2b0000;
-            border-left: 5px solid #ff0000;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-            font-style: italic;
-        }
-        
-        .actions {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        button {
-            background-color: #333;
-            color: #fff;
-            border: 1px solid #555;
-            padding: 15px;
-            cursor: pointer;
-            font-size: 1em;
-            font-family: 'Courier New', Courier, monospace;
-            transition: 0.2s;
-        }
-        button:hover {
-            background-color: #555;
-        }
-        button:disabled {
-            background-color: #111;
-            color: #444;
-            cursor: not-allowed;
-        }
-        
-        .errors {
-            background-color: #111;
-            padding: 15px;
-            border: 1px solid #333;
-        }
-        .error-item {
-            color: #ff9999;
-            margin-bottom: 5px;
-        }
+        .dr-hess { background-color: #2b0000; border-left: 5px solid #ff0000; padding: 15px; margin-bottom: 20px; font-size: 1.2em; font-style: italic; }
+        .actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        button { background-color: #333; color: #fff; border: 1px solid #555; padding: 15px; cursor: pointer; font-size: 1em; font-family: 'Courier New', Courier, monospace; transition: 0.2s; }
+        button:hover { background-color: #555; }
+        button:disabled { background-color: #111; color: #444; cursor: not-allowed; }
+        .errors { background-color: #111; padding: 15px; border: 1px solid #333; }
+        .error-item { color: #ff9999; margin-bottom: 5px; }
     </style>
 </head>
 <body>
-
     <h1>Déchocage - Salle 1</h1>
-
     <div class="dr-hess">
         <strong>Dr Hess :</strong> <span id="hess-quote">Bienvenue en déchocage. Essayez de ne pas tuer ce patient en moins de 5 minutes...</span>
     </div>
-
     <div class="monitor">
         <div class="vital vital-fc">FC: <span id="fc">130</span> bpm</div>
         <div class="vital vital-ta">TA: <span id="ta">80/50</span></div>
         <div class="vital vital-spo2">SpO2: <span id="spo2">88</span>%</div>
     </div>
-    <div id="patient-status" style="text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 1.2em;">
-        Statut : VIVANT
-    </div>
-
+    <div id="patient-status" style="text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 1.2em;">Statut : VIVANT</div>
     <div class="actions">
         <button id="btn-oxygen" onclick="sendAction('oxygen')">Oxygène (Masque HC)</button>
         <button id="btn-adrenaline" onclick="sendAction('adrenaline')">Adrénaline 1mg</button>
         <button id="btn-shock" onclick="sendAction('shock')">Choc 200J</button>
     </div>
-
     <div class="errors">
         <h3>Dossier d'erreurs (Mortalité & Morbidité)</h3>
-        <ul id="error-list">
-            <li>Aucune erreur documentée... pour l'instant.</li>
-        </ul>
+        <ul id="error-list"><li>Aucune erreur documentée... pour l'instant.</li></ul>
     </div>
-
     <script>
-        // Actualisation des constantes vitales toutes les 2 secondes
         setInterval(fetchVitals, 2000);
         setInterval(fetchErrors, 5000);
-
         function updateMonitor(patient) {
             document.getElementById('fc').innerText = patient.heartRate;
             document.getElementById('ta').innerText = patient.bloodPressure;
             document.getElementById('spo2').innerText = patient.oxygen;
-            
             const statusDiv = document.getElementById('patient-status');
             if (!patient.isAlive) {
                 statusDiv.innerText = "Statut : DÉCÉDÉ";
                 statusDiv.style.color = "#ff0000";
                 disableButtons();
-            } else {
-                statusDiv.innerText = "Statut : VIVANT";
-                statusDiv.style.color = "#4dff4d";
-            }
+            } else { statusDiv.innerText = "Statut : VIVANT"; statusDiv.style.color = "#4dff4d"; }
         }
-
         function disableButtons() {
             document.getElementById('btn-oxygen').disabled = true;
             document.getElementById('btn-adrenaline').disabled = true;
             document.getElementById('btn-shock').disabled = true;
         }
-
         async function fetchVitals() {
             try {
                 const response = await fetch('/api/vitals');
                 const patient = await response.json();
                 updateMonitor(patient);
-            } catch (err) {
-                console.error("Erreur de connexion au moniteur", err);
-            }
+            } catch (err) { console.error("Erreur de connexion au moniteur", err); }
         }
-
         async function fetchErrors() {
             try {
                 const response = await fetch('/api/errors');
                 const errors = await response.json();
                 const list = document.getElementById('error-list');
-                
                 if (errors.length > 0) {
                     list.innerHTML = '';
                     errors.forEach(err => {
@@ -161,11 +81,8 @@
                         list.appendChild(li);
                     });
                 }
-            } catch (err) {
-                console.error("Erreur de récupération du dossier", err);
-            }
+            } catch (err) { console.error("Erreur de récupération du dossier", err); }
         }
-
         async function sendAction(actionType) {
             try {
                 const response = await fetch('/api/action', {
@@ -173,23 +90,11 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: actionType })
                 });
-                
                 const data = await response.json();
-                
-                // Mise à jour de la réplique du Dr Hess
-                if (data.quote) {
-                    document.getElementById('hess-quote').innerText = data.quote;
-                }
-                
-                // Mise à jour immédiate du moniteur
+                if (data.quote) { document.getElementById('hess-quote').innerText = data.quote; }
                 updateMonitor(data.patient);
-                
-                // Récupération des erreurs au cas où l'action en aurait généré une
                 fetchErrors();
-                
-            } catch (err) {
-                console.error("Erreur lors de l'action", err);
-            }
+            } catch (err) { console.error("Erreur lors de l'action", err); }
         }
     </script>
 </body>
