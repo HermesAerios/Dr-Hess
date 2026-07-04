@@ -4,12 +4,10 @@ const fs = require('fs');
 const path = require('path');
 const game = require('./gameLogic');
 
-// Démarrage de l'état du patient
 game.startTimeLoop();
 
 const server = http.createServer((req, res) => {
     if (req.url === '/' && req.method === 'GET') {
-        // Lecture du fichier HTML séparé
         fs.readFile(path.join(__dirname, 'public', 'index.html'), (err, content) => {
             if (err) {
                 res.writeHead(500);
