@@ -1,9 +1,13 @@
 {
-  "name": "simulateur-dechocage",
+  "name": "Dr Hess",
   "version": "1.0.0",
-  "description": "Simulateur du Dr Hess",
+  "description": "Simulateur EDN - Dr Hess",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
   }
 }
