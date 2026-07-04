@@ -19,10 +19,14 @@ let activeSim = {
     investigations: {},
     history: [],
     score: 100,
-    turns: 0
+    turns: 0,
+    // Nouveautés Étape 3
+    liesDiscovered: false,
+    searchedHome: false,
+    interrogationCount: 0
 };
 
-// Base de données des scénarios EDN complexes
+// Base de données des scénarios EDN avec secrets intégrés
 const ednScenarios = {
     "158": { 
         name: "Mme Joly, 74 ans", 
@@ -30,6 +34,10 @@ const ednScenarios = {
         fc: 125, ta: "82/46", spo2: 90,
         correctDiag: "Sepsis grave",
         lethalWrongDiags: ["Poussée de Lupus", "Insuffisance cardiaque isolée"],
+        // Étape 3 : Secrets (Everybody Lies)
+        patientSecret: "La patiente prétend qu'elle a juste attrapé un 'petit coup de froid' hier.",
+        interrogateClue: "En insistant, sa fille avoue qu'elle avait des brûlures urinaires depuis 4 jours qu'elle refusait de soigner par peur des antibiotiques.",
+        searchClue: "L'externe fouille son sac à main : il trouve des protections urinaires souillées et une boîte d'antalgiques vide. La porte d'entrée est clairement urinaire (Item 158 - Pyélonéphrite).",
         investigations: {
             "hemocultures": { tier: 1, res: "Positives à E. Coli (2 flacons aérobie/anaérobie).", msg: "Essentiel ! Toujours faire les hémocultures AVANT l'antibiothérapie (Item 158)." },
             "lactates": { tier: 1, res: "Lactatémie à 4.5 mmol/L (Seuil critique > 2).", msg: "Parfait pour évaluer l'hypoperfusion tissulaire." },
@@ -44,6 +52,10 @@ const ednScenarios = {
         fc: 98, ta: "145/92", spo2: 96,
         correctDiag: "SCA ST+",
         lethalWrongDiags: ["Dissection aortique", "Pneumothorax"],
+        // Étape 3 : Secrets (Everybody Lies)
+        patientSecret: "Il jure qu'il est non-fumeur, qu'il mange sain et n'a aucun stress.",
+        interrogateClue: "Sous la pression, il admet avoir eu une violente dispute au travail et avoir pris une 'substance' pour tenir le coup.",
+        searchClue: "L'externe fouille sa voiture : il trouve un pochon de cocaïne vide et 3 paquets de cigarettes cachés sous le siège. Facteur de risque majeur de spasme coronaire / SCA précoce (Item 339).",
         investigations: {
             "ecg": { tier: 1, res: "Sus-décalage du segment ST de 3mm en D2, D3, aVF avec miroir en D1, aVL.", msg: "FAIT EN MOINS DE 10 MINUTES. Vous avez votre diagnostic de Infarctus du myocarde inférieur !" },
             "troponine": { tier: 2, res: "En attente... (Le laboratoire prend 45 min).", msg: "Sur un ST+, on n'attend PAS la troponine pour envoyer en coronarographie ! Perte de chance pour le muscle cardiaque." },
@@ -68,7 +80,7 @@ app.post('/api/start-case', (req, res) => {
             fc: Math.round(sc.fc * multiplier),
             ta: sc.ta,
             spo2: Math.max(75, Math.round(sc.spo2 / multiplier)),
-            desc: sc.desc
+            desc: `${sc.desc} -> Déclaration initiale du patient : "${sc.patientSecret}"`
         },
         whiteboard: [],
         correctDiag: sc.correctDiag,
@@ -76,10 +88,60 @@ app.post('/api/start-case', (req, res) => {
         investigations: sc.investigations,
         history: ["Patient admis en salle de déchocage."],
         score: 100,
-        turns: 0
+        turns: 0,
+        // Étape 3
+        liesDiscovered: false,
+        searchedHome: false,
+        interrogationCount: 0
     };
 
     res.json(activeSim);
+});
+
+// Route Étape 3 : Pousser l'interrogatoire (Anamnèse ciblée)
+app.post('/api/interrogate', (req, res) => {
+    const sc = ednScenarios[activeSim.itemId];
+    activeSim.turns++;
+    activeSim.interrogationCount++;
+
+    let outcome = "";
+    let hessQuote = "";
+
+    if (activeSim.interrogationCount === 1) {
+        activeSim.score += 5;
+        outcome = `[Anamnèse poussée] ${sc.interrogateClue}`;
+        hessQuote = "Dr House : Étonnant, non ? Les gens oublient toujours de mentionner ce qui pourrait les sauver.";
+        activeSim.liesDiscovered = true;
+    } else {
+        activeSim.score -= 5;
+        outcome = "[Anamnèse] Le patient s'énerve : 'Laissez-moi tranquille, je vous ai déjà tout dit !'";
+        hessQuote = "Dr House : Vous le harcelez. À ce rythme, sa tension va grimper plus vite que votre score.";
+    }
+
+    activeSim.history.push(outcome);
+    res.json({ activeSim, outcome, hessQuote });
+});
+
+// Route Étape 3 : Perquisition environnementale
+app.post('/api/search-home', (req, res) => {
+    const sc = ednScenarios[activeSim.itemId];
+    activeSim.turns++;
+    
+    let outcome = "";
+    let hessQuote = "";
+
+    if (!activeSim.searchedHome) {
+        activeSim.searchedHome = true;
+        activeSim.score += 10; // Récompensé car capital dans l'univers de House
+        outcome = `[Perquisition Externe] ${sc.searchClue}`;
+        hessQuote = "Dr House : Voilà pourquoi on enfreint la loi. La vérité est dans les poubelles, jamais dans la bouche du malade.";
+    } else {
+        outcome = "[Perquisition] L'externe est déjà sur place, il ne trouve rien d'autre à part de la poussière.";
+        hessQuote = "Dr House : Arrêtez de vider son appartement et concentrez-vous sur ses organes.";
+    }
+
+    activeSim.history.push(outcome);
+    res.json({ activeSim, outcome, hessQuote });
 });
 
 // Route pour ajouter une hypothèse au Tableau Blanc
