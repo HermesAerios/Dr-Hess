@@ -37,10 +37,10 @@
         button { padding: 12px 25px; background: #00e5ff; border: none; color: #000; font-weight: bold; cursor: pointer; font-family: inherit; font-size: 1em; border-radius: 4px; }
         button:hover { background: #00b3cc; }
 
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; border-bottom: 1px solid #222; text-align: left; }
-        th { color: #00e5ff; background: #000; }
-        progress { width: 100%; height: 12px; }
+        /* Module d'investigation d'ambiance */
+        .investigation-panel { display: flex; gap: 10px; margin-bottom: 20px; background: #1a2233; padding: 15px; border-radius: 5px; border: 1px dashed #00e5ff; }
+        .btn-house-action { background: #e67e22; color: #000; font-weight: bold; }
+        .btn-house-action:hover { background: #d35400; }
     </style>
 </head>
 <body>
@@ -87,6 +87,13 @@
             <div class="param spo2">SpO2: <span id="scope-spo2">--</span> %</div>
         </div>
 
+        <!-- ÉTAPE 3 : MODULE EVERYBODY LIES -->
+        <div class="investigation-panel">
+            <span style="color: #ff9900; font-weight: bold; display: flex; align-items: center; padding-right: 10px;">🕵️‍♂️ INVESTIGATION DE TERRAIN :</span>
+            <button class="btn-house-action" onclick="interrogatePatient()">Pousser l'interrogatoire</button>
+            <button class="btn-house-action" onclick="searchHome()" style="background:#9b59b6;">Fouiller le domicile / Effets personnels</button>
+        </div>
+
         <!-- Layout dynamique : Tableau blanc + Description -->
         <div class="grid-layout">
             <!-- LE TABLEAU BLANC -->
@@ -111,7 +118,7 @@
             <strong>👨‍⚕️ Dr House :</strong> <span id="house-feedback">En attente d'un patient. Ne restez pas planté là.</span>
         </div>
 
-        <!-- PRESCRIPTION EXAMENS EDN (Étape 2) -->
+        <!-- PRESCRIPTION EXAMENS EDN -->
         <div style="background: #000; border: 1px solid #00e5ff; padding: 15px; margin-bottom: 25px; border-radius: 5px;">
             <h3 style="color: #00e5ff; margin-top: 0;">🔬 PRESCRIPTION LABO & IMAGERIE (Rigueur HAS)</h3>
             <p style="font-size: 0.85em; color: #888; margin-bottom: 12px;">Exemples requis par le programme : "ecg", "lactates", "hemocultures", "gaze du sang"...</p>
@@ -147,7 +154,7 @@
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            event.currentTarget.classList.add('active');
+            if (event) event.currentTarget.classList.add('active');
         }
 
         async function startMedicalCase() {
@@ -170,7 +177,7 @@
             document.getElementById('patient-presentation').innerText = data.patient.desc;
             document.getElementById('whiteboard-list').innerHTML = "";
             document.getElementById('clinical-log').innerHTML = "<p>[Système] Monitoring démarré. Patient scopé.</p>";
-            document.getElementById('house-feedback').innerText = "Remplissez le tableau blanc avec vos suspicions avant de commettre un meurtre par incompétence.";
+            document.getElementById('house-feedback').innerText = "Remplissez le tableau blanc avec vos suspicions. Rappelez-vous : tout le monde ment.";
 
             // Timer
             clearInterval(timerInterval);
@@ -183,6 +190,27 @@
             }, 1000);
 
             switchTab('simulation');
+        }
+
+        // Fonctions de l'Étape 3
+        async function interrogatePatient() {
+            const res = await fetch('/api/interrogate', { method: 'POST' });
+            const data = await res.json();
+            updateLogsAndViews(data, "#e67e22", "Interrogatoire");
+        }
+
+        async function searchHome() {
+            const res = await fetch('/api/search-home', { method: 'POST' });
+            const data = await res.json();
+            updateLogsAndViews(data, "#9b59b6", "Perquisition");
+        }
+
+        function updateLogsAndViews(data, color, type) {
+            const logBox = document.getElementById('clinical-log');
+            logBox.innerHTML += `<p style="color:${color};">> Action : ${type}</p>`;
+            logBox.innerHTML += `<p style="color:#fff;">${data.outcome}</p>`;
+            logBox.scrollTop = logBox.scrollHeight;
+            document.getElementById('house-feedback').innerText = data.hessQuote;
         }
 
         async function addHypothesis() {
@@ -225,7 +253,7 @@
             logBox.innerHTML += `<p style="color:#fff;">[Résultat] ${data.outcome}</p>`;
             logBox.scrollTop = logBox.scrollHeight;
 
-            document.getElementById('house-feedback').innerText = data.activeSim.score <= 40 ? "Dr House : Vos prescriptions sont pathétiques." : data.hessQuote;
+            document.getElementById('house-feedback').innerText = data.hessQuote;
             input.value = "";
         }
 
