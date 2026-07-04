@@ -31,6 +31,66 @@ const EXAM_CATALOG = {
 };
 
 const ednScenarios = {
+   "24": { 
+        name: "Amandine L., 26 ans", 
+        type: "Fièvre et contractions au 3ème trimestre (Items 23 / 24)",
+        desc: "Amenée par le SAMU à 31 SA + 4 jours pour de violentes douleurs abdominales intermittentes et des vomissements. Elle déclare : 'C'est juste une vilaine grippe, j'ai de la fièvre depuis ce matin. Ne touchez pas à mon ventre, j'ai trop mal.'", 
+        // Constantes Hospitalières Réalistes (Rigueur ECN)
+        fc: 118, 
+        ta: "148/95", // HTA sous-jacente masquée par la douleur
+        spo2: 95, 
+        fr: 24, 
+        temp: 38.6, 
+        dextro: 5.2, 
+        aspect: "Faciès prostré, angoissé, sueurs profuses. Hauteur utérine mesurée à 31 cm (normale pour le terme). Utérus sensible entre les contractions.",
+        correctDiag: "Chorioamniotite", // Diagnostic EDN attendu
+        lethalWrongDiags: ["Appendicite aiguë", "Hématome rétroplacentaire"],
+        
+        // Étape 3 : Non-linéarité et secrets (Everybody Lies)
+        patientSecret: "C'est juste une vilaine grippe, j'ai de la fièvre depuis ce matin.",
+        interrogateEffect: (sim) => {
+            if (!sim.liesDiscovered) {
+                sim.liesDiscovered = true;
+                sim.patient.fr = 28; // Polypnée aggravée
+                sim.patient.fc = 135; // Tachycardie réflexe
+                return {
+                    outcome: "[ANAMNÈSE AGRESSIVE] Vous la poussez à bout. En larmes, elle avoue : 'D'accord ! J'ai rompu ma poche des eaux avant-hier soir à la maison... Je n'ai rien dit parce que je fume beaucoup de cannabis et j'avais peur qu'on me retire mon bébé à la maternité !'",
+                    hess: "Dr Hess : Magique. Une Rupture Prématurée des Membranes (RPM) cachée depuis 48h à 31 SA (Item 24). La barrière stérile est rompue, les bactéries vaginales ont colonisé l'amnios. Vous avez un incendie microbiologique intra-utérin à éteindre d'urgence !"
+                };
+            }
+            return { outcome: "[Anamnèse] La patiente gémit et refuse de parler davantage, focalisée sur ses vagues utérines.", hess: "Dr Hess : Vous connaissez son secret. Arrêtez de bavarder, agissez." };
+        },
+        searchEffect: (sim) => {
+            if (!sim.searchedHome) {
+                sim.searchedHome = true;
+                sim.score += 5;
+                return {
+                    outcome: "[PERQUISITION DOMICILE] Votre externe fouille son sac de maternité resté dans le couloir : il y trouve un pochon de têtes de cannabis (FR d'accouchement prématuré) et des serviettes hygiéniques totalement trempées d'un liquide teinté, d'odeur fétide.",
+                    hess: "Dr Hess : Du liquide amniotique fétide dans le sac. Ça confirme la rupture prolongée des membranes. Le piège se referme."
+                };
+            }
+            return { outcome: "[Perquisition] Rien de plus.", hess: "Dr Hess : Inutile de fouiller deux fois." };
+        },
+        
+        // Étape 4 : L'Épiphanie de Hess
+        epiphany: "Vous observez un externe qui essaie de refermer un bocal de cornichons dont le joint en caoutchouc s'est liquéfié : le vinaigre coule et empeste la pièce. Flash mental. L'utérus d'Amandine n'est pas en train de faire une simple crise contractile idiopathique, c'est son liquide amniotique protecteur qui a été infecté à cause du joint rompu (la RPM) ! La fièvre et la douleur permanente, c'est l'infection de l'œuf ! (Item 24 / Chorioamniotite). Tocolyser ce vagin est un arrêt de mort pour le fœtus !",
+        
+        // Matrice Para-clinique Exhaustive (Régulation HAS)
+        usefulExams: {
+            "ecg": { tier: 2, res: "Tachycardie sinusale à 118 bpm, pas de trouble de conduction.", justification: "PEU UTILE : Examen de routine devant une tachycardie, mais n'oriente pas la pathologie obstétricale." },
+            "lactates": { tier: 2, res: "Lactates à 1.8 mmol/L.", justification: "UTILE : Élimine un état de choc systémique profond (Sepsis-3) pour le moment." },
+            "bu": { tier: 2, res: "Traces de leucocytes, nitrites négatifs, pas de protéinurie.", justification: "ÉCARTÉ : Permet d'éliminer une pyélonéphrite aiguë (principal diagnostic différentiel de fièvre au 3ème trimestre)." },
+            "nfs": { tier: 1, res: "Hémoglobine à 11.2 g/dL (normal pour le 3e trimestre), Leucocytes à 16 500/mm3 avec hyperleucocytose à PNN.", justification: "CRITIQUE : Confirme le syndrome infectieux biologique, même si une hyperleucocytose modérée est physiologique en fin de grossesse." },
+            "crp": { tier: 1, res: "CRP élevée à 84 mg/L.", justification: "CRITIQUE : Confirme le syndrome inflammatoire aigu majeur en miroir de la fièvre clinique." },
+            "gaze_du_sang": { tier: 2, res: "pH 7.41, pCO2 32 mmHg (hyperventilation adaptative), HCO3- 21 mmol/L.", justification: "PEU UTILE : Confirme la compensation respiratoire de la grossesse, sans valeur d'orientation." },
+            "hemocultures": { tier: 1, res: "En cours... (Recherche de Listeria monocytogenes et germes vaginaux lancée).", justification: "INDISPENSABLE : Devant toute fièvre in utero non étiquetée, les hémocultures sont obligatoires avant l'antibiothérapie." },
+            "ecbu": { tier: 2, res: "Culture stérile, absence de leucocyturie significative.", justification: "ÉCARTÉ : Confirme l'absence de colonisation ou d'infection urinaire active." },
+            "radio_thorax": { tier: 2, res: "Parenchyme pulmonaire libre, pas de foyer infectieux.", justification: "PEU UTILE : Élimine une pneumopathie aiguë communautaire, mais fait perdre du temps." },
+            "angio_scanner": { tier: 3, res: "Irradiation pelvienne injustifiée.", justification: "FAUTE GRAVE : Injecter et irradier un fœtus de 31 SA sans aucun signe d'embolie pulmonaire ou de dissection aortique est une erreur majeure." },
+            "echo_coeur": { tier: 2, res: "Fraction d'éjection préservée, pas de végétation d'endocardite.", justification: "INUTILE : Perte de temps totale en salle de déchocage." },
+            "tdm_abdomen": { tier: 3, res: "Examen non contributif, utérus gravide volumineux.", justification: "FAUTE GRAVE : Demander un scanner abdominal pour une douleur utérine fébrile retarde la prise en charge et expose à une irradiation fœtale inutile." }
+        }
+    },
     "158": { 
         name: "Mme Joly, 74 ans", 
         type: "Choc septique d'origine urinaire (Item 158)",
