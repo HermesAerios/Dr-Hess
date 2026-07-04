@@ -287,6 +287,11 @@ app.post('/api/execute', (req, res) => {
     res.json({ activeSim, outcome, hessQuote });
 });
 
+// Route d'état de synchronisation pour le Tableau Blanc (Front-End)
+app.get('/api/get-current-sim', (req, res) => {
+    res.json(activeSim);
+});
+
 app.post('/api/diagnose', (req, res) => {
     const { hypothesis } = req.body;
     let success = false;
