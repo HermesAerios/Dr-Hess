@@ -21,73 +21,57 @@
             color: #c9d1d9; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; 
             padding: 20px; 
-            max-width: 1200px; 
+            max-width: 1250px; 
             margin: 0 auto;
         }
 
-        h1 { text-align: center; color: var(--accent-cyan); font-size: 1.6em; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;}
+        h1 { text-align: center; color: var(--accent-cyan); font-size: 1.5em; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;}
         h2, h3 { color: #fff; margin-top: 0; font-weight: 600; }
 
-        /* Navigation */
         .tabs { display: flex; gap: 5px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
         .tab-btn { 
-            background: transparent; 
-            color: var(--text-muted); 
-            border: none; 
-            padding: 10px 18px; 
-            cursor: pointer; 
-            font-family: inherit; 
-            font-size: 0.95em;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            border-radius: 6px;
+            background: transparent; color: var(--text-muted); border: none; padding: 10px 18px; cursor: pointer; font-family: inherit; font-size: 0.95em; font-weight: 500; transition: all 0.2s ease; border-radius: 6px;
         }
         .tab-btn:hover { color: #fff; background: #161b22; }
         .tab-btn.active { color: var(--accent-cyan); background: #161b22; box-shadow: inset 0 -2px 0 var(--accent-cyan); }
         
-        .tab-content { display: none; background: var(--bg-card); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color); min-height: 420px; }
+        .tab-content { display: none; background: var(--bg-card); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color); min-height: 450px; }
         .tab-content.active { display: block; }
 
-        /* Scope Médical Étendu Réaliste */
-        .scope-container { background: #000; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
-        .scope-monitor { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .param { text-align: center; font-size: 1.6em; font-weight: 700; padding: 10px; font-family: 'Courier New', monospace; background: #05070a; border-radius: 6px; border: 1px solid #111; }
+        /* Scope */
+        .scope-container { background: #000; border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+        .scope-monitor { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+        .param { text-align: center; font-size: 1.5em; font-weight: 700; padding: 8px; font-family: 'Courier New', monospace; background: #05070a; border-radius: 6px; border: 1px solid #111; }
         .fc { color: var(--accent-red); }
         .ta { color: #ffff33; }
         .spo2 { color: var(--accent-green); }
         .fr { color: #9b59b6; }
         .temp { color: #ff9933; }
         .dextro { color: #00e5ff; }
-        .param-label { font-size: 0.4em; display: block; color: var(--text-muted); text-transform: uppercase; margin-bottom: 3px; font-family: sans-serif; }
+        .param-label { font-size: 0.35em; display: block; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px; font-family: sans-serif; }
 
-        .clinical-aspect { margin-top: 15px; font-size: 0.9em; padding-top: 10px; border-top: 1px dashed #222; color: #e0e4e8; }
-
-        /* Layouts */
-        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-        .whiteboard { background: #ffffff; color: #1f2428; padding: 20px; border-radius: 8px; min-height: 250px; }
-        .whiteboard h3 { color: #1f2428; border-bottom: 2px solid #e1e4e6; padding-bottom: 5px; font-size: 1.1em; }
-        .whiteboard ul { padding-left: 20px; font-weight: bold; font-family: monospace; }
-
-        .terminal-log { background: #05070a; border: 1px solid var(--border-color); height: 250px; overflow-y: auto; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 0.9em; color: #e0e4e8; }
-        .terminal-log p { margin: 6px 0; border-left: 2px solid var(--accent-cyan); padding-left: 8px; }
-
-        /* Dr Hess Prompt */
-        .dr-house-box { background: #161111; border-left: 4px solid var(--accent-red); padding: 15px; color: #ffb3b3; margin-bottom: 20px; border-radius: 6px; font-style: italic; font-size: 0.95em; }
+        /* Workspace Grid Split */
+        .workspace { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; margin-top: 20px; }
         
-        .input-group { background: #05070a; border: 1px solid var(--border-color); border-radius: 6px; padding: 15px; margin-bottom: 25px; }
+        /* Whiteboard Importance styled */
+        .whiteboard-panel { background: #ffffff; color: #1c2128; padding: 20px; border-radius: 8px; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); border-left: 6px solid var(--accent-cyan); }
+        .whiteboard-panel h3 { color: #1c2128; border-bottom: 2px solid #e1e4e6; padding-bottom: 5px; }
+        .whiteboard-panel li { font-family: monospace; font-weight: 700; font-size: 1.05em; margin-bottom: 6px; color: #000; }
+
+        .terminal-log { background: #04060a; border: 1px solid var(--border-color); height: 280px; overflow-y: auto; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 0.9em; line-height: 1.4; }
+        
+        .dr-house-box { background: #161111; border-left: 4px solid var(--accent-red); padding: 15px; color: #ffb3b3; margin-top: 15px; border-radius: 6px; font-style: italic; }
+        
+        .control-box { background: #05070a; border: 1px solid var(--border-color); padding: 15px; border-radius: 6px; margin-bottom: 15px; }
         .input-line { display: flex; gap: 10px; margin-top: 8px; }
-        input[type="text"], select { flex-grow: 1; padding: 10px 14px; background: #161b22; color: #fff; border: 1px solid #30363d; font-family: inherit; font-size: 0.95em; border-radius: 6px; }
         
-        button { padding: 10px 18px; background: #21262d; border: 1px solid #30363d; color: #c9d1d9; font-weight: 600; cursor: pointer; font-family: inherit; border-radius: 6px; }
+        button { padding: 10px 18px; background: #21262d; border: 1px solid #30363d; color: #c9d1d9; font-weight: 600; cursor: pointer; border-radius: 6px; }
         button:hover { background: #30363d; color: #fff; }
         .btn-primary { background: var(--accent-cyan); color: #000; border: none; }
-        .btn-primary:hover { background: #00b3cc; }
         
-        .action-flex { display: flex; gap: 10px; margin-bottom: 20px; }
-        .progression-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #161b22; border-radius: 6px; overflow: hidden; }
+        .progression-table { width: 100%; border-collapse: collapse; background: #161b22; border-radius: 6px; overflow: hidden; }
         .progression-table th, .progression-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
         .progression-table th { background: #21262d; color: var(--accent-cyan); font-size: 0.85em; text-transform: uppercase; }
-        .badge-note { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-family: monospace; background: #21262d; }
     </style>
 </head>
 <body>
@@ -96,140 +80,152 @@
 
     <div class="tabs">
         <button class="tab-btn active" id="btn-tab-dossiers" onclick="switchTab('tab-dossiers')">📂 Dossiers & Progression</button>
-        <button class="tab-btn" id="btn-tab-dechoc" onclick="switchTab('tab-dechoc')">🏥 Déchocage & Clinique</button>
-        <button class="tab-btn" id="btn-tab-whiteboard" onclick="switchTab('tab-whiteboard')">📝 Tableau Blanc & Labo</button>
+        <button class="tab-btn" id="btn-tab-dechoc" onclick="switchTab('tab-dechoc')">🏥 Unité de Déchocage & Labo</button>
         <button class="tab-btn" id="btn-tab-cloture" onclick="switchTab('tab-cloture')">🏁 Clôture du Cas</button>
     </div>
 
-    <!-- ONGLET 1 -->
+    <!-- ONGLER 1 : ACCUEIL -->
     <div id="tab-dossiers" class="tab-content active">
-        <h2>Prendre une Garde Clinique</h2>
+        <h2>Tableau de Garde du Service</h2>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
             <div style="background: #161b22; padding: 20px; border-radius: 6px; border: 1px solid var(--border-color);">
-                <h3>Admission Patient</h3>
-                <label style="color: var(--text-muted); font-size: 0.9em;">Cibler un Item EDN :</label>
-                <select id="edn-select" style="margin: 8px 0 15px 0; display: block; width: 100%;">
+                <h3>Prendre un Dossier Clinique</h3>
+                <label style="color: var(--text-muted); font-size: 0.9em;">Sélectionner l'Item EDN réglementaire :</label>
+                <select id="edn-select" style="margin: 8px 0 15px 0; display: block; width: 100%; padding: 10px; background:#161b22; color:#fff; border:1px solid #30363d; border-radius:6px;">
                     <option value="158">Item 158 - Sepsis et choc septique (Mme Joly)</option>
                     <option value="339">Item 339 - Syndrome Coronarien Aigu (M. Kovac)</option>
                 </select>
 
-                <label style="color: var(--text-muted); font-size: 0.9em;">Niveau de la Garde :</label>
-                <select id="difficulty" style="margin: 8px 0 20px 0; display: block; width: 100%;">
+                <label style="color: var(--text-muted); font-size: 0.9em;">Complexité réglementaire :</label>
+                <select id="difficulty" style="margin: 8px 0 20px 0; display: block; width: 100%; padding: 10px; background:#161b22; color:#fff; border:1px solid #30363d; border-radius:6px;">
                     <option value="easy">DFASM1 (Aide intégrée)</option>
-                    <option value="medium" selected>DFASM3 / Interne (Réaliste)</option>
-                    <option value="hard">Major de Promo (Crash critique)</option>
+                    <option value="medium" selected>DFASM3 / Interne (Standard)</option>
+                    <option value="hard">Major de Promo (Instabilité critique)</option>
                 </select>
                 
-                <button onclick="startMedicalCase()" class="btn-primary" style="width: 100%; padding: 12px;">ADMETTRE LE PATIENT</button>
+                <button onclick="startMedicalCase()" class="btn-primary" style="width: 100%; padding: 12px;">ADMETTRE AU DÉCHOCAGE</button>
             </div>
 
             <div>
-                <h3>📈 Validation des Compétences</h3>
-                <p style="color: var(--text-muted); font-size: 0.9em; margin-bottom: 15px;">Dernières notes enregistrées sur le simulateur (Note requise >= 14/20).</p>
+                <h3>📈 Suivi des Items Validés</h3>
                 <table class="progression-table">
                     <thead>
-                        <tr>
-                            <th>Item EDN</th>
-                            <th>Pathologie Clinique</th>
-                            <th>Note /20</th>
-                        </tr>
+                        <tr><th>Item EDN</th><th>Intitulé Pathologique</th><th>Dernière Note</th></tr>
                     </thead>
-                    <tbody id="progression-body">
-                        <tr><td>Item 158</td><td>Sepsis grave / Urinaire</td><td><span class="badge-note" id="note-158">--/20</span></td></tr>
-                        <tr><td>Item 339</td><td>Syndrome Coronarien Aigu</td><td><span class="badge-note" id="note-339">--/20</span></td></tr>
+                    <tbody>
+                        <tr><td>Item 158</td><td>Sepsis et choc septique</td><td><span id="note-158" style="font-weight:bold; font-family:monospace;">--/20</span></td></tr>
+                        <tr><td>Item 339</td><td>Syndrome Coronarien Aigu</td><td><span id="note-339" style="font-weight:bold; font-family:monospace;">--/20</span></td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- ONGLET 2 -->
+    <!-- ONGLET 2 : LE COEUR DU JEU FUSIONNÉ -->
     <div id="tab-dechoc" class="tab-content">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3>Dossier Actif : <span id="pat-status" style="color: var(--accent-red);">Aucun</span></h3>
-            <div style="font-family: monospace; font-size: 1.05em; color: var(--accent-cyan);">⏱️ COMPTEUR : <span id="timer">00:00</span></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3>Patient Actif : <span id="pat-status" style="color: var(--accent-cyan);">Aucun</span> | <span id="scope-type" style="font-size:0.85em; color:var(--text-muted);">---</span></h3>
+            <div style="font-family: monospace; font-size: 1.1em; color: var(--accent-orange);">⏱️ TEMPS D'INTERVENTION : <span id="timer">00:00</span></div>
         </div>
 
-        <!-- Scope Médical Hospitalier Complet -->
+        <!-- Scope Médical Hospitalier Fixé -->
         <div class="scope-container">
             <div class="scope-monitor">
-                <div class="param fc"><span class="param-label">FC</span><span id="scope-fc">--</span> <span style="font-size:0.35em;">bpm</span></div>
-                <div class="param ta"><span class="param-label">PA</span><span id="scope-ta">--/--</span> <span style="font-size:0.35em;">mmHg</span></div>
-                <div class="param spo2"><span class="param-label">SpO2</span><span id="scope-spo2">--</span> <span style="font-size:0.35em;">%</span></div>
-                <div class="param fr"><span class="param-label">FR</span><span id="scope-fr">--</span> <span style="font-size:0.35em;">/min</span></div>
+                <div class="param fc"><span class="param-label">FC (Pouls)</span><span id="scope-fc">--</span> <span style="font-size:0.3em;">bpm</span></div>
+                <div class="param ta"><span class="param-label">PA (Tension)</span><span id="scope-ta">--/--</span> <span style="font-size:0.3em;">mmHg</span></div>
+                <div class="param spo2"><span class="param-label">SpO2 (Sat)</span><span id="scope-spo2">--</span> <span style="font-size:0.3em;">%</span></div>
+                <div class="param fr"><span class="param-label">FR (Resp)</span><span id="scope-fr">--</span> <span style="font-size:0.3em;">/min</span></div>
+                <div class="param temp"><span class="param-label">Température</span><span id="scope-temp">--</span> <span style="font-size:0.3em;">°C</span></div>
+                <div class="param dextro"><span class="param-label">Dextro</span><span id="scope-dextro">--</span> <span style="font-size:0.3em;">mmol/L</span></div>
             </div>
-            <div class="scope-monitor" style="margin-top: 10px;">
-                <div class="param temp"><span class="param-label">TEMP</span><span id="scope-temp">--</span> <span style="font-size:0.35em;">°C</span></div>
-                <div class="param dextro"><span class="param-label">GLYCÉMIE (Capillaire)</span><span id="scope-dextro">--</span> <span style="font-size:0.35em;">mmol/L</span></div>
-                <div class="param" style="grid-column: span 2; color:#fff; font-size: 1.1em; text-align: left; padding: 12px;"><span class="param-label">Type étiologique suspecté</span><span id="scope-type" style="font-family:sans-serif; font-weight:normal;">En attente d'évaluation...</span></div>
-            </div>
-            <div class="clinical-aspect">
-                <strong>Examen physique d'emblée :</strong> <span id="scope-aspect">--</span>
+            <div style="margin-top:10px; font-size:0.9em; color:#e0e4e8;">
+                <strong>Sémiologie Cutanée/Neurologique d'emblée :</strong> <span id="scope-aspect">--</span>
             </div>
         </div>
 
-        <div style="background: #161b22; border: 1px solid var(--border-color); padding: 18px; border-radius: 6px; margin-bottom: 20px;">
-            <h3 style="color: var(--accent-cyan); font-size: 1em; margin-bottom: 5px;">📋 Histoire de la Maladie & Terrain</h3>
-            <p id="patient-presentation" style="color: #e0e4e8; line-height: 1.5; margin: 0; font-size:0.95em;"></p>
+        <!-- Histoire initiale -->
+        <div style="background: #161b22; border: 1px solid var(--border-color); padding: 15px; border-radius: 6px;">
+            <strong>Transmission de l'interne d'accueil :</strong> <span id="patient-presentation" style="color:#cfd6df;"></span>
         </div>
 
-        <div class="action-flex">
-            <button onclick="interrogatePatient()" style="border-color: var(--accent-orange); color: var(--accent-orange); background: transparent;">🕵️‍♂️ Pousser l'anamnèse</button>
-            <button onclick="searchHome()" style="border-color: #9b59b6; color: #9b59b6; background: transparent;">🏚️ Envoyer au domicile</button>
-            <div style="flex-grow: 1;"></div>
-            <button onclick="takeVicodin()" style="background: var(--accent-red); color: #fff; border:none;">💊 Prendre une Vicodine (<span id="vicodin-count">3</span>)</button>
+        <!-- Enquêtes de terrain non-linéaires -->
+        <div style="display:flex; gap:10px; margin-top:15px;">
+            <button onclick="interrogatePatient()" style="color:var(--accent-orange); border-color:var(--accent-orange); background:transparent;">🕵️‍♂️ Pousser l'interrogatoire</button>
+            <button onclick="searchHome()" style="color:#9b59b6; border-color:#9b59b6; background:transparent;">🏚️ Fouiller le domicile</button>
+            <div style="flex-grow:1;"></div>
+            <button onclick="takeVicodin()" style="background:var(--accent-red); border:none; color:#fff;">💊 Prendre une Vicodine (<span id="vicodin-count">3</span>)</button>
         </div>
-        
-        <div class="dr-house-box">
-            <strong>👨‍⚕️ Dr Hess :</strong> <span id="house-feedback">Admettez un patient pour générer la confrontation clinique.</span>
-        </div>
-    </div>
 
-    <!-- ONGLET 3 -->
-    <div id="tab-whiteboard" class="tab-content">
-        <div class="grid-layout">
-            <div class="whiteboard">
-                <h3>📋 LE TABLEAU BLANC</h3>
-                <ul id="whiteboard-list"></ul>
-                <div style="display:flex; gap: 8px; margin-top: 20px;">
-                    <input type="text" id="hypothesis-input" placeholder="Inscrire une hypothèse...">
-                    <button onclick="addHypothesis()">Poser</button>
-                </div>
-            </div>
-
-            <div style="display: flex; flex-direction: column; justify-content: space-between;">
-                <div class="input-group" style="margin-bottom: 0;">
-                    <h3>🔬 Prescription Para-clinique (HAS)</h3>
-                    <p style="font-size: 0.8em; color: var(--text-muted); margin-bottom: 8px;">Prescription libre (ex: "ecg", "lactates", "hemocultures", "ecbu", "gaze du sang", "numération formule sanguine").</p>
-                    <div class="input-line">
-                        <input type="text" id="exam-input" placeholder="Nom de l'examen réglementaire..." onkeydown="if(event.key==='Enter') sendPrescription()">
-                        <button onclick="sendPrescription()" class="btn-primary">Prescrire</button>
+        <!-- Zone de Travail Double Colonne -->
+        <div class="workspace">
+            <!-- Colonne Gauche : Diagnostic & Choix Cliniques -->
+            <div>
+                <!-- Tableau Blanc D'importance -->
+                <div class="whiteboard-panel">
+                    <h3>📝 TABLEAU BLANC DES DIAGNOSTICS DIFFÉRENTIELS</h3>
+                    <ul id="whiteboard-list"></ul>
+                    <div style="display:flex; gap:6px; margin-top:12px;">
+                        <input type="text" id="hypothesis-input" placeholder="Inscrire un diagnostic à analyser..." style="flex-grow:1; padding:8px; border-radius:4px; border:1px solid #ccc;">
+                        <button onclick="addHypothesis()" style="background:#1c2128; color:#fff; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">Poser</button>
                     </div>
                 </div>
 
-                <div class="input-group" style="margin-bottom: 0; margin-top: 15px;">
-                    <h3>⚡ Réanimation & Thérapeutique</h3>
-                    <p style="font-size: 0.8em; color: var(--text-muted); margin-bottom: 8px;">Exemples : "Oxygène", "Remplissage", "Antibiothérapie".</p>
+                <!-- Menu Déroulant Exhaustif d'Examens -->
+                <div class="control-box" style="margin-top:20px;">
+                    <h3>🔬 Plateau Technique & Labo Central</h3>
+                    <p style="font-size:0.8em; color:var(--text-muted); margin-bottom:10px;">Sélectionnez l'examen réglementaire adapté aux lignes directrices HAS :</p>
                     <div class="input-line">
-                        <input type="text" id="action-input" placeholder="Action d'urgence immédiate..." onkeydown="if(event.key==='Enter') sendClinicalAction()">
+                        <select id="exam-select" style="padding:10px; background:#161b22; color:#fff; border:1px solid #30363d; border-radius:6px; flex-grow:1;">
+                            <option value="ecg">ECG 12 dérivations</option>
+                            <option value="lactates">Lactatémie (Lactates)</option>
+                            <option value="hemocultures">Hémocultures (2 paires)</option>
+                            <option value="ecbu">ECBU (Urines)</option>
+                            <option value="gaze_du_sang">Gaz du Sang artériels</option>
+                            <option value="nfs">NFS (Formule Sanguine)</option>
+                            <option value="crp">CRP (Inflammation)</option>
+                            <option value="ionogramme">Ionogramme & Créatinine</option>
+                            <option value="troponine">Troponine I / T</option>
+                            <option value="bnh">Bilan Hépatique (BNH)</option>
+                            <option value="radio_thorax">Radiographie du Thorax</option>
+                            <option value="angio_scanner">Angioscanner Thoracique</option>
+                            <option value="echo_coeur">Échocardiographie (ETT)</option>
+                            <option value="tdm_abdomen">Scanner Abdomino-pelvien</option>
+                        </select>
+                        <button onclick="sendPrescription()" class="btn-primary">Lancer l'Analyse</button>
+                    </div>
+                </div>
+
+                <!-- Thérapeutiques d'urgence -->
+                <div class="control-box">
+                    <h3>⚡ Thérapeutiques et Réanimation</h3>
+                    <div class="input-line">
+                        <input type="text" id="action-input" placeholder="Drogue ou geste (ex: Oxygène, Remplissage, Antibiotique)...">
                         <button onclick="sendClinicalAction()">Administrer</button>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <h3>📜 Journal des Événements & Résultats de Laboratoire</h3>
-        <div class="terminal-log" id="clinical-log"></div>
+            <!-- Colonne Droite : Journal unique & Dr Hess -->
+            <div style="display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                    <h3>📜 Journal Clinique & Comptes-rendus de Laboratoire</h3>
+                    <div class="terminal-log" id="clinical-log"></div>
+                </div>
+                
+                <div class="dr-house-box">
+                    <strong>👨‍⚕️ Dr Hess :</strong> <span id="house-feedback">Analysez la sémiologie initiale.</span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- ONGLET 4 -->
+    <!-- ONGLET 3 : CONCLUSION -->
     <div id="tab-cloture" class="tab-content" style="text-align: center; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: var(--accent-cyan); margin-bottom: 15px;">🏁 Formuler le Diagnostic Définitif</h2>
-        <p style="color: var(--text-muted); font-size: 0.9em; margin-bottom: 25px;">La soumission clôture la garde. Les erreurs diagnostiques d'item ou le non-respect des parcours de soins HAS donneront une note éliminatoire.</p>
-        
-        <div class="input-group">
-            <input type="text" id="diag-input" placeholder="Pathologie exacte exigée (ex: Sepsis grave, SCA ST+)..." style="text-align: center; font-size: 1.15em; padding: 12px; margin-bottom: 15px; width: calc(100% - 28px); display: block;">
-            <button onclick="submitFinalDiagnosis()" class="btn-primary" style="width: 100%; padding: 12px; font-size: 1.05em;">SOUMETTRE LE VERDICT</button>
+        <h2>🏁 Validation du Rapport Clinique Majeur</h2>
+        <p style="color: var(--text-muted); font-size: 0.9em; margin-bottom: 25px;">Saisissez la pathologie ou l'item exact validé par vos examens. Le jury EDN ne tolère aucune approximation.</p>
+        <div class="control-box">
+            <input type="text" id="diag-input" placeholder="Exemple : Sepsis grave, SCA ST+..." style="text-align: center; font-size: 1.2em; padding: 12px; margin-bottom: 15px; width: calc(100% - 28px); display: block; background:#161b22; color:#fff; border:1px solid #30363d; border-radius:6px;">
+            <button onclick="submitFinalDiagnosis()" class="btn-primary" style="width: 100%; padding: 15px; font-size: 1.1em;">CLÔTURER LA GARDE</button>
         </div>
     </div>
 
@@ -257,7 +253,7 @@
             });
             const data = await res.json();
 
-            // Remplissage du scope étendu
+            // Injection sans bug
             document.getElementById('pat-status').innerText = data.patient.name;
             document.getElementById('scope-type').innerText = data.patient.type;
             document.getElementById('scope-fc').innerText = data.patient.fc;
@@ -271,7 +267,7 @@
             document.getElementById('vicodin-count').innerText = data.vicodinDoses;
             
             document.getElementById('whiteboard-list').innerHTML = "";
-            document.getElementById('clinical-log').innerHTML = "<p>[Système] Monitorage réanimatoire initialisé. En attente de prescriptions.</p>";
+            document.getElementById('clinical-log').innerHTML = "<p style='color:var(--accent-green);'>[Système] Monitorage de réanimation activé. Patient scopé.</p>";
             document.getElementById('house-feedback').innerText = "Tout le monde ment. À vous de trouver où se cache l'erreur.";
 
             clearInterval(timerInterval);
@@ -289,10 +285,10 @@
         async function takeVicodin() {
             const res = await fetch('/api/vicodin', { method: 'POST' });
             const data = await res.json();
-            document.getElementById('vicodin-count').innerText = data.activeSim.vicodinDoses;
             
+            document.getElementById('vicodin-count').innerText = data.activeSim.vicodinDoses;
             const logBox = document.getElementById('clinical-log');
-            logBox.innerHTML += `<p style="color:var(--accent-red);">> Dr Hess consomme de la Vicodine...</p>`;
+            logBox.innerHTML += `<p style="color:var(--accent-red); font-weight:bold;">> Réflexion sous narcotiques...</p>`;
             logBox.innerHTML += `<p style="color:#fff;">${data.outcome}</p>`;
             logBox.scrollTop = logBox.scrollHeight;
             document.getElementById('house-feedback').innerText = data.hessQuote;
@@ -302,25 +298,16 @@
             const res = await fetch('/api/interrogate', { method: 'POST' });
             const data = await res.json();
             
-            // Mise à jour si les constantes ont bougé lors de l'action (non-linéarité)
             document.getElementById('scope-fc').innerText = data.activeSim.patient.fc;
             document.getElementById('scope-ta').innerText = data.activeSim.patient.ta;
             
-            updateLogs(data, varColor('orange'), "Anamnèse clinique forcée");
+            updateLogs(data.outcome, data.hessQuote, '#ff9900', "Anamnèse clinique poussée");
         }
 
         async function searchHome() {
             const res = await fetch('/api/search-home', { method: 'POST' });
             const data = await res.json();
-            updateLogs(data, "#9b59b6", "Investigation de terrain");
-        }
-
-        function updateLogs(data, color, type) {
-            const logBox = document.getElementById('clinical-log');
-            logBox.innerHTML += `<p style="color:${color}; font-weight:bold;">> ${type}</p>`;
-            logBox.innerHTML += `<p style="color:#fff;">${data.outcome}</p>`;
-            logBox.scrollTop = logBox.scrollHeight;
-            document.getElementById('house-feedback').innerText = data.hessQuote;
+            updateLogs(data.outcome, data.hessQuote, '#9b59b6', "Perquisition du domicile");
         }
 
         async function addHypothesis() {
@@ -338,31 +325,32 @@
             const list = document.getElementById('whiteboard-list');
             list.innerHTML = "";
             data.activeSim.whiteboard.forEach(h => {
-                list.innerHTML += `<li>${h}</li>`;
+                list.innerHTML += `<li>📌 ${h}</li>`;
             });
             document.getElementById('house-feedback').innerText = data.feedback;
             input.value = "";
         }
 
         async function sendPrescription() {
-            const input = document.getElementById('exam-input');
-            const examName = input.value.trim();
-            if(!examName) return;
+            const examKey = document.getElementById('exam-select').value;
 
             const res = await fetch('/api/investigate', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ examName })
+                body: JSON.stringify({ examKey })
             });
             const data = await res.json();
 
             const logBox = document.getElementById('clinical-log');
             let color = data.success ? varColor('green') : varColor('red');
-            logBox.innerHTML += `<p style="color:${color};">> Biologie/Imagerie : ${examName}</p>`;
-            logBox.innerHTML += `<p style="color:#fff;">[Résultat] ${data.outcome}</p>`;
+            
+            logBox.innerHTML += `<p style="color:${color}; font-weight:bold;">> Analyse demandée : ${examKey.toUpperCase()}</p>`;
+            logBox.innerHTML += `<p style="color:#fff;"><strong>[Résultat]</strong> ${data.outcome}</p>`;
+            logBox.innerHTML += `<p style="color:var(--text-muted); font-size:0.85em; font-style:italic; padding-left:10px;">👉 Justification EDN : ${data.justification}</p>`;
             logBox.scrollTop = logBox.scrollHeight;
+            
             document.getElementById('house-feedback').innerText = data.hessQuote;
-            input.value = "";
+            document.getElementById('scope-fc').innerText = data.activeSim.patient.fc;
         }
 
         async function sendClinicalAction() {
@@ -378,8 +366,8 @@
             const data = await res.json();
 
             const logBox = document.getElementById('clinical-log');
-            logBox.innerHTML += `<p style="color:#ffff33;">> Prescription Urgente : ${order}</p>`;
-            logBox.innerHTML += `<p style="color:#fff;">[Effet] ${data.outcome}</p>`;
+            logBox.innerHTML += `<p style="color:#ffff33; font-weight:bold;">> Action Thérapeutique : ${order}</p>`;
+            logBox.innerHTML += `<p style="color:#fff;">[Effet Physiologique] ${data.outcome}</p>`;
             logBox.scrollTop = logBox.scrollHeight;
 
             document.getElementById('scope-fc').innerText = data.activeSim.patient.fc;
@@ -392,7 +380,7 @@
 
         async function submitFinalDiagnosis() {
             const hypothesis = document.getElementById('diag-input').value.trim();
-            if(!hypothesis) return alert("Veuillez formuler une conclusion.");
+            if(!hypothesis) return alert("Saisissez votre conclusion.");
             clearInterval(timerInterval);
 
             const res = await fetch('/api/diagnose', {
@@ -407,9 +395,17 @@
                 document.getElementById(`note-${activeItemId}`).style.color = data.finalNote >= 14 ? varColor('green') : varColor('orange');
             }
 
-            alert(`Fin de l'épisode.\nNote clinique finale : ${data.finalNote}/20\nDiagnostic attendu : ${data.correctAnswer}`);
+            alert(`Dossier bouclé.\nNote : ${data.finalNote}/20\nRéponse exigée : ${data.correctAnswer}`);
             document.getElementById('diag-input').value = "";
             switchTab('tab-dossiers');
+        }
+
+        function updateLogs(outcome, hessQuote, color, type) {
+            const logBox = document.getElementById('clinical-log');
+            logBox.innerHTML += `<p style="color:${color}; font-weight:bold;">> ${type}</p>`;
+            logBox.innerHTML += `<p style="color:#fff;">${outcome}</p>`;
+            logBox.scrollTop = logBox.scrollHeight;
+            document.getElementById('house-feedback').innerText = hessQuote;
         }
 
         function varColor(name) {
