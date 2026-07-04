@@ -1,0 +1,15 @@
+{
+  "id": "cas_226_ep",
+  "edn_item_id": 226,
+  "configuration_difficulte": {
+    "masquer_objectifs": true,
+    "dr_hess_disponible": true,
+    "malus_dr_hess": 2.0,
+    "temps_limite_secondes": 600
+  },
+  "objectifs_stabilisation": [
+    "Identifier les signes de gravité",
+    "Évaluer le score de probabilité clinique",
+    "Initier l'anticoagulation curative"
+  ]
+}
