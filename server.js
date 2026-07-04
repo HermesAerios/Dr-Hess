@@ -240,16 +240,26 @@ app.post('/api/investigate', (req, res) => {
     }
 });
 
+// Route de diagnostic final avec note sur 20 stricte
 app.post('/api/diagnose', (req, res) => {
     const { hypothesis } = req.body;
     let success = false;
     let finalNote = 0;
+
+    // Calcul si la chaîne du diagnostic contient le bon diagnostic
     if (activeSim.correctDiag && hypothesis.toLowerCase().includes(activeSim.correctDiag.toLowerCase())) {
         success = true;
-        finalNote = Math.max(10, Math.round(activeSim.score / 5));
+        // Division du score (max 100) par 5 pour obtenir une note sur 20
+        finalNote = Math.round(activeSim.score / 5);
+        // Sécurités de bornes [0 - 20]
+        if (finalNote > 20) finalNote = 20;
+        if (finalNote < 0) finalNote = 0;
     } else {
-        finalNote = Math.max(0, Math.round((activeSim.score - 40) / 5));
+        // Mauvais diagnostic d'emblée = note éliminatoire ou calculée très bas
+        finalNote = Math.max(0, Math.round((activeSim.score - 50) / 5));
+        if (finalNote > 5) finalNote = 4; // Plafond en cas d'erreur de diagnostic étiologique (Faute lourde)
     }
+
     res.json({ success, finalNote, correctAnswer: activeSim.correctDiag });
 });
 
