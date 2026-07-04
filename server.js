@@ -5,110 +5,188 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static('public'));
 
+// État de la simulation en cours
 let activeSim = {
     itemId: null,
+    difficulty: 'medium',
     patient: {},
-    whiteboard: [], // Hypothèses posées par le joueur
+    whiteboard: [],
     correctDiag: "",
-    lethalWrongDiags: [], // Diagnostics mortels si traités à l'envers
+    lethalWrongDiags: [],
+    clues: {},
+    investigations: {},
     history: [],
-    score: 100
+    score: 100,
+    turns: 0
 };
 
+// Base de données des scénarios EDN complexes
 const ednScenarios = {
     "158": { 
         name: "Mme Joly, 74 ans", 
-        desc: "Fièvre à 39.5°C, frissons, marbrures aux genoux, désorientée. FC 120, TA 85/50.", 
+        desc: "Fièvre à 39.5°C, frissons, marbrures aux genoux, désorientée. Pouls filant, polypnée.", 
+        fc: 125, ta: "82/46", spo2: 90,
         correctDiag: "Sepsis grave",
         lethalWrongDiags: ["Poussée de Lupus", "Insuffisance cardiaque isolée"],
-        clues: { "bilan bio": "Hyperleucocytose à 18G/L, Lactates à 4.2 mmol/L.", "hemocultures": "En cours... (Positives à E. Coli à 24h)" }
+        investigations: {
+            "hemocultures": { tier: 1, res: "Positives à E. Coli (2 flacons aérobie/anaérobie).", msg: "Essentiel ! Toujours faire les hémocultures AVANT l'antibiothérapie (Item 158)." },
+            "lactates": { tier: 1, res: "Lactatémie à 4.5 mmol/L (Seuil critique > 2).", msg: "Parfait pour évaluer l'hypoperfusion tissulaire." },
+            "gaze du sang": { tier: 1, res: "Acidose métabolique compensée. pH 7.31, HCO3- 18 mEq/L.", msg: "Indispensable pour l'équilibre acido-basique." },
+            "tdm abdomino-pelvien": { tier: 2, res: "Infiltration de la graisse péri-rénale gauche. Pyélonéphrite aiguë suspectée.", msg: "Bonne recherche de la porte d'entrée, mais stabilisez le choc d'abord." },
+            "ponction lombaire": { tier: 3, res: "Liquide clair, absence d'hyperleucocytose.", msg: "Inutile et dangereux sur un patient en choc sans signe de localisation !" }
+        }
     },
     "339": { 
         name: "M. Kovac, 52 ans", 
-        desc: "Douleur thoracique irradiant dans le bras gauche, en sueur. Transfixiante. FC 98, TA 140/90.", 
+        desc: "Douleur thoracique irradiant dans le bras gauche, en sueur. Transfixiante depuis 45 min.", 
+        fc: 98, ta: "145/92", spo2: 96,
         correctDiag: "SCA ST+",
         lethalWrongDiags: ["Dissection aortique", "Pneumothorax"],
-        clues: { "ecg": "Sus-décalage du segment ST en D2, D3, aVF (Infarctus inférieur).", "troponine": "Troponine I ultra-sensible élevée." }
+        investigations: {
+            "ecg": { tier: 1, res: "Sus-décalage du segment ST de 3mm en D2, D3, aVF avec miroir en D1, aVL.", msg: "FAIT EN MOINS DE 10 MINUTES. Vous avez votre diagnostic de Infarctus du myocarde inférieur !" },
+            "troponine": { tier: 2, res: "En attente... (Le laboratoire prend 45 min).", msg: "Sur un ST+, on n'attend PAS la troponine pour envoyer en coronarographie ! Perte de chance pour le muscle cardiaque." },
+            "angioscanner": { tier: 3, res: "Aorte intègre. Pas d'embolie pulmonaire.", msg: "Irradiation inutile et perte de temps criminelle. L'ECG signait l'urgence coronaire." }
+        }
     }
 };
 
+// Route pour initialiser un cas
 app.post('/api/start-case', (req, res) => {
-    const { itemId } = req.body;
-    const sc = ednScenarios[itemId] || ednScenarios["158"]; // Fallback
+    const { itemId, difficulty } = req.body;
+    const sc = ednScenarios[itemId] || ednScenarios["158"];
     
+    let multiplier = difficulty === 'easy' ? 0.8 : difficulty === 'hard' ? 1.3 : 1.0;
+
     activeSim = {
         itemId,
-        patient: { name: sc.name, desc: sc.desc, fc: 110, ta: "90/60", spo2: 93, status: "En observation" },
+        difficulty,
+        patient: {
+            name: sc.name,
+            status: "Détresse Initiale",
+            fc: Math.round(sc.fc * multiplier),
+            ta: sc.ta,
+            spo2: Math.max(75, Math.round(sc.spo2 / multiplier)),
+            desc: sc.desc
+        },
         whiteboard: [],
         correctDiag: sc.correctDiag,
         lethalWrongDiags: sc.lethalWrongDiags,
-        clues: sc.clues,
-        history: ["Patient installé dans le box d'investigation."],
-        score: 100
+        investigations: sc.investigations,
+        history: ["Patient admis en salle de déchocage."],
+        score: 100,
+        turns: 0
     };
+
     res.json(activeSim);
 });
 
-// Ajouter une hypothèse au tableau blanc
+// Route pour ajouter une hypothèse au Tableau Blanc
 app.post('/api/whiteboard/add', (req, res) => {
     const { hypothesis } = req.body;
     let feedback = "";
     
     if (!activeSim.whiteboard.includes(hypothesis)) {
         activeSim.whiteboard.push(hypothesis);
-        activeSim.history.push(`Hypothèse ajoutée au tableau blanc : ${hypothesis}`);
+        activeSim.history.push(`Hypothèse sur le tableau : ${hypothesis}`);
         
-        if (activeSim.lethalWrongDiags.includes(hypothesis)) {
-            feedback = `Dr Hess : "Pister une '${hypothesis}' ? Dangereux, mais biologiquement défendable. Prouvez-le avant de tuer le patient."`;
+        if (activeSim.lethalWrongDiags.some(d => d.toLowerCase() === hypothesis.toLowerCase())) {
+            feedback = `Dr House : "${hypothesis} ? Dangereux, mais biologiquement défendable. Prouvez-le avant de tuer le patient."`;
         } else if (hypothesis.toLowerCase() === activeSim.correctDiag.toLowerCase()) {
-            feedback = `Dr Hess : "Tiens, une lueur de génie ? Gardez cette idée dans un coin de votre tête."`;
+            feedback = `Dr House : "Tiens, une lueur de génie ? Dommage que vous n'ayez encore rien prouvé."`;
         } else {
-            feedback = `Dr Hess : "${hypothesis} ? Vous avez acheté votre diplôme sur internet ou quoi ?"`;
+            feedback = `Dr House : "${hypothesis} ? Vous avez acheté votre diplôme sur internet ou récupéré dans une pochette surprise ?"`;
             activeSim.score -= 5;
         }
+    } else {
+        feedback = `Dr House : "C'est déjà écrit sur le tableau. Vous devenez alzheimer ?"`;
     }
     res.json({ activeSim, feedback });
 });
 
-// Prescrire un examen ou un traitement
+// Route d'urgence (Actions libres et drogues)
 app.post('/api/execute', (req, res) => {
     const { order } = req.body;
     let outcome = "";
     let hessQuote = "";
     const cleanOrder = order.toLowerCase();
+    activeSim.turns++;
 
-    // Gestion des examens biologiques/imagerie du programme EDN
-    if (cleanOrder.includes("ecg") || cleanOrder.includes("bilan") || cleanOrder.includes("troponine") || cleanOrder.includes("lactates")) {
-        let foundClue = false;
-        for (let key in activeSim.clues) {
-            if (cleanOrder.includes(key) || key.includes(cleanOrder)) {
-                outcome = `[Examen] ${activeSim.clues[key]}`;
-                foundClue = true;
-            }
-        }
-        if (!foundClue) outcome = "[Examen] Résultats dans les limites de la normale.";
-        hessQuote = "Les chiffres ne mentent pas. Contrairement aux patients.";
+    if (cleanOrder.includes("oxygène") || cleanOrder.includes("o2")) {
+        activeSim.patient.spo2 = Math.min(100, activeSim.patient.spo2 + 4);
+        outcome = "Mise en place d'une VPC (Oxygène à haut débit).";
+        hessQuote = "Dr House : Le cerveau respire, mais la cause profonde attend toujours.";
     } 
-    // Erreur fatale : Traiter un faux diagnostic mortel
-    else if (cleanOrder.includes("anticoagulant") || cleanOrder.includes("aspirine")) {
-        if (activeSim.whiteboard.includes("Dissection aortique") || activeSim.itemId === "339") {
-            outcome = "Administration d'antiagrégants plaquettaires.";
-            hessQuote = "Traitement standard du SCA validé. Bien joué.";
+    else if (cleanOrder.includes("anticoagulant") || cleanOrder.includes("aspirine") || cleanOrder.includes("lovenox")) {
+        if (activeSim.itemId === "339") {
+            outcome = "Bolus d'Aspegic IV administré.";
+            hessQuote = "Dr House : Antiagrégation lancée. Logique pour une coronaire bouchée.";
         } else {
-            activeSim.patient.status = "ARRÊT CARDIAQUE (Choc hémorragique)";
+            activeSim.patient.status = "CHOC HÉMORRAGIQUE (Décès)";
             activeSim.patient.fc = 0; activeSim.patient.ta = "0/0";
-            outcome = "Effondrement circulatoire immédiat.";
-            hessQuote = "Donner des anticoagulants sur une suspicion de dissection aortique... Vous venez de rompre son artère. Il est mort vidé de son sang.";
+            outcome = "L'état s'effondre. Saignement massif interne provoqué.";
+            hessQuote = "Dr House : Merveilleux. Vous avez fluidifié le sang d'un patient qui n'en avait pas besoin. Il est mort vidé.";
             activeSim.score = 0;
         }
     } else {
-        outcome = `Ordre exécuté : ${order}`;
-        hessQuote = "Rien de catastrophique, mais on n'avance pas.";
+        outcome = `Action enregistrée : "${order}"`;
+        hessQuote = "Dr House : Vous brassez de l'air. Donnez un vrai ordre thérapeutique ou diagnostique.";
+        activeSim.score -= 2;
     }
 
     activeSim.history.push(outcome);
     res.json({ activeSim, outcome, hessQuote });
 });
 
-app.listen(PORT, () => console.log("Moteur d'enquête lancé."));
+// Route d'examens complémentaires (Rigueur EDN / HAS)
+app.post('/api/investigate', (req, res) => {
+    const { examName } = req.body;
+    let cleanExam = examName.toLowerCase().trim();
+    activeSim.turns++;
+
+    let matchedKey = Object.keys(activeSim.investigations).find(key => cleanExam.includes(key) || key.includes(cleanExam));
+
+    if (matchedKey) {
+        let details = activeSim.investigations[matchedKey];
+        
+        if (details.tier === 1) {
+            activeSim.score += 5;
+            activeSim.history.push(`[1ère Intention] ${matchedKey.toUpperCase()} : ${details.res}`);
+            return res.json({ activeSim, outcome: details.res, hessQuote: `Dr House : ${details.msg}`, success: true });
+        } 
+        else if (details.tier === 2) {
+            activeSim.score -= 5;
+            activeSim.history.push(`[2ème Intention] ${matchedKey.toUpperCase()} : ${details.res}`);
+            return res.json({ activeSim, outcome: details.res, hessQuote: `Dr House : ${details.msg}`, success: true });
+        } 
+        else if (details.tier === 3) {
+            activeSim.score -= 20;
+            activeSim.history.push(`[ERREUR DE STRATÉGIE] ${matchedKey.toUpperCase()} : ${details.res}`);
+            return res.json({ activeSim, outcome: details.res, hessQuote: `Dr House : ${details.msg}`, success: false });
+        }
+    } else {
+        activeSim.score -= 3;
+        let outcome = "Laboratoire : Examen non disponible en urgence ou non significatif.";
+        activeSim.history.push(outcome);
+        return res.json({ activeSim, outcome, hessQuote: "Dr House : Arrêtez de vider les caisses de l'hôpital avec des bilans inutiles.", success: false });
+    }
+});
+
+// Route de diagnostic final
+app.post('/api/diagnose', (req, res) => {
+    const { hypothesis } = req.body;
+    let success = false;
+    let finalNote = 0;
+
+    if (activeSim.correctDiag && hypothesis.toLowerCase().includes(activeSim.correctDiag.toLowerCase())) {
+        success = true;
+        finalNote = Math.max(10, Math.round(activeSim.score / 5));
+    } else {
+        finalNote = Math.max(0, Math.round((activeSim.score - 40) / 5));
+    }
+
+    res.json({ success, finalNote, correctAnswer: activeSim.correctDiag });
+});
+
+app.listen(PORT, () => console.log(`Serveur Simulation EDN sur le port ${PORT}`));
