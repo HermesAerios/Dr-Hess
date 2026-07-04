@@ -1,5 +1,4 @@
 // gameLogic.js
-
 const patient = {
     heartRate: 130,
     bloodPressure: "80/50",
@@ -12,11 +11,10 @@ const errorDatabase = [];
 const drHessQuotes = {
     welcome: "Bienvenue en déchocage. Essayez de ne pas tuer ce patient en moins de 5 minutes...",
     bad_med: "De l'adrénaline maintenant ? Vous avez eu votre diplôme dans une pochette surprise ?",
-    good_action: "Miracle. Vous avez fait quelque chose de correct. Ne prenez pas la confiance.",
+    good_action: "Miracle. Vous avez fait chose de correct. Ne prenez pas la confiance.",
     death: "Heure du décès : maintenant. Félicitations, vous venez de libérer un lit."
 };
 
-// Dégradation des constantes
 function startTimeLoop() {
     setInterval(() => {
         if (patient.isAlive) {
@@ -33,7 +31,6 @@ function startTimeLoop() {
     }, 5000);
 }
 
-// Traitement des actions
 function processAction(actionType) {
     let responseQuote = "";
 
