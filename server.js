@@ -85,29 +85,53 @@ app.post('/api/start-case', (req, res) => {
     const filePath = path.join(__dirname, 'cases', `${itemId}.json`);
     if (!fs.existsSync(filePath)) return res.status(404).json({ error: "Introuvable." });
 
-    const sc = JSON.parse(fs.readFileSync(filePath));
+    const matrix = JSON.parse(fs.readFileSync(filePath));
+
+    // Initialisation par défaut
+    let patientInstance = {};
+    
+    // Si c'est une matrice adaptative, on pioche un profil au hasard
+    if (matrix.isMatrix && matrix.possibleProfiles && matrix.possibleProfiles.length > 0) {
+        const randomIndex = Math.floor(Math.random() * matrix.possibleProfiles.length);
+        const profile = matrix.possibleProfiles[randomIndex];
+        
+        patientInstance = {
+            name: profile.name,
+            type: matrix.patient ? matrix.patient.type : "Syndrome infectieux / Choc suspect",
+            status: "Détresse Initiale",
+            fc: profile.baseVitals.fc,
+            ta: profile.baseVitals.ta,
+            spo2: profile.baseVitals.spo2,
+            fr: profile.baseVitals.fr,
+            temp: profile.baseVitals.temp,
+            dextro: profile.baseVitals.dextro,
+            aspect: profile.aspect,
+            desc: `Admis(e) pour évaluation d'une défaillance aiguë. Terrain : ${profile.terrain} Histoire : ${profile.secret}`
+        };
+    } else {
+        // Fallback si fichier classique non matriciel
+        patientInstance = sc.patient;
+    }
+
     activeSim = {
-        itemId: sc.itemId,
-        patient: { ...sc.patient, status: "Détresse Initiale", isCritical: sc.patient.isCritical || false },
+        itemId: matrix.itemId,
+        patient: patientInstance,
         whiteboard: [],
-        correctDiag: sc.correctDiag,
-        lethalWrongDiags: sc.lethalWrongDiags,
-        usefulExams: sc.usefulExams,
-        // Axe 3 : Diagnostics différentiels obligatoires à éliminer
-        mandatoryExamsToRuleOut: sc.mandatoryExamsToRuleOut || [],
+        correctDiag: matrix.correctDiag,
+        lethalWrongDiags: matrix.lethalWrongDiags,
+        usefulExams: matrix.matrixExams || matrix.usefulExams, // Adapte les examens selon la matrice
+        mandatoryExamsToRuleOut: matrix.mandatoryExamsToRuleOut || [],
         ruledOutExams: [],
-        rosHint: sc.rosHint, examHint: sc.examHint, investigationsHint: sc.investigationsHint,
-        correctDisposition: sc.correctDisposition,
-        dispositionsConfig: sc.dispositionsConfig,
+        correctDisposition: matrix.correctDisposition,
+        dispositionsConfig: matrix.dispositionsConfig,
         performedActions: [],
         score: 100,
-        // Axe 1 : Temps virtuel médicalisé cumulé (en minutes)
         virtualMinutesElapsed: 0,
         vicodinDoses: 3,
         stabilizationItems: { iv_access: false, oxygen: false, monitoring: false },
-        // Axe 2 : Examens physiquement complétés pour débloquer les traitements
         completedExams: []
     };
+
     res.json(activeSim);
 });
 
