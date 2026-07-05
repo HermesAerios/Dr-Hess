@@ -4,6 +4,7 @@
   "correctDiag": "Sepsis grave",
   "lethalWrongDiags": ["Poussée de Lupus", "Surdosage en bêtabloquants"],
   "correctDisposition": "icu_admission",
+  "mandatoryExamsToRuleOut": ["hgt"],
   "rosHint": "Insistez auprès de la fille sur les jours précédant l'épisode, les personnes âgées cachent souvent leurs symptômes urinaires par gêne.",
   "examHint": "Examinez les fosses lombaires (signe de Giordano) et l'état cutané pour grader le niveau de choc circulatoire.",
   "investigationsHint": "Le diagnostic de choc est clinique et biologique (Lactates). La porte d'entrée nécessite un examen d'orientation immédiat au lit du patient (BU).",
@@ -16,12 +17,13 @@
     "fr": 26,
     "temp": 39.5,
     "dextro": 6.1,
+    "isCritical": true,
     "aspect": "Marbrures aux genoux, TRC > 4s, somnolence prononcée.",
     "desc": "Trouvée désorientée chez elle. Fièvre majeure, frissons. Sa fille prétend qu'elle a juste attrapé un 'petit coup de froid' hier."
   },
   "dispositionsConfig": {
     "icu_admission": { "label": "Hospitalisation en Réanimation Médicale ou USC", "score": 5, "rationale": "INDISPENSABLE : Le choc septique avec défaillance d'organe impose une surveillance monitorée continue en réanimation." },
-    "admit_to_floor": { "label": "Hospitalisation en service de Médecine Conventionnelle", "score": -15, "rationale": "FAUTE GRAVE : Installer un patient en état de choc circulatoire dans un lit de médecine standard expose à un arrêt sans surveillance." },
+    "admit_to_floor": { "label": "Hospitalisation en service de Médecine Conventionnelle", "score": -15, "rationale": "FAUTE GRAVE : Installer un patient en état de choc circulatoire dans un lits de médecine standard expose à un arrêt sans surveillance." },
     "prep_for_operating_room": { "label": "Transfert immédiat au Bloc Opératoire", "score": -5, "rationale": "INADÉQUAT : Pas d'obstacle obstructif nécessitant une dérivation chirurgicale immédiate sur l'imagerie." },
     "discharge": { "label": "Retour à domicile", "score": -40, "rationale": "CRIMINEL : Pronostic vital engagé à court terme." }
   },
@@ -32,6 +34,7 @@
     "exam_back": { "tier": 1, "res": "Douleur vive déclenchée à la percussion de la fosse lombaire gauche.", "interpretation": "Signe de Giordano positif à gauche.", "image": "giordano_pos.jpg", "justification": "Oriente vers une atteinte rénale (pyélonéphrite)." },
     "exam_skin": { "tier": 1, "res": "Marbrures violacées localisées aux genoux.", "interpretation": "Marbrures score de mottling >= 2.", "image": "mottling_genoux.jpg", "justification": "Marqueur clinique de gravité extrême de l'insuffisance circulatoire." },
     "bu": { "tier": 1, "res": "Leucocytes +++, Nitrites +", "interpretation": "Infection urinaire hautement probable.", "image": "bu_sepsis.jpg", "justification": "Confirme l'infection urinaire aiguë et la porte d'entrée." },
+    "hgt": { "tier": 1, "res": "Dextro mesuré à 6.1 mmol/L.", "interpretation": "Glycémie normale.", "image": "hgt_normal.jpg", "justification": "OBLIGATOIRE : Permet d'écarter formellement une hypoglycémie mimétique devant un état confusionnel aigu." },
     "lactates": { "tier": 1, "res": "Lactatémie à 4.5 mmol/L.", "interpretation": "Hyperlactatémie critique.", "image": "lactates_high.jpg", "justification": "Confirme l'hypoperfusion tissulaire périphérique (seuil Sepsis-3 > 2 mmol/L)." },
     "ecg": { "tier": 1, "res": "Tachycardie sinusale régulière à 125 bpm.", "interpretation": "Tachycardie sinusale adaptative.", "image": "sinus_tachycardia.jpg", "justification": "Élimine un trouble du rythme malin primaire ou un infarctus." },
     "hemocultures": { "tier": 1, "res": "Positives à E. Coli.", "interpretation": "Bactériémie confirmée.", "image": "culture.jpg", "justification": "Isole le germe causal avant de guider l'antibiothérapie." }
