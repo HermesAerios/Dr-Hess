@@ -1,0 +1,47 @@
+{
+  "itemId": "023",
+  "displayName": "Item 23 — Consultation et Suivi d'une Grossesse Normale",
+  "correctDiag": "Grossesse intra-utérine évolutive",
+  "isMatrix": true,
+  "mandatoryExamsToRuleOut": ["groupage_rai", "hgt"],
+  "lethalWrongDiags": ["Grossesse extra-utérine", "Môle hydatiforme", "Embolie pulmonaire"],
+  "correctDisposition": "discharge",
+  "rosHint": "Ne vous focalisez pas uniquement sur la plainte principale. Calculez précisément l'âge gestationnel en semaines d'aménorrhée (SA) à partir de la longueur cranio-caudale pour dater le terme.",
+  "examHint": "Recherchez les signes utérins classiques du premier trimestre : ramollissement et augmentation globale de volume. Pensez au signe de Noble.",
+  "investigationsHint": "Le jury exige la stricte vérification du bilan obligatoire du premier examen prénatal. Un dosage d'hCG quantitatif isolé ne remplace pas une échographie de datation.",
+  "possibleProfiles": [
+    {
+      "name": "Clara B., 24 ans",
+      "age": 24,
+      "terrain": "IMC préconceptionnel à 21 kg/m² (poids normal), pas d'antécédent médical, primigeste.",
+      "secret": "Consomme un verre de vin 'de temps en temps' lors des repas de famille car sa grand-mère lui a dit que c'était bon pour le sang du bébé. Fume 3 cigarettes par jour en cachette de son conjoint.",
+      "baseVitals": { "fc": 88, "ta": "105/65", "spo2": 98, "fr": 16, "temp": 37.2, "dextro": 4.2, "isCritical": false },
+      "aspect": "Jeune femme en parfait état général, se plaignant d'une asthénie marquée et de nausées matinales transitoires.",
+      "desc": "Consultation à 11 SA selon la date de ses dernières règles pour premier examen prénatal obligatoire. Déclare se sentir épuisée et barbouillée au réveil."
+    },
+    {
+      "name": "Nadia K., 38 ans",
+      "age": 38,
+      "terrain": "Âge maternel > 35 ans (facteur de risque), IMC à 28.5 kg/m² (surpoids), multipare (2 enfants nés à terme).",
+      "secret": "A arrêté d'elle-même sa supplémentation en acide folique prescrite par son médecin généraliste il y a 3 semaines car cela lui donnait de fausses douleurs d'estomac.",
+      "baseVitals": { "fc": 95, "ta": "115/75", "spo2": 97, "fr": 18, "temp": 36.9, "dextro": 5.1, "isCritical": false },
+      "aspect": "Patiente anxieuse en raison de son âge, se plaint d'une pesanteur pelvienne et de tiraillements ligamentaires bilatéraux.",
+      "desc": "Se présente pour sa première consultation de suivi. Des nausées modérées sans vomissements sont signalées. Elle s'inquiète d'un éventuel risque génétique."
+    }
+  ],
+  "dispositionsConfig": {
+    "discharge": { "label": "Retour à domicile avec déclaration de grossesse et conseils RHD", "score": 5, "rationale": "PARFAIT : Il s'agit d'une grossesse physiologique. La prise en charge se fait en ambulatoire avec éducation thérapeutique stricte (tolérance zéro alcool/tabac), déclaration avant 15 SA, et planification de l'entretien prénatal précoce (EPP) au 4e mois." },
+    "admit_to_floor": { "label": "Hospitalisation en service de Gynécologie-Obstétrique", "score": -15, "rationale": "INUTILE : Hospitaliser une grossesse normale du premier trimestre sans aucun critère de gravité (vomissements incoercibles ou métrorragies) encombre inutilement les lits et médicalise à tort une situation physiologique." }
+  },
+  "matrixExams": {
+    "exam_circ": { "tier": 1, "res": "Pouls radial régulier, pression artérielle basse mais physiologique pour le premier trimestre (chute systolo-diastolique de 5 à 10 mmHg liée à la vasodilatation systémique).", "interpretation": "Hémodynamique stable, modifications physiologiques normales du premier trimestre.", "justification": "La baisse tensionnelle est normale en début de grossesse due à l'ouverture de la circulation utéro-placentaire." },
+    "exam_gu": { "tier": 1, "res": "Au spéculum : col utérin d'aspect violacé, absence de saignement. Au toucher vaginal : utérus augmenté de volume (taille d'une mandarine), ramolli. Perception de l'utérus à travers les culs-de-sac latéraux (Signe de Noble positif).", "interpretation": "Modifications anatomiques utérines gravides normales.", "justification": "L'examen clinique met en évidence l'utérus globuleux et le ramollissement isthmique caractéristiques." },
+    "hgt": { "tier": 1, "res": "Glycémie capillaire normale. Glycémie à jeun demandée au labo : 0.84 g/L (Nadia) / 0.81 g/L (Clara).", "interpretation": "Absence de diabète gestationnel précoce au premier trimestre (seuil de suspicion si GAJ >= 0.92 g/L / 5.1 mmol/L).", "justification": "Le dépistage du diabète gestationnel par GAJ dès le premier trimestre est recommandé uniquement en cas de facteurs de risque (âge > 35 ans, IMC > 25 kg/m²)." },
+    "groupage_rai": { "tier": 1, "res": "Groupe sanguin maternel déterminé (2 déterminations). Recherche d'Agglutinines Irrégulières (RAI) : Négative.", "interpretation": "Bilan immuno-hématologique initial conforme.", "justification": "La détermination du groupe ABO, Rhésus complet, Kell et la recherche de RAI sont obligatoires lors du premier examen prénatal." },
+    "analyse_urine": { tier: 1, res: "Bandelette urinaire : Albumine négative, Sucre négatif.", interpretation: "Absence de protéinurie ou de glycosurie normoglycémique pathologique.", justification: "La recherche d'une albuminurie est obligatoire chaque mois. La recherche de sucre par BU est obsolète mais classique." },
+    "crp": { tier: 2, res: "CRP normale à 4 mg/L.", interpretation: "Absence de syndrome inflammatoire biologique.", justification: "Examen non recommandé de première intention en l'absence de point d'appel infectieux clinique." },
+    "nfs": { tier: 2, res: "Hémoglobine à 11.8 g/dL, Leucocytes à 11 500/mm3 (hyperleucocytose modérée physiologique à prédominance PNN).", interpretation: "Hémogramme normal pour une femme enceinte.", justification: "L'hyperleucocytose modérée et l'hémodilution modérée sont des modifications biologiques physiologiques de la grossesse." },
+    "lactates": { tier: 2, res: "Lactatémie normale à 1.0 mmol/L.", interpretation: "Absence d'hypoperfusion tissulaire.", justification: "Examen totalement inutile et hors de propos pour une consultation de suivi de grossesse normale." },
+    "lcr_num": { tier: 3, res: "Examen non réalisé.", interpretation: "Injustifié.", justification: "ERREUR GRAVE : Demander un examen invasif (LCR) sans aucun symptôme neurologique relève de la faute lourde." }
+  }
+}
