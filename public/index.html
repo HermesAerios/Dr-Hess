@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScribECN - Cockpit Médical</title>
+    <title>ScribECN Core - Mode Full Code</title>
     <style>
         :root {
             --bg-main: #0b0f17; --bg-interface: #131924; --border-color: #222d3f;
@@ -19,7 +19,7 @@
         .app-view { display: none; flex: 1; height: calc(100vh - 50px); overflow: hidden; }
         .app-view.active { display: flex; }
 
-        /* Simulation Container Layout */
+        /* Grid */
         .top-bar { background-color: #0f141c; border-bottom: 2px solid #ff7a00; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 30px; }
         .simulation-container { flex: 1; display: flex; position: relative; height: 100%; width: 100%; }
         .sidebar-tabs-left, .sidebar-tabs-right { width: 45px; background-color: #0c1017; display: flex; flex-direction: column; gap: 8px; padding-top: 15px; border-right: 1px solid var(--border-color); }
@@ -27,21 +27,28 @@
         .v-tab { background: #1a2333; color: var(--text-muted); border: 1px solid var(--border-color); padding: 25px 5px; cursor: pointer; font-size: 0.75em; font-weight: bold; text-transform: uppercase; writing-mode: vertical-lr; transform: rotate(180deg); text-align: center; border-radius: 4px 0 0 4px; }
         .sidebar-tabs-right .v-tab { border-radius: 0 4px 4px 0; transform: rotate(0deg); writing-mode: vertical-lr; }
         .v-tab.active { background: #0284c7; color: #fff; }
+        
         .center-stage { flex: 1; position: relative; background: #111622; display: flex; flex-direction: column; }
         .patient-room { flex: 1.2; background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; border-bottom: 1px solid var(--border-color); }
-        .patient-silhouette { width: 100px; height: 100px; background: #334155; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2em; border: 4px solid var(--accent-cyan); }
+        .patient-silhouette { width: 90px; height: 90px; background: #334155; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2em; border: 4px solid var(--accent-cyan); }
+        
+        /* Scope overlay */
         .scope-overlay { position: absolute; top: 15px; width: 90%; background: rgba(0,0,0,0.85); border: 1px solid #222; border-radius: 6px; padding: 8px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; font-family: monospace; }
         .scope-param { text-align: center; }
         .scope-val { font-size: 1.2em; font-weight: bold; }
         .scope-lbl { font-size: 0.6em; color: #64748b; text-transform: uppercase; }
+        
+        /* Drawer layout */
         .action-drawer { position: absolute; top: 0; bottom: 0; width: 380px; background: var(--bg-interface); box-shadow: 0 0 30px rgba(0,0,0,0.7); z-index: 5; display: none; flex-direction: column; }
         .action-drawer.left-side { left: 45px; border-right: 1px solid var(--border-color); }
         .action-drawer.right-side { right: 45px; border-left: 1px solid var(--border-color); }
         .action-drawer.show { display: flex; }
         .drawer-header { padding: 15px; background: #1a2332; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .drawer-content { flex: 1; overflow-y: auto; padding: 15px; }
+        
         .console-log-panel { flex: 0.8; background: #090d14; display: flex; flex-direction: column; }
         .console-terminal { flex: 1; padding: 12px; font-family: monospace; font-size: 0.85em; overflow-y: auto; color: #a3b3c9; }
+        
         .search-box { position: relative; margin-bottom: 15px; }
         .search-input { width: 100%; padding: 10px 10px 10px 35px; background: #0b0f17; border: 1px solid var(--border-color); border-radius: 6px; color: #fff; box-sizing: border-box; }
         .search-icon { position: absolute; left: 10px; top: 11px; color: var(--text-muted); }
@@ -51,11 +58,20 @@
         .accordion-content.open { display: block; }
         .exam-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 0.85em; }
         .btn-order { background: #0284c7; border: none; color: #fff; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
-        .whiteboard-box { background: #f8fafc; color: #0f172a; padding: 12px; border-radius: 6px; border-left: 5px solid var(--accent-cyan); margin-bottom: 15px; }
-        .wb-tag { background: #e2e8f0; color: #334155; padding: 3px 8px; font-weight: bold; border-radius: 4px; display: inline-block; margin: 3px; font-size: 0.8em; font-family: monospace; }
-        .setup-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; width: 100%; background: #0f141c; }
-
-        /* NEW: Écran de Débriefing / Rationale Style Full Code */
+        
+        /* Box d'imagerie dynamique (Style Full Code) */
+        .image-viewer-box {
+            background: #000; border: 2px dashed var(--border-color); border-radius: 6px;
+            padding: 20px; margin-top: 15px; text-align: center; min-height: 150px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .image-placeholder-graphic {
+            width: 80%; height: 90px; background: #1e293b; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center; font-family: monospace;
+            color: var(--accent-cyan); font-weight: bold; border: 1px solid #334155; margin-bottom: 10px;
+        }
+        
+        /* Debriefing view */
         .debriefing-view { display: none; flex-direction: column; flex: 1; padding: 30px; overflow-y: auto; background: #0e121a; }
         .debrief-card { background: var(--bg-interface); border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; margin-bottom: 20px; }
         .debrief-row { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 5px; }
@@ -63,6 +79,8 @@
         .badge-crit { background: rgba(16,185,129,0.15); color: var(--accent-green); }
         .badge-opt { background: rgba(245,158,11,0.15); color: var(--accent-yellow); }
         .badge-wrong { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+        .setup-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; width: 100%; background: #0f141c; }
+        .hint-btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -75,22 +93,25 @@
         </div>
     </div>
 
-    <!-- DASHBOARD -->
+    <!-- ACCUEIL -->
     <div id="view-dashboard" class="app-view active">
-        <div class="dashboard-container" style="display:block; max-width:600px;">
+        <div class="dashboard-container" style="padding:40px; max-width:600px; margin: 0 auto;">
             <div class="dashboard-card">
-                <h3 class="card-title">📋 Examens de Garde Disponibles</h3>
-                <div class="item-row"><span>Item 158 - Sepsis et Choc Septique (Mme Joly)</span><span class="item-badge badge-review" style="cursor:pointer;" onclick="switchMainView('simulation')">Prêter serment</span></div>
+                <h3>📋 Dossiers de Garde Actifs</h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0b0f17; border-radius:6px;">
+                    <span>Item 158 - Sepsis et choc septique (Mme Joly)</span>
+                    <button class="btn-order" onclick="switchMainView('simulation')">Ouvrir</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- CLINI-JEU SIMULATEUR -->
+    <!-- WORKSPACE SIMULATION -->
     <div id="view-simulation" class="app-view" style="flex-direction: column;">
         <div id="simulation-setup" class="setup-screen">
-            <div style="background:var(--bg-interface); border:1px solid var(--border-color); padding:30px; border-radius:8px; max-width:400px; width:100%;">
-                <h3>Ouvrir le Dossier #158</h3>
-                <button onclick="startLocalGameSimulation()" style="width:100%; padding:12px; background:var(--accent-cyan); border:none; color:#000; font-weight:bold; border-radius:6px; cursor:pointer;">LANCER L'ÉPISODE</button>
+            <div style="background:var(--bg-interface); border:1px solid var(--border-color); padding:30px; border-radius:8px; width:350px; text-align:center;">
+                <h3>Prise en charge #158</h3>
+                <button onclick="startLocalGameSimulation()" class="btn-order" style="width:100%; padding:12px; font-weight:bold;">LANCER LA SIMULATION</button>
             </div>
         </div>
 
@@ -99,13 +120,15 @@
                 <div><span class="case-number" id="case-display-id">Case #158</span> <span class="case-title" id="case-display-title">--</span></div>
                 <div style="font-family: monospace; color: var(--accent-yellow);" id="timer-display">TIME: 00:00</div>
             </div>
+            
             <div class="simulation-container">
                 <div class="sidebar-tabs-left">
                     <div class="v-tab" id="tab-patient" onclick="handleTabClick('patient', 'left')">Patient</div>
                     <div class="v-tab" id="tab-exam" onclick="handleTabClick('exam', 'left')">Exam</div>
                     <div class="v-tab" id="tab-differential" onclick="handleTabClick('differential', 'left')">Differential</div>
                 </div>
-                <div class="action-drawer left-side" id="drawer-left"><div class="drawer-header"><h3 id="drawer-left-title" style="margin:0; font-size:1em;">Menu</h3><button onclick="closeDrawer('left')" style="background:transparent; border:none; color:#fff; cursor:pointer;">✕</button></div><div class="drawer-content" id="drawer-left-content"></div></div>
+                
+                <div class="action-drawer left-side" id="drawer-left"><div class="drawer-header"><h3 id="drawer-left-title">Menu</h3><button onclick="closeDrawer('left')" style="background:transparent; border:none; color:#fff; cursor:pointer;">✕</button></div><div class="drawer-content" id="drawer-left-content"></div></div>
                 
                 <div class="center-stage">
                     <div class="patient-room">
@@ -119,10 +142,20 @@
                         </div>
                         <div class="patient-avatar-box"><div class="patient-silhouette">👤</div><h3 id="patient-name-label">--</h3></div>
                     </div>
+                    
+                    <!-- NEW VISUALIZER BOX PANEL AT CENTER-RIGHT FOR IMAGES AND ECGs -->
+                    <div id="image-viewer-panel" class="image-viewer-box" style="display:none;">
+                        <div class="image-placeholder-graphic" id="iv-graphic-box">ASSET_IMAGE</div>
+                        <div style="font-size:0.85em; color:var(--text-muted); margin-bottom:8px;" id="iv-text-result">Analyse en attente...</div>
+                        <button onclick="requestOfficialInterpretation()" style="background:var(--accent-yellow); border:none; color:#000; font-weight:bold; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8em;">🔍 DEMANDER L'AVIS DU CLINICIEN-EXPERT (-2 pts)</button>
+                        <div id="iv-official-interpretation" style="margin-top:10px; font-size:0.85em; color:var(--accent-green); font-style:italic; max-width:500px;"></div>
+                    </div>
+
                     <div class="console-log-panel"><div class="console-terminal" id="terminal-output"></div></div>
                 </div>
 
-                <div class="action-drawer right-side" id="drawer-right"><div class="drawer-header"><h3 id="drawer-right-title" style="margin:0; font-size:1em;">Menu</h3><button onclick="closeDrawer('right')" style="background:transparent; border:none; color:#fff; cursor:pointer;">✕</button></div><div class="drawer-content" id="drawer-right-content"></div></div>
+                <div class="action-drawer right-side" id="drawer-right"><div class="drawer-header"><h3 id="drawer-right-title">Menu</h3><button onclick="closeDrawer('right')" style="background:transparent; border:none; color:#fff; cursor:pointer;">✕</button></div><div class="drawer-content" id="drawer-right-content"></div></div>
+                
                 <div class="sidebar-tabs-right">
                     <div class="v-tab" id="tab-investigations" onclick="handleTabClick('investigations', 'right')">Investigations</div>
                     <div class="v-tab" id="tab-interventions" onclick="handleTabClick('interventions', 'right')">Interventions</div>
@@ -131,42 +164,42 @@
             </div>
         </div>
 
-        <!-- NEW DYNAMIC DEBRIEFING VIEW (Rapports de fin de cas) -->
+        <!-- DEBRIEFING -->
         <div id="simulation-debriefing" class="debriefing-view">
             <div class="debrief-card" style="text-align:center;">
-                <h1 style="color:var(--accent-cyan); font-size:2.2em; margin-bottom:5px;">RAPPORT DE SYNTHÈSE CLINI-ECN</h1>
-                <h2 style="font-size:3em; color:var(--accent-yellow); margin:15px 0;" id="debrief-final-note">--/20</h2>
-                <p id="debrief-verdict-text" style="color:var(--text-muted); font-size:1.1em;"></p>
-                <button onclick="window.location.reload()" style="padding:12px 25px; background:var(--accent-cyan); border:none; color:#000; font-weight:bold; border-radius:6px; cursor:pointer; font-size:1em; margin-top:10px;">RETOURNER AU TABLEAU DE BORDE</button>
+                <h1 style="color:var(--accent-cyan)">DÉBRIEFING DE FIN DE DOSSIER</h1>
+                <h2 style="font-size:3em; color:var(--accent-yellow)" id="debrief-final-note">--/20</h2>
+                <p id="debrief-verdict-text"></p>
+                <button onclick="window.location.reload()" class="btn-order">RETOURNER AU SERVICE</button>
             </div>
-            
-            <h2 style="text-transform:uppercase; color:#fff; border-bottom:1px solid var(--border-color); padding-bottom:8px;">Analyse Docimologique des Actes (`scoringRationale`)</h2>
+            <h2>Analyse Docimologique Rationale</h2>
             <div id="debrief-actions-list"></div>
         </div>
-
     </div>
 
     <script>
-        let gameState = { activeCase: null, whiteboard: [], totalSeconds: 0 };
-        let currentActiveLeftTab = null, currentActiveRightTab = null, timerInterval = null;
+        let gameState = { activeCase: null, whiteboard: [], currentExamKeyViewed: null };
+        let currentActiveLeftTab = null, currentActiveRightTab = null, timerInterval = null, totalSeconds = 0;
 
         const EXAM_DATABASE = {
             bedside: [
-                { id: "exam_vias", name: "Examen des Voies Aériennes (VAS)" },
+                { id: "exam_vias", name: "Examen des Voies Aériennes" },
                 { id: "exam_resp", name: "Examen de la Respiration" },
                 { id: "exam_circ", name: "Examen Circulatoire" },
                 { id: "exam_back", name: "Percussion Lombaire (Giordano)" },
                 { id: "exam_skin", name: "Inspection Cutanée (Marbrures)" },
-                { id: "bu", name: "Bandelette Urinaire (BU)" }
+                { id: "bu", name: "Bandelette Urinaire (BU)" },
+                { id: "ecg", name: "Électrocardiogramme (ECG)" }
             ],
             biology: [
-                { id: "lactates", name: "Lactatémie Artérielle" },
+                { id: "lactates", name: "Lactates Sanguins" },
                 { id: "hemocultures", name: "Hémocultures (2 paires)" },
-                { id: "ionogramme", name: "Ionogramme sanguin standard" },
+                { id: "ionogramme", name: "Ionogramme Sanguin" },
                 { id: "lcr_num", name: "Numération du LCR" }
             ],
             imaging: [
-                { id: "angio_scanner", name: "Angioscanner Thoracique" }
+                { id: "radio_thorax", name: "Radiographie Thoracique Face" },
+                { id: "tdm_abdomen", name: "Scanner Abdomino-pelvien" }
             ]
         };
 
@@ -178,7 +211,7 @@
         }
 
         async function startLocalGameSimulation() {
-            const res = await fetch('/api/start-case', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ itemId: "158", difficulty: 'medium' }) });
+            const res = await fetch('/api/start-case', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ itemId: "158" }) });
             const data = await res.json();
             gameState.activeCase = data.patient;
 
@@ -188,10 +221,9 @@
             document.getElementById('patient-name-label').innerText = data.patient.name;
 
             updateScope(data.patient);
-            document.getElementById('terminal-output').innerHTML = `<p style="color:var(--accent-green)">[Système] Monitorage de réanimation activé.</p>`;
-
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => { gameState.totalSeconds++; }, 1000);
+            document.getElementById('terminal-output').innerHTML = `<p style="color:var(--accent-green)">[Système] Prise en charge lancée.</p>`;
+            clearInterval(timerInterval); totalSeconds = 0;
+            timerInterval = setInterval(() => { totalSeconds++; }, 1000);
         }
 
         function updateScope(p) {
@@ -224,26 +256,40 @@
             document.getElementById(`drawer-${side}`).classList.add('show');
 
             if(tabId === 'patient') {
-                content.innerHTML = `<button onclick="triggerAction('/api/interrogate')" style="width:100%; padding:10px; background:none; border:1px solid var(--accent-orange); color:var(--accent-orange); cursor:pointer;">🕵️ Pousser l'interrogatoire</button><button onclick="triggerAction('/api/search-home')" style="width:100%; padding:10px; background:none; border:1px solid #9b59b6; color:#9b59b6; margin-top:8px; cursor:pointer;">🏚️ Fouiller le domicile</button><button onclick="triggerAction('/api/vicodin')" style="width:100%; padding:10px; background:var(--accent-red); border:none; color:#fff; font-weight:bold; margin-top:15px; cursor:pointer;">💊 Prendre une Vicodine</button>`;
+                content.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:6px;">
+                        <button onclick="triggerAction('/api/interrogate')" style="padding:10px; background:#1e293b; color:#fff; cursor:pointer; border:1px solid var(--border-color); text-align:left;">🕵️ Interrogatoire</button>
+                        <button onclick="triggerAction('/api/search-home')" style="padding:10px; background:#1e293b; color:#fff; cursor:pointer; border:1px solid var(--border-color); text-align:left;">🏚️ Perquisitionner Domicile</button>
+                    </div>
+                    <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:10px;">
+                        <span style="font-size:0.85em; color:var(--text-muted); font-weight:bold;">💊 CONSEIL DU DR HESS (HINTS) :</span>
+                        <div class="hint-btn-group">
+                            <button onclick="fetchHint('rosHint')" style="font-size:0.8em; padding:6px;">Anamnèse</button>
+                            <button onclick="fetchHint('examHint')" style="font-size:0.8em; padding:6px;">Clinique</button>
+                            <button onclick="fetchHint('investigationsHint')" style="font-size:0.8em; padding:6px; grid-column: span 2;">Investigations</button>
+                        </div>
+                        <div id="hess-hint-text" style="margin-top:10px; font-size:0.85em; color:var(--accent-yellow); font-style:italic; line-height:1.4;"></div>
+                    </div>
+                `;
             }
             else if(tabId === 'exam') {
-                content.innerHTML = `<p style="color:var(--text-muted); font-size:0.85em;">Prescrivez vos examens physiques dans l'onglet Investigations.</p>`;
+                content.innerHTML = `<p style="color:var(--text-muted); font-size:0.85em;">Sélectionnez vos examens physiques structurés directement dans l'onglet Investigations à droite (Rigueur Full Code).</p>`;
             }
             else if(tabId === 'investigations') {
                 content.innerHTML = `
                     <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="exam-search" oninput="filterRows()" placeholder="Filtrer un examen..." class="search-input"></div>
-                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-bedside')">⚡ Examens Cliniques & Lit <span>▼</span></button><div class="accordion-content open" id="c-bedside">${renderCategoryRows(EXAM_DATABASE.bedside)}</div></div>
-                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-biology')">🔬 Biologie <span>▼</span></button><div class="accordion-content open" id="c-biology">${renderCategoryRows(EXAM_DATABASE.biology)}</div></div>
-                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-imaging')">☢️ Imagerie <span>▼</span></button><div class="accordion-content open" id="c-imaging">${renderCategoryRows(EXAM_DATABASE.imaging)}</div></div>`;
+                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-bedside')">⚡ Clinique & Bedside <span>▼</span></button><div class="accordion-content open" id="c-bedside">${renderCategoryRows(EXAM_DATABASE.bedside)}</div></div>
+                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-biology')">🔬 Labo / Biologie <span>▼</span></button><div class="accordion-content open" id="c-biology">${renderCategoryRows(EXAM_DATABASE.biology)}</div></div>
+                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-imaging')">☢️ Plateau d'Imagerie <span>▼</span></button><div class="accordion-content open" id="c-imaging">${renderCategoryRows(EXAM_DATABASE.imaging)}</div></div>`;
             }
             else if(tabId === 'differential') {
-                content.innerHTML = `<div class="whiteboard-box"><h4>Tableau d'analyse</h4><div id="wb-tags-box"></div></div><div style="display:flex; gap:5px;"><input type="text" id="wb-in" style="flex:1; padding:8px; background:#0b0f17; border:1px solid var(--border-color); color:#fff; border-radius:4px;"><button onclick="submitWb()" style="background:var(--accent-cyan); border:none; padding:8px; color:#000; font-weight:bold; cursor:pointer;">Poser</button></div>`;
+                content.innerHTML = `<div class="whiteboard-box"><h4>Tableau Clinique</h4><div id="wb-tags-box"></div></div><div style="display:flex; gap:5px;"><input type="text" id="wb-in" style="flex:1; padding:8px; background:#0b0f17; border:1px solid var(--border-color); color:#fff; border-radius:4px;"><button onclick="submitWb()" style="background:var(--accent-cyan); border:none; padding:8px; font-weight:bold; color:#000; border-radius:4px;">Poser</button></div>`;
             }
             else if(tabId === 'interventions') {
-                content.innerHTML = `<button onclick="executeTherapeutic('Oxygène')" style="width:100%; padding:10px; background:#1e293b; color:#fff; border:1px solid var(--border-color); text-align:left; cursor:pointer; margin-bottom:5px;">⚡ Lancer l'Oxygène</button><button onclick="executeTherapeutic('Remplissage vasculaire')" style="width:100%; padding:10px; background:#1e293b; color:#fff; border:1px solid var(--border-color); text-align:left; cursor:pointer;">💧 Lancer Remplissage Vasculaire</button>`;
+                content.innerHTML = `<button onclick="executeTherapeutic('Oxygène')" style="width:100%; padding:10px; background:#1e293b; color:#fff; border:1px solid var(--border-color); text-align:left; cursor:pointer; margin-bottom:5px;">⚡ Lancer l'Oxygène</button><button onclick="executeTherapeutic('Remplissage')" style="width:100%; padding:10px; background:#1e293b; color:#fff; border:1px solid var(--border-color); text-align:left; cursor:pointer;">💧 Lancer Remplissage Vasculaire</button>`;
             }
             else if(tabId === 'handoff') {
-                content.innerHTML = `<input type="text" id="diag-final" placeholder="Saisir diagnostic..." style="width:100%; padding:10px; background:#0b0f17; border:1px solid var(--border-color); color:#fff; border-radius:4px; margin-bottom:12px; box-sizing:border-box;"><button onclick="closeCaseAndShowDebrief()" style="width:100%; padding:12px; background:var(--accent-green); border:none; color:#fff; font-weight:bold; cursor:pointer;">CLÔTURER LE DOSSIER</button>`;
+                content.innerHTML = `<input type="text" id="diag-final" placeholder="Saisir diagnostic..." style="width:100%; padding:10px; background:#0b0f17; border:1px solid var(--border-color); color:#fff; border-radius:4px; margin-bottom:12px; box-sizing:border-box;"><button onclick="closeCaseAndShowDebrief()" style="width:100%; padding:12px; background:var(--accent-green); border:none; color:#fff; font-weight:bold; cursor:pointer;">SOUMETTRE LE RAPPORT</button>`;
             }
         }
 
@@ -253,21 +299,47 @@
 
         async function triggerAction(url) {
             const res = await fetch(url, { method: 'POST' }); const data = await res.json();
-            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-yellow)">> Action effectuée : ${data.outcome}</p>`;
+            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-yellow)">> ${data.outcome}</p>`;
             updateScope(data.activeSim.patient);
         }
 
+        // NEW FUNCTION: Gère l'affichage graphique de l'image de l'examen et masque la réponse écrite (Rigueur Full Code)
         async function prescribeExam(examKey, examName) {
             const res = await fetch('/api/investigate', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ examKey }) });
             const data = await res.json();
-            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-green)">📊 <b>[Analyse] ${examName}</b> ➜ ${data.outcome}</p>`;
+
+            gameState.currentExamKeyViewed = examKey;
+
+            // Révéler le visualiseur central d'imagerie
+            document.getElementById('image-viewer-panel').style.display = 'flex';
+            document.getElementById('iv-graphic-box').innerText = `📷 ASSET: ${data.image.toUpperCase()}`;
+            document.getElementById('iv-text-result').innerHTML = `<b>Tracé / Donnée Brute :</b> ${data.rawResult}`;
+            document.getElementById('iv-official-interpretation').innerText = ""; // Clear ancienne aide
+
+            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-green)">📊 [Prescription] ${examName} disponible dans le panneau central.</p>`;
             updateScope(data.activeSim.patient);
+        }
+
+        // NEW FUNCTION: Demande l'interprétation au Dr Hess (Coûte des points)
+        async function requestOfficialInterpretation() {
+            if(!gameState.currentExamKeyViewed) return;
+            const res = await fetch('/api/reveal-interpretation', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ examKey: gameState.currentExamKeyViewed }) });
+            const data = await res.json();
+
+            document.getElementById('iv-official-interpretation').innerHTML = `<b>Analyse Expert :</b> ${data.interpretation}<br><span style="font-size:0.9em; color:var(--text-muted)">Rationale : ${data.justification}</span>`;
+        }
+
+        // NEW FUNCTION: Récupère un indice Hess segmenté spécifique (Style de tes fichiers JSON)
+        async function fetchHint(hintType) {
+            const res = await fetch('/api/get-hint', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ type: hintType }) });
+            const data = await res.json();
+            document.getElementById('hess-hint-text').innerText = `Dr Hess : "${data.hint}"`;
         }
 
         async function executeTherapeutic(order) {
             const res = await fetch('/api/execute', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ order }) });
             const data = await res.json();
-            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-yellow)">⚡ <b>Geste : ${order}</b></p>`;
+            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-yellow)">⚡ Geste : ${order} ➜ ${data.outcome}</p>`;
             updateScope(data.activeSim.patient);
         }
 
@@ -277,37 +349,29 @@
             const data = await res.json(); gameState.whiteboard = data.activeSim.whiteboard; openDrawer('left', 'differential');
         }
 
-        // NEW FUNCTION: Génère le panneau de débriefing de fin de partie à la fermeture
         async function closeCaseAndShowDebrief() {
             const hypothesis = document.getElementById('diag-final').value.trim();
             const res = await fetch('/api/diagnose', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ hypothesis }) });
             const data = await res.json();
 
             clearInterval(timerInterval);
-
-            // Masquer la zone de jeu, afficher le débriefing
             document.getElementById('simulation-gameplay').style.display = 'none';
             document.getElementById('simulation-debriefing').style.display = 'flex';
-
             document.getElementById('debrief-final-note').innerText = `${data.finalNote}/20`;
-            document.getElementById('debrief-verdict-text').innerText = `Le diagnostic attendu par le jury était : ${data.correctAnswer}.`;
+            document.getElementById('debrief-verdict-text').innerText = `Le diagnostic requis était : ${data.correctAnswer}.`;
 
-            // Construire la liste docimologique structurée
             let listContainer = document.getElementById('debrief-actions-list');
             listContainer.innerHTML = "";
-
             data.actionsHistory.forEach(act => {
                 let badgeClass = act.status === 1 ? 'badge-crit' : act.status === 2 ? 'badge-opt' : 'badge-wrong';
                 listContainer.innerHTML += `
                     <div class="debrief-card debrief-row">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong style="color:#fff; font-size:1.05em;">${act.name}</strong>
-                            <span class="action-badge ${badgeClass}">${act.tier.toUpperCase()}</span>
+                            <strong>${act.name}</strong> <span class="action-badge ${badgeClass}">${act.tier.toUpperCase()}</span>
                         </div>
-                        <div style="color:var(--accent-cyan); font-size:0.9em; margin-top:3px;">➜ Valeur mesurée / Effet : ${act.res}</div>
-                        <div style="color:var(--text-muted); font-size:0.88em; margin-top:5px; font-style:italic; line-height:1.4;">💡 Rationale HAS : ${act.justification}</div>
-                    </div>
-                `;
+                        <div style="color:var(--accent-cyan)">➜ ${act.res}</div>
+                        <div style="color:var(--text-muted); font-size:0.88em; font-style:italic;">💡 Rationale : ${act.justification}</div>
+                    </div>`;
             });
         }
     </script>
