@@ -203,7 +203,7 @@
 
         async function startLocalGameSimulation() {
             const itemId = document.getElementById('case-select').value;
-            if(!itemId) return alert("Veuillez d'abord ajouter un fichier JSON valide dans le dossier /cases.");
+            if(!itemId) return alert("Veuillez d'avance ajouter un fichier JSON valide dans le dossier /cases.");
 
             const res = await fetch('/api/start-case', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ itemId }) });
             const data = await res.json();
@@ -217,9 +217,38 @@
             document.getElementById('patient-aspect-label').innerText = data.patient.aspect;
 
             updateScope(data.patient);
-            document.getElementById('terminal-output').innerHTML = `<p style="color:var(--accent-green)">[Système] Prise en charge lancée. Fichier JSON lu avec succès.</p>`;
-            clearInterval(timerInterval); totalSeconds = 0;
-            timerInterval = setInterval(() => { totalSeconds++; }, 1000);
+            
+            // Affichage initial du temps virtuel (00h00 d'admission aux urgences)
+            document.getElementById('timer-display').innerText = `TEMPS VIRTUEL : 0h00 min`;
+            document.getElementById('terminal-output').innerHTML = `<p style="color:var(--accent-green)">[Système] Prise en charge hyper-aiguë initialisée. Le chronomètre suit la latence de vos prescriptions.</p>`;
+        }
+
+        // Remplacer la fonction prescribeExam pour rafraîchir dynamiquement le scope et le temps virtuel
+        async function prescribeExam(examKey, examName) {
+            const res = await fetch('/api/investigate', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ examKey }) });
+            const data = await res.json();
+
+            gameState.currentExamKeyViewed = examKey;
+
+            document.getElementById('image-viewer-panel').style.display = 'flex';
+            document.getElementById('iv-graphic-box').innerText = `📷 ASSET: ${data.image.toUpperCase()}`;
+            document.getElementById('iv-text-result').innerHTML = `<b>Donnée Brute :</b> ${data.rawResult}`;
+            document.getElementById('iv-official-interpretation').innerText = "";
+
+            // Mise à jour de l'affichage du temps virtuel hospitalier cumulé
+            document.getElementById('timer-display').innerText = `TEMPS VIRTUEL : +${data.activeSim.virtualMinutesElapsed} min`;
+
+            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-green)">📊 [Prescription] ${examName} réalisée (Durée : ${data.minutesSpent} min).</p>`;
+            updateScope(data.activeSim.patient);
+        }
+
+        // Faire de même pour triggerStabilize pour actualiser l'horloge
+        async function triggerStabilize(actionKey) {
+            const res = await fetch('/api/stabilize-action', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ actionKey }) });
+            const data = await res.json();
+            document.getElementById('timer-display').innerText = `TEMPS VIRTUEL : +${data.activeSim.virtualMinutesElapsed} min`;
+            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-cyan)"><b>[Stabilize]</b> ${data.outcome}</p>`;
+            updateScope(data.activeSim.patient);
         }
     </script>
 </body>
