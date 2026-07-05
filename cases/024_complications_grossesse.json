@@ -1,0 +1,53 @@
+{
+  "itemId": "024",
+  "displayName": "Item 24 — Principales Complications de la Grossesse",
+  "correctDiag": "Chorioamniotite",
+  "isMatrix": true,
+  "mandatoryExamsToRuleOut": ["bu", "nfs", "crp", "hemocultures", "ecg"],
+  "lethalWrongDiags": ["Appendicite aiguë", "Hématome rétroplacentaire", "Placenta prævia"],
+  "correctDisposition": "icu_admission",
+  "rosHint": "Un saignement ou une fièvre au 3e trimestre est une urgence obstétricale absolue. Cherchez une rupture de membrane masquée ou prolongée, et interrogez sur la cinétique exacte des douleurs.",
+  "examHint": "Le toucher vaginal est formellement interdit en cas de métrorragie tant que la localisation placentaire n'est pas connue par échographie. Réalisez un examen au spéculum stérile et mesurez la hauteur utérine.",
+  "investigationsHint": "Le moniteur de cardiotocographie (RCF) est indispensable au-delà de 25 SA pour surveiller le fœtus. Ne lancez pas d'imagerie irradiante lourde sans éliminer les urgences cliniques immédiates.",
+  "possibleProfiles": [
+    {
+      "name": "Amandine L., 26 ans",
+      "age": 26,
+      "terrain": "Primipare, 31 SA + 4 jours, tabagisme actif et consommation de cannabis signalés au 1er trimestre.",
+      "secret": "A fissuré sa poche des eaux il y a 48 heures à la maison mais n'a rien dit par peur des services sociaux. Déclare que ses contractions ne sont qu'une 'petite grippe'.",
+      "baseVitals": { "fc": 118, "ta": "124/82", "spo2": 95, "fr": 24, "temp": 38.6, "dextro": 5.2, "isCritical": true },
+      "aspect": "Faciès anxieux, frissons intenses, utérus sensible en permanence entre les vagues contractiles. Hauteur utérine à 31 cm.",
+      "desc": "Amenée par les secours pour fièvre à 38.6°C, vomissements et contractions utérines douloureuses rapprochées à 31 SA."
+    },
+    {
+      "name": "Mylène V., 32 ans",
+      "age": 32,
+      "terrain": "Deuxième geste, utérus cicatriciel (antécédent de césarienne), 33 SA + 2 jours, diabète gestationnel bien contrôlé.",
+      "secret": "A mangé du fromage au lait cru artisanal lors d'un buffet il y a une semaine. Se plaint de céphalées légères et présente un syndrome pseudo-grippal fruste.",
+      "baseVitals": { "fc": 112, "ta": "138/85", "spo2": 96, "fr": 22, "temp": 38.9, "dextro": 5.8, "isCritical": true },
+      "aspect": "Patiente prostrée, se plaignant de frissons et de lombalgies diffuses. Contractions utérines perceptibles à la palpation.",
+      "desc": "Admise en salle de déchocage pour un syndrome fébrile aigu isolé à 33 SA avec apparition de contractions utérines douloureuses."
+    }
+  ],
+  "dispositionsConfig": {
+    "icu_admission": { "label": "Hospitalisation en Réanimation Médicale ou Secteur Grossesses à Haut Risque (Maternité Type III)", "score": 5, "rationale": "PARFAIT : Une chorioamniotite ou fièvre in utero à < 32 SA impose une extraction ou une naissance imminente. Le transfert in utero doit se faire vers une structure de type III dotée d'une réanimation néonatale, sous couverture d'une antibiothérapie parentérale immédiate. La tocolyse est formellement contre-indiquée." },
+    "admit_to_floor": { "label": "Hospitalisation en service de Gynécologie conventionnelle (Maternité Type I)", "score": -15, "rationale": "FAUTE DE TRIAGE : Un nouveau-né de moins de 32 SA ou de moins de 1500g requiert une structure de type III avec réanimation infantile. L'hospitaliser en niveau I est une perte de chance majeure." },
+    "prep_for_operating_room": { "label": "Césarienne en extrême urgence immédiate", "score": -5, "rationale": "PRÉMATURÉ : Bien que l'extraction fœtale soit l'issue obligatoire de la chorioamniotite, il faut d'abord injecter l'antibiothérapie parentérale immédiate et évaluer précisément la tolérance du RCF, sauf si le crash fœtal est cataclysmique." },
+    "discharge": { "label": "Retour à domicile sous paracétamol et repos", "score": -50, "rationale": "CRIMINEL : Toute fièvre in utero est une listériose ou une chorioamniotite jusqu'à preuve du contraire. Le risque de mort fœtale in utero (MFIU) et de choc septique maternel est imminent." }
+  },
+  "matrixExams": {
+    "exam_resp": { "tier": 1, "res": "Polypnée superficielle à 24/min. Auscultation pleuropulmonaire libre.", "interpretation": "Tachypnée maternelle liée au syndrome fébrile systémique.", "justification": "Évalue la tolérance systémique de l'infection maternelle." },
+    "exam_circ": { "tier": 1, "res": "Tachycardie sinusale maternelle à 118 bpm. Extrémités chaudes, pas de marbrures à ce stade.", "interpretation": "Hémodynamique hyperdynamique fébrile compensée.", "justification": "Indispensable pour traquer le glissement vers un sepsis grave ou un choc septique." },
+    "exam_abd": { "tier": 1, "res": "Abdomen souple en dehors de l'utérus gravide. Pas de défense ni de contracture dans les fosses iliaques. Hauteur utérine normale pour le terme.", "interpretation": "Absence de syndrome péritonéal chirurgical pur (élimine une appendicite aiguë vraie).", "justification": "Permet d'éliminer une urgence chirurgicale digestive mimétique." },
+    "exam_gu": { "tier": 1, "res": "Toucher vaginal NON RÉALISÉ (Interdit d'emblée). Au spéculum stérile : visualisation d'un écoulement permanent de liquide amniotique teinté, louche et d'odeur fétide, sourdant du col. Col utérin centré, ramolli, ouvert à 2 cm.", "interpretation": "Rupture prématurée des membranes (RPM) prolongée et compliquée de chorioamniotite.", "justification": "Le toucher vaginal est contre-indiqué en cas de suspicion de placenta prævia. Le spéculum affirme la rupture et l'aspect fétide du liquide." },
+    "exam_back": { "tier": 1, "res": "Fosses lombaires libres, percussion bilatérale totalement indolore.", "interpretation": "Signe de Giordano négatif.", "justification": "Élimine formellement une pyélonéphrite aiguë gravidique, cause fréquente de fièvre au 3e trimestre." },
+    "ecg": { "tier": 1, "res": "Enregistrement cardiotocographique (RCF) : Rythme cardiaque fœtal de base à 185 bpm (tachycardie fœtale majeure), variabilité diminuée (oscillations < 5 bpm, rythme plat), absence totale d'accélérations. Enregistrement des contractions : CU régulières et intenses toutes les 3 minutes.", "interpretation": "Tachycardie fœtale constante témoignant d'une infection fœtale active (chorioamniotite) et d'un début d'hypoxie.", "justification": "La tachycardie fœtale (> 160 bpm) est le signe fœtal le plus précoce et constant de la chorioamniotite." },
+    "bu": { "tier": 1, "res": "Bandelette urinaire : Albumine négative, Leucocytes négatifs, Nitrites négatifs.", "interpretation": "Bandelette urinaire normale.", "justification": "Permet d'écarter une colonisation ou infection urinaire aiguë concomitante." },
+    "nfs": { "tier": 1, "res": "Hémoglobine : 11.2 g/dL (anémie physiologique de dilution), Leucocytes : 17 400/mm3 à polynucléaires neutrophiles.", "interpretation": "Hyperleucocytose franche, en faveur du syndrome infectieux aigu.", "justification": "Bien qu'une hyperleucocytose modérée (< 15 000) soit physiologique au 3e trimestre, un taux très élevé oriente vers l'infection." },
+    "crp": { "tier": 1, "res": "CRP élevée à 86 mg/L.", "interpretation": "Syndrome inflammatoire systémique majeur.", "justification": "Marqueur clé du suivi et du diagnostic de l'inflammation chorioamniotique." },
+    "hemocultures": { "tier": 1, "res": "Prélèvements effectués. En cours de culture (Recherche spécifique de Listeria monocytogenes lancée).", "interpretation": "Hémocultures obligatoires avant toute antibiothérapie fébrile in utero.", "justification": "Toute fièvre isolée ou syndromique chez une femme enceinte impose des hémocultures pour traquer la listériose." },
+    "ionogramme": { "tier": 2, res: "Sodium : 137 mmol/L, Potassium : 3.9 mmol/L, Créatinine : 62 µmol/L.", interpretation: "Fonction rénale et équilibre hydro-électrolytique normaux.", justification: "Bilan de base avant réanimation ou corticothérapie." },
+    "hemostase": { "tier": 2, "res": "TP : 96%, TCA : 32s, Fibrinogène augmenté à 5.8 g/L (hyperfibrinogénémie physiologique de la grossesse).", "interpretation": "Absence de coagulopathie de consommation (CIVD).", "justification": "Écarte une CIVD précoce, complication classique d'un hématome rétroplacentaire marginal ou complet." },
+    "tdm_abdomen": { "tier": 3, "res": "Examen non réalisé en raison de l'irradiation fœtale indue.", "interpretation": "Contre-indiqué.", "justification": "FAUTE GRAVE : Irradier un utérus gravide au 3e trimestre pour une douleur utérine fébrile évidente constitue une faute lourde." }
+  }
+}
