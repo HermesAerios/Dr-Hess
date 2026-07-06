@@ -1,0 +1,48 @@
+{
+  "itemId": "156",
+  "displayName": "Item 156 — Infections Ostéo-Articulaires (IOA) de l'Enfant et de l'Adulte",
+  "correctDiag": "Arthrite septique",
+  "isMatrix": true,
+  "mandatoryExamsToRuleOut": ["nfs", "crp", "hemocultures", "echo_renal"],
+  "lethalWrongDiags": ["Rhume de hanche", "Crise de Goutte aiguë", "Ostéosarcome fémoral"],
+  "correctDisposition": "prep_for_operating_room",
+  "rosHint": "Recherchez systématiquement une porte d'entrée ou un épisode infectieux récent (ORL chez l'enfant, cutané ou urinaire chez l'adulte). La chronologie de l'impotence fonctionnelle est la clé.",
+  "examHint": "L'attitude en flessum, abduction et rotation externe est la position antalgique classique d'une hanche sous pression. Testez la mobilité passive avec une infinie douceur et cherchez une douleur exquise.",
+  "investigationsHint": "Chez l'enfant, l'imagerie de première intention est l'échographie articulaire bilatérale et comparative pour traquer l'épanchement. Ne demandez pas de scanner inutilement irradiant.",
+  "possibleProfiles": [
+    {
+      "name": "Lucas D., 5 ans",
+      "age": 5,
+      "terrain": "Développement psychomoteur normal, vaccins à jour, antécédent de rhinopharyngite aiguë guérie il y a 10 jours.",
+      "secret": "A reçu du sirop d'ibuprofène donné par ses parents ce matin pour calmer sa douleur, ce qui masque partiellement sa courbe thermique et sa cinétique inflammatoire clinique.",
+      "baseVitals": { "fc": 115, "ta": "98/60", "spo2": 98, "fr": 22, "temp": 38.3, "dextro": 5.1, "isCritical": true },
+      "aspect": "Jeune garçon grognon, blotti dans les bras de sa mère. Refuse catégoriquement de poser le pied droit au sol pour marcher (impotence fonctionnelle totale).",
+      "desc": "Enfant de 5 ans amené en urgence par ses parents car il ne peut plus poser la jambe droite au sol, associé à une fièvre modérée à 38.3°C."
+    },
+    {
+      "name": "Gérard M., 62 ans",
+      "age": 62,
+      "terrain": "Diabétique de type 2 mal équilibré, porteur d'une arthroplastie totale de hanche gauche posée en 2024.",
+      "secret": "S'est blessé au pied en jardinant il y a 3 semaines et a négligé de désinfecter une plaie cutanée trainante (porte d'entrée hématogène).",
+      "baseVitals": { "fc": 102, "ta": "112/68", "spo2": 95, "fr": 20, "temp": 38.8, "dextro": 11.4, "isCritical": true },
+      "aspect": "Patient algique, présentant des frissons, focalisé sur une douleur intolérable de la racine de la cuisse gauche avec impotence fonctionnelle complète du membre inférieur.",
+      "desc": "Consultation pour monoarthrite aiguë fébrile de la hanche gauche sur prothèse totale, évoluant depuis 36 heures sur un terrain d'immunotolérance diabétique."
+    }
+  ],
+  "dispositionsConfig": {
+    "prep_for_operating_room": { "label": "Mise à jeun immédiate et transfert au bloc opératoire pour ponction articulaire chirurgicale et lavage", "score": 5, "rationale": "PARFAIT : L'arthrite septique est une urgence médico-chirurgicale absolue. Le traitement repose sur la ponction articulaire pour analyse cytobactériologique obligatoire AVANT toute antibiothérapie, suivie d'un lavage articulaire et d'une immobilisation antalgique." },
+    "icu_admission": { "label": "Hospitalisation en service de Réanimation Médicale ou USC", "score": -5, "rationale": "INADÉQUAT : Bien que le patient présente des signes de détresse fébrile, le geste curatif est chirurgical et doit être réalisé au bloc opératoire en urgence pour décomprimer l'articulation et sauver le cartilage." },
+    "admit_to_floor": { "label": "Hospitalisation en service de Pédiatrie ou de Médecine conventionnelle sous surveillance", "score": -15, "rationale": "FAUTE GRAVE : Différer la prise en charge chirurgicale d'une arthrite septique expose à une destruction définitive du cartilage articulaire et à une nécrose de la tête fémorale en quelques heures." },
+    "discharge": { "label": "Retour à domicile sous antibiotiques oraux (Augmentin) et paracétamol", "score": -50, "rationale": "CRIMINEL : Initier une antibiothérapie probabiliste orale à domicile sans prélèvement ni lavage articulaire est une faute lourde qui pérennise l'infection et décime l'articulation." }
+  },
+  "usefulExams": {
+    "exam_circ": { "tier": 1, "res": "Tachycardie sinusale à 115 bpm, temps de recoloration cutanée normal à 2 secondes, pas de marbrures.", "interpretation": "Hémodynamique stable, tachycardie adaptative liée à la fièvre et à la douleur.", "justification": "Évalue la tolérance hémodynamique et élimine un choc septique systémique d'emblée." },
+    "exam_loco": { "tier": 1, "res": "Attitude spontanée du membre inférieur droit en flessum, légère abduction et rotation externe (position antalgique). La mobilisation passive de la hanche droite déclenche une douleur aiguë intolérable et montre une limitation stricte dans tous les secteurs (abduction et rotation interne impossibles). Pas de signe inflammatoire cutané local visible[cite: 6]. Genou et cheville libres[cite: 6]. Perquisition osseuse des jambes indolore[cite: 6].", "interpretation": "Monoarthrite aiguë de hanche droite hautement suspecte d'origine septique[cite: 6].", "justification": "L'examen clinique met en évidence l'attitude antalgique et la limitation douloureuse multidirectionnelle de l'articulation[cite: 6]." },
+    "echo_renal": { "tier": 1, "res": "L'échographie de la hanche pathologique met en évidence un épanchement intra-articulaire significatif avec un écart capsulo-fémoral mesuré à 6 mm (comparé à 2 mm du côté sain)[cite: 6]. Absence d'anomalie osseuse corticale visible[cite: 6].", "interpretation": "Épanchement intra-articulaire franc confirmant le diagnostic d'arthrite[cite: 6].", "justification": "L'échographie est l'examen radiologique de première intention, indispensable pour objective l'épanchement de hanche chez l'enfant[cite: 6]." },
+    "nfs": { "tier": 1, "res": "Hémoglobine : 12.1 g/dL, Plaquettes : 340 000 /mm3, Leucocytes augmentés à 15 600 /mm3 à polynucléaires neutrophiles[cite: 6].", "interpretation": "Hyperleucocytose franche à PNN en faveur d'un processus bactérien aigu[cite: 6].", "justification": "Permet de documenter le syndrome infectieux biologique et valide un des critères de Kocher[cite: 6]." },
+    "crp": { "tier": 1, "res": "Protéine C-Réactive augmentée à 48 mg/L[cite: 6].", "interpretation": "Syndrome inflammatoire biologique franc[cite: 6].", "justification": "La CRP est un marqueur biologique clé pour évaluer l'inflammation et calculer les critères de Kocher (seuil > 20 mg/L)[cite: 6]." },
+    "hemocultures": { "tier": 1, "res": "Prélèvements sanguins (2 flacons) effectués en urgence[cite: 6]. En cours de culture (Négatives à H+24)[cite: 6].", "interpretation": "Hémocultures obligatoires devant toute suspicion d'IOA fébrile[cite: 6].", "justification": "Doivent être prélevées systématiquement avant toute antibiothérapie probabiliste pour traquer le germe par voie hématogène[cite: 6]." },
+    "hgt": { "tier": 2, "res": "Glycémie capillaire normale mesurée à 5.1 mmol/L[cite: 6].", "interpretation": "Absence d'anomalie glycémique aiguë[cite: 6].", "justification": "Examen de routine au lit du patient pour éliminer une détresse métabolique associée[cite: 6]." },
+    "tdm_abdomen": { "tier": 3, "res": "Examen non réalisé.", "interpretation": "Contre-indiqué et non pertinent.", "justification": "FAUTE GRAVE : Demander un scanner abdominal ou pelvien irradiant chez un enfant pour une suspicion de boiterie isolée est une erreur majeure qui retarde la ponction[cite: 6]." }
+  }
+}
