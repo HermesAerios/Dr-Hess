@@ -1,0 +1,46 @@
+{
+  "itemId": "168",
+  "displayName": "Item 168 — Infections à Herpès Virus du Sujet Immunocompétent",
+  "correctDiag": "Méningoencéphalite herpétique",
+  "isMatrix": true,
+  "mandatoryExamsToRuleOut": ["exam_neuro", "exam_skin", "hgt", "lcr_num"],
+  "lethalWrongDiags": ["Accident vasculaire cérébral (AVC) sylvien", "Poussée de sclérose en plaques", "Abcès cérébral à pyogènes"],
+  "correctDisposition": "icu_admission",
+  "rosHint": "Traquez la cinétique des troubles du comportement et l'apparition d'une fièvre. Un syndrome confusionnel fébrile aigu avec troubles de la mémoire ou aphasie est une urgence thérapeutique absolue.",
+  "examHint": "Recherchez des signes de focalisation neurologique temporelle (aphasie, dysmoisie) associés à un syndrome méningé. Inspectez la peau à la recherche de vésicules groupées en bouquet.",
+  "investigationsHint": "La ponction lombaire (PL) est prioritaire pour lancer la PCR HSV. En cas de troubles de vigilance ou de focalisation, le scanner cérébral est requis pour éliminer un effet de masse avant de piquer.",
+  "possibleProfiles": [
+    {
+      "name": "M. Guillaume T., 42 ans",
+      "age": 42,
+      "terrain": "Immunocompétent, aucun antécédent médical notable, vit en couple.",
+      "secret": "A présenté un herpès labial ('bouton de fièvre') discret il y a une semaine, négligé. Depuis 24h, tient des propos incohérents et présente des hallucinations olfactives bizarres (odeur de brûlé).",
+      "baseVitals": { "fc": 104, "ta": "122/74", "spo2": 97, "fr": 20, "temp": 39.1, "dextro": 5.6, "isCritical": true },
+      "aspect": "Patient obnubilé, agité par intermittence, aphasie d'expression mixte prédominante (Glasgow 12). Raideur de nuque modérée.",
+      "desc": "Amené par sa conjointe pour une confusion mentale d'apparition rapide, une désorientation, des troubles de l'élocution et une fièvre élevée à 39.1°C."
+    },
+    {
+      "name": "Chantal R., 65 ans",
+      "age": 65,
+      "terrain": "Âge > 65 ans (facteur de risque de névralgie post-zostérienne), hypertension artérielle contrôlée.",
+      "secret": "A appliqué une crème à base de corticoïdes sur ses lésions cutanées faciales en pensant qu'il s'agissait d'un eczéma, ce qui aggrave la réplication virale locale.",
+      "baseVitals": { "fc": 88, "ta": "135/80", "spo2": 98, "fr": 16, "temp": 38.1, "dextro": 5.2, "isCritical": false },
+      "aspect": "Patiente algique, se plaignant d'une sensation de brûlure cutanée intolérable (allodynie) dans le territoire du front et de l'œil gauche.",
+      "desc": "Consulte pour une éruption vésiculeuse unilatérale touchant le front gauche, la paupière supérieure et l'aile du nez, accompagnée d'une fièvre modérée."
+    }
+  ],
+  "dispositionsConfig": {
+    "icu_admission": { "label": "Hospitalisation en Réanimation Médicale ou en Unité de Soins Intensifs Neurologiques", "score": 5, "rationale": "PARFAIT : Une méningoencéphalite herpétique est une urgence vitale absolue. Le risque d'état de mal épileptique, d'œdème temporal compressif et de troubles de vigilance impose un monitorage continu armé en réanimation avec mise en place immédiate d'Aciclovir IV lourd." },
+    "admit_to_floor": { "label": "Hospitalisation en service de Neurologie ou d'Infectiologie conventionnelle", "score": -10, "rationale": "INADÉQUAT : Installer un patient suspect d'encéphalite nécrotico-hémorragique avec trouble de vigilance en chambre simple sans surveillance monitorée expose à un risque de virement vers le coma ou de crise convulsive non gérée." },
+    "discharge": { "label": "Retour à domicile sous Zelitrex oral et paracétamol", "score": -45, "rationale": "CRIMINEL (pour Guillaume) / JUSTIFIÉ uniquement si Chantal : Le zona ophtalmique de Chantal peut se gérer en ambulatoire avec traitement antiviral oral (Valaciclovir) initié avant 72h et avis ophtalmologique urgent. Pour l'encéphalite herpétique, c'est le décès ou des séquelles massives assurés." }
+  },
+  "matrixExams": {
+    "exam_neuro": { "tier": 1, "res": "Guillaume : Score de Glasgow à 12 (E3V3M6). Présence d'un trouble du langage type aphasie motrice, désorientation temporo-spatiale. Syndrome méningé modéré (raideur de nuque). Pas de déficit moteur focalisé des membres. Chantal : Examen neuro central strictement normal.", "interpretation": "Guillaume : Souffrance temporale gauche évocatrice d'une encéphalite focale associée à un syndrome méningé. Chantal : Examen central normal.", "justification": "L'examen neurologique traque l'atteinte temporale (aphasie, confusion, amnésie) propre à la méningoencéphalite herpétique." },
+    "exam_skin": { "tier": 1, "res": "Guillaume : Absence de lésion vésiculeuse active, cicatrice d'herpès labial croûteux. Chantal : Éruption de vésicules ombiliquées groupées en bouquets sur fond érythémateux, unilatérale, respectant strictement la ligne médiane, siégeant dans le territoire du V1 gauche. Présence de vésicules sur l'aile du nez (signe de Hutchinson positif).", "interpretation": "Guillaume : Pas de lésion active. Chantal : Zona ophtalmique gauche aigu avec atteinte de la branche naso-ciliaire (risque oculaire majeur).", "justification": "L'examen cutané affirme le diagnostic de zona par son caractère dermatotomique unilatéral. Le signe de Hutchinson impose l'examen ophtalmologique." },
+    "hgt": { "tier": 1, "res": "Glycémie capillaire normale à 5.6 mmol/L.", "interpretation": "Élimine une hypoglycémie mimétique de la confusion ou de l'aphasie.", "justification": "Obligatoire au lit du patient devant tout trouble aigu des fonctions supérieures." },
+    "lcr_num": { "tier": 1, "res": "Réalisé après scanner cérébral. Liquide clair / lymphocytaire. Cytologie : 120 éléments/mm3 (90% de lymphocytes), présence de quelques hématies (profil clair mais micro-hémorragique). Biochimie : Hyperprotéinorachie modérée à 0.8 g/L, Glycorachie NORMALE à 3.4 mmol/L. PCR HSV-1 : Lancée en urgence.", "interpretation": "Méningite lymphocytaire normoglycorachique typique d'une étiologie virale (Méningoencéphalite herpétique).", "justification": "CRITIQUE : Le LCR affirme la méningite lymphocytaire normoglycorachique. La PCR HSV scellera le diagnostic." },
+    "tdm_abdomen": { "tier": 1, "res": "Scanner cérébral sans et avec injection : Pas d'effet de masse, pas d'hémorragie active, pas de déviation de la ligne médiane. Discrète plage d'hypodensité cortico-sous-corticale temporale gauche précoce.", "interpretation": "Élimine un processus expansif contre-indiquant la PL. Confirme l'atteinte temporale sélective.", "justification": "Le scanner ou l'IRM sont obligatoires AVANT la PL en présence de signes focaux (aphasie) ou de troubles de vigilance pour écarter un risque d'engagement." },
+    "lactates": { "tier": 2, "res": "Lactatémie artérielle normale à 1.2 mmol/L.", "interpretation": "Pas de choc métabolique systémique d'aval.", "justification": "Bilan de débrouillage en réanimation, non contributif pour l'infection du SNC." },
+    "crp": { "tier": 2, "res": "CRP discrètement augmentée à 12 mg/L.", "interpretation": "Inflammation systémique modérée, classique dans les infections virales du SNC.", "justification": "La CRP n'aide pas à distinguer une méningite virale d'un mime neurologique." }
+  }
+}
