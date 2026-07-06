@@ -1,0 +1,44 @@
+{
+  "itemId": "151",
+  "displayName": "Item 151 — Méningite, Méningoencéphalite chez l'Adulte et l'Enfant",
+  "correctDiag": "Méningite aiguë à méningocoque",
+  "isMatrix": true,
+  "mandatoryExamsToRuleOut": ["hgt", "exam_skin", "exam_neuro"],
+  "lethalWrongDiags": ["Accident vasculaire cérébral (AVC)", "Surdosage médicamenteux", "Sepsis grave"],
+  "correctDisposition": "icu_admission",
+  "rosHint": "Recherchez la triade classique : fièvre, céphalées, vomissements ou photophobie. Traquez l'apparition de troubles de la conscience (Glasgow) ou d'éléments purpuriques cutanés.",
+  "examHint": "Recherchez une raideur de nuque, un signe de Kernig ou de Brudzinski. Examinez le patient NU sous toutes les coutures pour éliminer un purpura fulminans. Éliminez des signes de focalisation.",
+  "investigationsHint": "La ponction lombaire (PL) est le geste pivot absolu. Le scanner cérébral n'est requis avant la PL qu'en cas de signe de focalisation neurologique, de coma profond ou de convulsions persistantes.",
+  "possibleProfiles": [
+    {
+      "name": "Sophie M., 21 ans",
+      "age": 21,
+      "terrain": "Étudiante en communauté (cité universitaire), aucun antécédent médical notable.",
+      "secret": "A pris deux comprimés de kétoprofène (AINS) achetés par sa colocataire pour calmer ses maux de tête, ce qui a temporairement masqué la violence du syndrome méningé avant le crash.",
+      "baseVitals": { "fc": 112, "ta": "115/75", "spo2": 98, "fr": 22, "temp": 39.5, "dextro": 6.2, "isCritical": true },
+      "aspect": "Patiente couchée en chien de fusil, fuyant la lumière (photophobie intense). Somnolente mais orientée, répond aux ordres simples (Glasgow 14).",
+      "desc": "Amenée aux urgences pour céphalées diffuses pulsatiles pulvérisantes d'apparition brutale depuis 12h, accompagnées de vomissements en jet et de frissons."
+    },
+    {
+      "name": "Yanis B., 14 mois",
+      "age": 1,
+      "terrain": "Nourrisson, vaccins à jour sauf rappels des 12 mois retardés par les parents.",
+      "secret": "Présente une otite moyenne aiguë homolatérale non diagnostiquée depuis 3 jours, ayant servi de porte d'entrée par contiguïté anatomique.",
+      "baseVitals": { "fc": 145, "ta": "85/50", "spo2": 96, "fr": 35, "temp": 39.9, "dextro": 5.4, "isCritical": true },
+      "aspect": "Nourrisson geignard, hypotonique ('poupée de chiffon'), cri plaintif à la mobilisation, plafonnement intermittent du regard, fontanelle antérieure bombante.",
+      "desc": "Présenté aux urgences pédiatriques pour somnolence inhabituelle, refus du biberon et poussée thermique brutale à près de 40°C."
+    }
+  ],
+  "dispositionsConfig": {
+    "icu_admission": { "label": "Hospitalisation immédiate en Réanimation Médicale ou en Unité de Soins Intensifs Infectieux", "score": 5, "rationale": "EXCELLENT : La méningite bactérienne aiguë est une urgence vitale. Le risque de choc endotoxinique, d'œdème cérébral et de glissement vers le coma impose une surveillance monitorée armée en soins intensifs ou en réanimation." },
+    "admit_to_floor": { "label": "Hospitalisation en service de Médecine ou Pédiatrie conventionnelle", "score": -20, "rationale": "FAUTE LOURDE : Isoler une méningite purulente aiguë en chambre standard sans scope expose le patient à un décès par engagement cérébral ou choc septique non détecté." }
+  },
+  "usefulExams": {
+    "exam_skin": { "tier": 1, "res": "Examen cutané complet (patient entièrement dévêtu) : Absence totale d'éléments pétéchiaux, ecchymotiques ou nécrotiques. Pas de lésion cutanée.", "interpretation": "Absence de purpura fulminans. Autorise la réalisation de la Ponction Lombaire en urgence sans antibiothérapie préalable.", "justification": "L'absence de purpura fulminans est un prérequis obligatoire pour pouvoir effectuer la PL avant d'injecter les antibiotiques." },
+    "exam_neuro": { "tier": 1, "res": "Présence d'une raideur méningée majeure lors de la flexion passive de la nuque. Signes de Kernig et de Brudzinski positifs. Pas de déficit moteur focalisé, pupilles égales et réactives, pas de paralysie faciale.", "interpretation": "Syndrome méningé franc, absence de signe de focalisation neurologique (pas de processus expansif intracrânien évident).", "justification": "L'absence de signe de focalisation neurologique (déficit focal, atteinte de paire crânienne) élimine une contre-indication à la PL immédiate." },
+    "hgt": { "tier": 1, "res": "Glycémie capillaire mesurée à 6.2 mmol/L (Sophie) / 5.4 mmol/L (Yanis).", "interpretation": "Glycémie capillaire normale. Sert de valeur témoin obligatoire pour interpréter la glycorachie.", "justification": "Le diagnostic de méningite purulente repose sur l'hypoglycorachie, qui ne peut s'interpréter qu'en comparaison d'une glycémie sanguine concomitante." },
+    "lcr_num": { "tier": 1, "res": "Ponction lombaire effectuée en urgence. Liquide trouble / purulent. Cytologie : 1200 éléments/mm3 dont 85% de polynucléaires neutrophiles. Biochimie : Hyperprotéinorachie majeure à 2.8 g/L, Hypoglycorachie sévère à 0.8 mmol/L. Examen direct (Gram) : Présence de diplocoques Gram négatif encapsulés.", "interpretation": "Méningite purulente bactérienne aiguë à Neisseria meningitidis (méningocoque).", "justification": "La PL est l'examen diagnostique clé. L'hyperprotéinorachie, l'hypoglycorachie et le Gram affirment l'étiologie bactérienne purulente." },
+    "hemocultures": { "tier": 1, "res": "Prélèvement de deux paires d'hémocultures effectué immédiatement avant le geste invasif ou l'antibiothérapie.", "interpretation": "Bilan de bactériémie en cours.", "justification": "Les hémocultures doivent être prélevées systématiquement en urgence, car elles isolent le germe dans 50% des cas si la PL est stérile." },
+    "tdm_abdomen": { "tier": 3, "res": "Scanner cérébral : Normal. Pas d'effet de masse, pas d'œdème cérébral diffus, pas de déviation de la ligne médiane.", "interpretation": "Absence de contre-indication radiologique à la PL.", "justification": "FAUTE DOCUMENTÉE : Réaliser un scanner cérébral systématique en l'absence de signe de focalisation ou de coma retarde l'antibiothérapie et la PL de manière critique, augmentant drastiquement la mortalité." }
+  }
+}
