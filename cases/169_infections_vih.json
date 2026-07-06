@@ -1,0 +1,46 @@
+{
+  "itemId": "169",
+  "displayName": "Item 169 — Infections à VIH",
+  "correctDiag": "Primo-infection VIH",
+  "isMatrix": true,
+  "mandatoryExamsToRuleOut": ["exam_skin", "hgt", "hemocultures", "radio_thorax"],
+  "lethalWrongDiags": ["Mononucléose infectieuse (MNI)", "Pneumopathie bactérienne communautaire", "Syndrome de Lyell"],
+  "correctDisposition": "discharge",
+  "rosHint": "Recherchez minutieusement l'existence de rapports sexuels non protégés ou d'accidents d'exposition au sang dans les 2 à 6 semaines précédentes. La présence d'une asthénie foudroyante associée à des ulcérations est un signal d'alarme.",
+  "examHint": "Examinez les muqueuses à la recherche d'ulcérations buccales ou génitales. Traquez un exanthème maculo-papuleux du tronc et des adénopathies diffuses.",
+  "investigationsHint": "En phase de primo-infection suspecte, la sérologie VIH classique de 4e génération peut être faussement négative (fenêtre sérologique). Vous devez obligatoirement prescrire la mesure de la Charge Virale (ARN VIH plasmatique) associée.",
+  "possibleProfiles": [
+    {
+      "name": "Julien V., 26 ans",
+      "age": 26,
+      "terrain": "Aucun antécédent médical notable, immunocompétent connu.",
+      "secret": "A eu un rapport sexuel non protégé avec un nouveau partenaire rencontré sur une application il y a 3 semaines. Présente des sueurs nocturnes et une odynophagie majeure.",
+      "baseVitals": { "fc": 98, "ta": "120/75", "spo2": 98, "fr": 16, "temp": 38.8, "dextro": 4.9, "isCritical": false },
+      "aspect": "Patient très fatigué, fébrile, présentant des érosions cutanéo-muqueuses buccales douloureuses et de petites adénopathies cervicales et axillaires.",
+      "desc": "Consulte pour une fièvre isolée à 38.8°C trainant depuis 5 jours, accompagnée de maux de gorge intenses, de courbatures et d'une éruption cutanée discrète."
+    },
+    {
+      "name": "Marc O., 45 ans",
+      "age": 45,
+      "terrain": "Tabagisme actif, pas de suivi médical régulier depuis 5 ans.",
+      "secret": "A perdu 8 kg en 3 mois de manière inexpliquée (amaigrissement involontaire) et souffre d'une toux sèche qu'il attribuait initialement à son tabagisme.",
+      "baseVitals": { "fc": 110, "ta": "115/70", "spo2": 91, "fr": 24, "temp": 38.2, "dextro": 5.2, "isCritical": true },
+      "aspect": "Patient cachectique, polypnéique au moindre effort, présentant une candidose buccale extensive (muguet) et une pâleur cutanée.",
+      "desc": "Admis aux urgences pour une dyspnée d'effort d'aggravation progressive depuis 15 jours, associée à une toux sèche, une fièvre modérée et une altération de l'état général."
+    }
+  ],
+  "dispositionsConfig": {
+    "discharge": { "label": "Retour à domicile avec éducation thérapeutique, soutien psychologique et rendez-vous urgent en infectiologie", "score": 5, "rationale": "PARFAIT : S'il s'agit de la primo-infection de Julien, la prise en charge initiale est ambulatoire après confirmation virologique. Une prise en charge globale, un bilan complet (CD4, génotype) et l'initiation rapide d'un traitement antirétroviral (TAR) hautement actif seront coordonnés par l'infectiologue référent." },
+    "icu_admission": { "label": "Hospitalisation immédiate en Réanimation Médicale ou Soins Intensifs", "score": -5, "rationale": "INADÉQUAT (pour Julien) / JUSTIFIÉ si Marc : Pour Marc, la dyspnée hypoxémique avec SpO2 à 91% évoque une pneumocystose pulmonaire (infection opportuniste classant SIDA). Elle nécessite une hospitalisation lourde sous O2 et corticothérapie associée au Cotrimoxazole (Bactrim) IV." },
+    "admit_to_floor": { "label": "Hospitalisation en service de Médecine Interne ou d'Infectiologie", "score": 5, "rationale": "DISCUTABLE : Utile pour Marc pour bilanter son SIDA inaugural et traiter sa détresse respiratoire. Pour Julien, cela est inutilement anxiogène en l'absence de complication neurologique (méningite lymphocytaire symptomatique)." }
+  },
+  "matrixExams": {
+    "exam_skin": { "tier": 1, "res": "Julien : Exanthème maculo-papuleux discret du tronc et de la face, non prurigineux. Présence d'ulcérations aphtoïdes de la muqueuse buccale. Marc : Absence d'éruption. Présence d'un enduit blanchâtre crémeux sur la langue et le palais (candidose buccale franche).", "interpretation": "Julien : Tableau cutanéo-muqueux évocateur d'une primo-infection VIH ou MNI. Marc : Candidose buccale témoignant d'une immunodépression cellulaire sous-jacente (stade SIDA).", "justification": "L'examen des muqueuses et de la peau est indispensable pour orienter vers les manifestations cliniques du VIH." },
+    "exam_neuro": { "tier": 1, "res": "Patient conscient et orienté. Pas de raideur de nuque, pas de signe de focalisation neurologique.", "interpretation": "Absence de neuro-VIH aigu (méningite de primo-infection ou cryptococcose/toxoplasmose cérébrale de stade SIDA).", "justification": "Élimine une atteinte méningée ou un processus expansif opportuniste central." },
+    "hgt": { "tier": 1, "res": "Glycémie capillaire normale à 5.1 mmol/L.", "interpretation": "Pas d'anomalie métabolique aiguë.", "justification": "Examen systématique de tri au déchocage." },
+    "radio_thorax": { "tier": 1, "res": "Julien : Normal. Marc : Infiltrat interstitiel bilatéral, diffus, symétrique, prédominant dans les régions hilaire et péri-hilaire ('aspect en ailes de papillon'). Pas de nodule, pas d'épanchement pleural.", "interpretation": "Julien : Poumons clairs. Marc : Aspect radiologique hautement évocateur d'une pneumocystose pulmonaire (Pneumocystis jirovecii).", "justification": "La radiographie de thorax est obligatoire devant toute dyspnée fébrile chez un sujet suspect d'immunodépression." },
+    "hemocultures": { "tier": 1, "res": "Prélèvements effectués. En cours de culture (Stériles à H+24). Charge virale plasmatique (ARN VIH) demandée : Élevée à 6.5 log (3 000 000 copies/mL) chez Julien.", "interpretation": "Confirmation virologique de la primo-infection VIH chez Julien malgré une sérologie ELISA parfois négative ou douteuse à ce stade très précoce.", "justification": "La détection de l'ARN viral par PCR ou de l'antigène p24 est indispensable pour affirmer la primo-infection avant la séroconversion complète." },
+    "nfs": { "tier": 1, "res": "Julien : Leucopénie et thrombopénie modérées, syndrome mononucléosique discret. Marc : Anémie modérée à 10.5 g/dL, lymphopénie sévère.", "interpretation": "Signes hématologiques classiques d'invasion virale ou d'effondrement immunitaire.", "justification": "L'hémogramme oriente vers le profil virologique (leucopénie/thrombopénie de primo-infection) ou la profondeur du déficit." },
+    "gds": { "tier": 2, "res": "Julien : Non réalisé. Marc : Hypoxie marquée (PaO2 à 62 mmHg en air ambiant) avec hypocapnie (effet shunt).", "interpretation": "Insuffisance respiratoire aiguë hypoxémique chez Marc, justifiant une oxygénothérapie.", "justification": "Utile uniquement chez Marc pour quantifier la sévérité de l'atteinte respiratoire de la pneumocystose." }
+  }
+}
