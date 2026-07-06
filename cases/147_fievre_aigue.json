@@ -1,0 +1,48 @@
+{
+  "itemId": "147",
+  "displayName": "Item 147 — Fièvre Aiguë chez l'Enfant et l'Adulte",
+  "correctDiag": "Sepsis grave",
+  "isMatrix": true,
+  "mandatoryExamsToRuleOut": ["hgt", "exam_skin", "exam_neuro", "bu"],
+  "lethalWrongDiags": ["Accident vasculaire cérébral (AVC)", "Paludisme d'importation", "Coup de chaleur malin"],
+  "correctDisposition": "icu_admission",
+  "rosHint": "Toute fièvre aiguë doit faire rechercher un point d'appel. Interrogez sur les voyages récents (paludisme), les antécédents urologiques ou pulmonaires, et la cinétique des frissons.",
+  "examHint": "Recherchez immédiatement les critères de gravité qSOFA (fréquence respiratoire, pression artérielle, vigilance). Examinez la peau nue à la recherche de pétéchies.",
+  "investigationsHint": "Les examens de première ligne au lit du patient sont la bandelette urinaire et le HGT. Les hémocultures et le bilan biologique standard guident la gravité biologique.",
+  "possibleProfiles": [
+    {
+      "name": "M. Christian B., 68 ans",
+      "age": 68,
+      "terrain": "Antécédent d'hypertrophie bénigne de la prostate, non vacciné contre la grippe.",
+      "secret": "Prend des fortes doses d'AINS (Ibuprofène) en automédication depuis 48h pour calmer des frissons, ce qui a retardé sa prise en charge et masqué la sévérité des douleurs.",
+      "baseVitals": { "fc": 122, "ta": "88/52", "spo2": 93, "fr": 25, "temp": 39.4, "dextro": 6.8, "isCritical": true },
+      "aspect": "Patient somnolent, désorienté (Glasgow 13), présentant des frissons solennels et des marbrures discrètes aux membres inférieurs.",
+      "desc": "Admis pour altération brutale de l'état général avec fièvre élevée à 39.4°C et troubles du comportement depuis ce matin."
+    },
+    {
+      "name": "Chloé R., 8 mois",
+      "age": 1,
+      "terrain": "Nourrisson, née à terme, pas d'antécédent médical, vaccins à jour.",
+      "secret": "A été gardée en crèche où plusieurs cas de gastro-entérite et de syndrome grippal sont signalés, mais elle refuse catégoriquement de boire depuis 12 heures.",
+      "baseVitals": { "fc": 155, "ta": "78/42", "spo2": 96, "fr": 38, "temp": 39.1, "dextro": 4.1, "isCritical": true },
+      "aspect": "Nourrisson geignard, hypotonique, teint grisâtre, muqueuses sèches avec persistance du pli cutané.",
+      "desc": "Présentée aux urgences pédiatriques pour une fièvre isolée à 39.1°C avec refus total des biberons et apathie marquée."
+    }
+  ],
+  "dispositionsConfig": {
+    "icu_admission": { "label": "Hospitalisation en Réanimation Médicale ou en Surveillance Continue (USC)", "score": 5, "rationale": "PARFAIT : La présence de critères qSOFA positifs (hypotension, tachypnée, altération de la vigilance) définit un sepsis grave. Le pronostic vital est engagé, imposant un monitorage continu en secteur de soins intensifs pour débuter le remplissage et l'antibiothérapie d'urgence." },
+    "admit_to_floor": { "label": "Hospitalisation en service de Médecine Conventionnelle", "score": -15, "rationale": "FAUTE DE TRIAGE : Un patient en sepsis ou choc septique compensé ne doit jamais être isolé en chambre de médecine standard sans scope. Le risque de dégradation brutale requiert une surveillance armée." },
+    "discharge": { "label": "Retour à domicile avec prescription de paracétamol", "score": -45, "rationale": "CRIMINEL : Renvoyer un patient instable avec des défaillances d'organes cliniques (neurologique, circulatoire) relève de la faute lourde avec risque de décès rapide." }
+  },
+  "matrixExams": {
+    "exam_skin": { "tier": 1, "res": "Examen cutané complet : Absence de purpura (pas de pétéchies ni d'ecchymoses)[cite: 8]. Présence de marbrures cutanées nettes s'étendant aux genoux chez Christian.", "interpretation": "Absence de purpura fulminans[cite: 8]. Signes cliniques d'hypoperfusion microvasculaire (choc).", "justification": "L'examen cutané minutieux est le premier réflexe obligatoire devant une fièvre pour éliminer un purpura fulminans[cite: 8]." },
+    "exam_neuro": { "tier": 1, "res": "Score de Glasgow évalué à 13 (E3V4M6). Désorientation temporo-spatiale, somnolence, mais pas de signe de focalisation neurologique ni de raideur de nuque.", "interpretation": "Dysfonction neurologique aiguë liée au sepsis (critère qSOFA positif). Pas de syndrome méningé franc.", "justification": "Permet de rechercher une encéphalopathie septique ou une contre-indication aux gestes invasifs." },
+    "hgt": { "tier": 1, "res": "Glycémie capillaire mesurée à 6.8 mmol/L (Christian) / 4.1 mmol/L (Chloé).", "interpretation": "Absence d'urgence métabolique mimétique (pas d'hypoglycémie causant la confusion).", "justification": "Obligatoire en urgence devant tout trouble de la vigilance pour éliminer un mime métabolique." },
+    "bu": { "tier": 1, "res": "Bandelette urinaire : Leucocytes +++, Nitrites positifs chez Christian / Négative chez Chloé.", "interpretation": "Infection urinaire aiguë hautement suspecte (porte d'entrée du sepsis pour l'adulte).", "justification": "Examen diagnostique d'orientation rapide et obligatoire devant une fièvre sans point d'appel évident." },
+    "lactates": { "tier": 1, "res": "Lactatémie artérielle mesurée à 3.8 mmol/L.", "interpretation": "Hyperlactatémie significative signant la souffrance tissulaire.", "justification": "CRITIQUE : Le dosage des lactates est indispensable pour grader la sévérité du sepsis et affirmer l'hypoperfusion tissulaire." },
+    "hemocultures": { "tier": 1, "res": "Prélèvement de deux paires d'Hémocultures effectué immédiatement. En cours de culture (Bacilles Gram négatif suspectés à H+12).", "interpretation": "Bactériémie active.", "justification": "INDISPENSABLE : Doit être réalisé de manière systématique devant une fièvre aiguë sévère ou mal tolérée, impérativement avant les antibiotiques." },
+    "nfs": { "tier": 1, "res": "Hémogramme : Leucocytes augmentés à 18 200/mm3 à polynucléaires neutrophiles.", "interpretation": "Hyperleucocytose franche d'allure bactérienne.", "justification": "Permet de documenter le syndrome de réponse inflammatoire systémique." },
+    "crp": { "tier": 1, "res": "CRP élevée à 145 mg/L.", "interpretation": "Syndrome inflammatoire biologique majeur.", "justification": "Confirme l'importance du processus infectieux aigu en miroir de la clinique[cite: 2]." },
+    "lcr_num": { "tier": 3, "res": "Examen non réalisé.", "interpretation": "Injustifié.", "justification": "FAUTE LOURDE : Pratiquer une ponction lombaire sans syndrome méningé chez un patient instable sur le plan circulatoire retarde la réanimation et expose à des risques graves." }
+  }
+}
