@@ -1,0 +1,47 @@
+{
+  "itemId": "157",
+  "displayName": "Item 157 — Septicémie / Bactériémie / Fongémie de l'Adulte et de l'Enfant",
+  "correctDiag": "Sepsis grave",
+  "isMatrix": true,
+  "mandatoryExamsToRuleOut": ["exam_skin", "hgt", "hemocultures", "lactates"],
+  "lethalWrongDiags": ["Rejet de greffe", "Choc anaphylactique aux antalgiques", "Poussée aiguë de lymphome"],
+  "correctDisposition": "icu_admission",
+  "rosHint": "Traquez l'historique des dispositifs invasifs. Une bactériémie sur cathéter ou sur matériel prothétique est une urgence éradicatrice. Calculez le score qSOFA dès l'entrée.",
+  "examHint": "Examinez les aires ganglionnaires, mais surtout le point d'insertion de toutes les voies veineuses. Cherchez un érythème, un pus local ou un cordon induré.",
+  "investigationsHint": "Les hémocultures sont le pilier de cet item : prélevez au moins 2 paires sur des veines différentes. Le dosage des lactates doit être répété pour surveiller la clairance.",
+  "possibleProfiles": [
+    {
+      "name": "Marc T., 54 ans",
+      "age": 54,
+      "terrain": "Suivi pour un adénocarcinome colique, porteur d'une chambre de perfusion implantable (PAC) sous-cutanée. Dernière cure de chimiothérapie il y a 8 jours.",
+      "secret": "A remarqué une rougeur et un suintement au niveau de son boîtier de perfusion depuis 48h mais a appliqué une pommade de reste d'ordonnance sans en parler à l'oncologue.",
+      "baseVitals": { "fc": 128, "ta": "84/48", "spo2": 94, "fr": 26, "temp": 39.8, "dextro": 5.9, "isCritical": true },
+      "aspect": "Patient prostré, frissons solennels et incontrôlables, extrémités froides et marbrées. Temps de recoloration cutanée à 4 secondes.",
+      "desc": "Admis en urgence pour un pic thermique à 39.8°C associé à un état de malaise généralisé, une dyspnée et des frissons intenses."
+    },
+    {
+      "name": "Léna S., 6 ans",
+      "age": 6,
+      "terrain": "Suivie en hématologie pédiatrique pour une leucémie aiguë lymphoblastique (LAL) en rémission, sous aplasie post-chimiothérapie (PNN attendus < 500/mm3).",
+      "secret": "S'est plainte d'avoir mal au bras près de sa ligne veineuse centrale ce matin, mais sa grand-mère a minimisé pour éviter de retourner à l'hôpital.",
+      "baseVitals": { "fc": 142, "ta": "80/44", "spo2": 95, "fr": 32, "temp": 39.1, "dextro": 4.6, "isCritical": true },
+      "aspect": "Enfant apathique, somnolente, grognant à la moindre palpation. Tachycardie majeure, temps de recoloration cutanée allongé.",
+      "desc": "Présentée en urgence au déchocage pédiatrique pour une fièvre aiguë à 39.1°C avec asthénie profonde sur terrain de neutropénie fébrile."
+    }
+  ],
+  "dispositionsConfig": {
+    "icu_admission": { "label": "Hospitalisation immédiate en Réanimation Médicale ou en Unité de Soins Intensifs Hématologiques", "score": 5, "rationale": "PARFAIT : L'association d'une bactériémie/fongémie suspecte avec des critères de sepsis (qSOFA positif, instabilité hémodynamique et terrain d'immunodépression ou d'aplasie) requiert un monitorage continu invasif en réanimation pour l'administration de drogues vasoactives et d'une antibiothérapie parentérale d'urgence." },
+    "admit_to_floor": { "label": "Hospitalisation en service d'Oncologie ou de Médecine conventionnelle", "score": -15, "rationale": "FAUTE DE TRIAGE : Un patient en état de défaillance circulatoire aiguë sur suspicion de bactériémie/sepsis sur cathéter ne peut pas être installé dans un secteur non monitoré. Le risque d'arrêt cardiaque par choc septique réfractaire est majeur." },
+    "discharge": { "label": "Retour à domicile sous couverture antibiotique orale", "score": -50, "rationale": "CRIMINEL : La mortalité d'une bactériémie non traitée ou traitée à l'aveugle par voie orale sur ce type de terrain approche les 80% en quelques heures." }
+  },
+  "matrixExams": {
+    "exam_skin": { "tier": 1, "res": "Inspection cutanée complète : Absence de purpura ecchymotique. Présence d'un érythème inflammatoire franc, chaud et douloureux en regard du site d'insertion du cathéter central / de la chambre implantable, avec issue d'une goutte de pus à la pression.", "interpretation": "Porte d'entrée infectieuse cutanée locale évidente sur matériel invasif (bactériémie sur cathéter).", "justification": "L'examen minutieux des points d'insertion des dispositifs endoveineux est impératif devant toute suspicion de bactériémie." },
+    "exam_circ": { "tier": 1, "res": "Tachycardie majeure (FC à 128 ou 142 bpm), pouls radiaux filants. Pression artérielle effondrée (PAS < 90 mmHg). Temps de recoloration cutanée allongé à 4s.", "interpretation": "Insuffisance circulatoire aiguë (état de choc/sepsis selon Sepsis-3).", "justification": "Objective la dysfonction d'organe hémodynamique induite par la décharge endotoxinique." },
+    "hgt": { "tier": 1, "res": "Glycémie capillaire normale à 5.9 mmol/L (Marc) / 4.6 mmol/L (Léna).", "interpretation": "Absence d'anomalie métabolique mimétique.", "justification": "Permet d'écarter un coma ou un trouble de vigilance lié à une hypoglycémie adaptative." },
+    "hemocultures": { "tier": 1, "res": "Prélèvement synchrone de 2 paires d'Hémocultures en périphérie et d'une paire directement sur le dispositif invasif (cathéter/PAC) réalisé immédiatement. En cours de culture (Examen direct à H+12 positif pour un Cocci Gram Positif en grappes).", "interpretation": "Bactériémie active à Staphylocoque (hautement évocatrice d'une infection de matériel).", "justification": "CRITIQUE : Les hémocultures couplées (périphérie + cathéter) avec calcul du différentiel de temps de pousse sont le gold standard diagnostique." },
+    "lactates": { "tier": 1, "res": "Lactatémie artérielle mesurée à 4.2 mmol/L.", "interpretation": "Hyperlactatémie critique témoignant d'une souffrance cellulaire métabolique.", "justification": "INDISPENSABLE : Reflet direct de l'hypoperfusion tissulaire systémique dans la définition du sepsis." },
+    "nfs": { "tier": 1, "res": "Marc : Leucocytes à 22 000/mm3 à PNN. Léna : Leucocytes effondrés à 300/mm3 (Neutropénie profonde à 110/mm3).", "interpretation": "Marc : Hyperleucocytose majeure. Léna : Neutropénie fébrile post-chimiothérapie à haut risque de choc.", "justification": "Documente la réponse immunitaire ou le statut d'aplasie, ce qui modifie immédiatement l'antibiothérapie probabiliste." },
+    "crp": { "tier": 2, "res": "CRP élevée à 180 mg/L.", "interpretation": "Syndrome inflammatoire biologique majeur.", "justification": "Confirme le profil systémique mais ne doit en aucun cas retarder la réanimation initiale." },
+    "radio_thorax": { "tier": 2, "res": "Opacité paracardiaque droite minime, pas de foyer alvéolaire franc.", "interpretation": "Radiographie thoracique sans argument majeur pour une pneumopathie franche comme foyer principal.", "justification": "Recherche un foyer secondaire ou une complication (OAP), non prioritaire face aux prélèvements sanguins." }
+  }
+}
