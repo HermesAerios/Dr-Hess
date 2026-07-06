@@ -1,0 +1,46 @@
+{
+  "itemId": "332",
+  "displayName": "Item 332 — État de Choc (Anaphylactique, Cardiogénique, Septique, Hypovolémique)",
+  "correctDiag": "Choc anaphylactique",
+  "isMatrix": true,
+  "mandatoryExamsToRuleOut": ["exam_skin", "ecg", "hgt", "lactates"],
+  "lethalWrongDiags": ["Choc cardiogénique", "Choc septique d'origine urinaire", "Embolie pulmonaire massive"],
+  "correctDisposition": "icu_admission",
+  "rosHint": "La cinétique d'installation de l'hypotension est cruciale. Interrogez l'entourage sur l'exposition récente à un allergène (médicament, venin, aliment) ou une douleur thoracique brutale précédant le crash.",
+  "examHint": "Auscultez les poumons à la recherche de sibilants (bronchospasme) ou de crépitants (OAP). Inspectez la peau à la recherche d'un érythème généralisé ou de marbrures.",
+  "investigationsHint": "L'ECG 12 dérivations est obligatoire d'emblée pour éliminer un mime ou une cause cardiogénique (IDM). Le dosage des lactates affirme la sévérité métabolique de la défaillance.",
+  "possibleProfiles": [
+    {
+      "name": "Julien R., 29 ans",
+      "age": 29,
+      "terrain": "Asthmatique connu, sans autre antécédent. Vient de débuter un traitement par Amoxicilline pour une angine il y a 30 minutes.",
+      "secret": "A ressenti des picotements dans la gorge et une sensation de chaleur diffuse dès l'ingestion du comprimé, mais a continué à marcher avant de s'effondrer dans la rue.",
+      "baseVitals": { "fc": 138, "ta": "72/40", "spo2": 88, "fr": 28, "temp": 36.8, "dextro": 5.4, "isCritical": true },
+      "aspect": "Patient agité, polypnéique, présentant un œdème palpébral et labial marqué, associé à un érythème maculo-papuleux diffus du tronc.",
+      "desc": "Amené par les pompiers suite à un malaise brutal sur la voie publique avec détresse respiratoire et effondrement tensionnel majeur."
+    },
+    {
+      "name": "Robert D., 72 ans",
+      "age": 72,
+      "terrain": "Insuffisant coronaire, hypertendu, tabagique sevré.",
+      "secret": "A ressenti une pesanteur thoracique constructive atroce à 4 heures du matin, mais a préféré attendre le réveil pour ne pas déranger son épouse.",
+      "baseVitals": { "fc": 112, "ta": "84/46", "spo2": 89, "fr": 26, "temp": 36.2, "dextro": 7.1, "isCritical": true },
+      "aspect": "Patient prostré, pâle, sueurs froides abondantes, marbrures franches s'étendant aux cuisses. Râles crépitants remontant aux deux tiers des champs pulmonaires.",
+      "desc": "Admis en urgence pour un état de choc hypotensif associé à une dyspnée aiguë sévère et des signes francs de surcharge volémique pulmonaire."
+    }
+  ],
+  "dispositionsConfig": {
+    "icu_admission": { "label": "Hospitalisation immédiate en Réanimation Médicale ou Unité de Soins Intensifs de Cardiologie (USIC)", "score": 5, "rationale": "PARFAIT : Tout état de choc (défaillance circulatoire aiguë avec hypoperfusion tissulaire) engage le pronostic vital à court terme. Une admission monitorée armée en réanimation ou en USIC est obligatoire pour la surveillance des amines vasopressives (Adrénaline ou Noradrénaline) et le traitement étiologique." },
+    "admit_to_floor": { "label": "Hospitalisation en service de Médecine Conventionnelle", "score": -20, "rationale": "FAUTE LOURDE : Installer un patient en état de choc circulatoire réfractaire dans un lit de médecine standard sans scope équivaut à un arrêt cardiorespiratoire non surveillé." },
+    "discharge": { "label": "Sortie après stabilisation avec ordonnance d'antihistaminiques", "score": -50, "rationale": "CRIMINEL : Le risque de réaction biphasique dans le choc anaphylactique ou de défaillance myocardique secondaire impose au minimum 24h de surveillance en secteur de réanimation." }
+  },
+  "matrixExams": {
+    "exam_skin": { "tier": 1, "res": "Julien : Érythème maculo-papuleux diffus, prurigineux, avec urticaire géante du tronc et œdème du visage. Robert : Pâleur cutanée, sueurs froides profuses, marbrures violacées majeures aux deux genoux (Mottling score 3).", "interpretation": "Julien : Signes cutanéo-muqueux d'anaphylaxie aiguë de grade III. Robert : Signes d'hypoperfusion microvasculaire critique (choc cardiogénique/septique).", "justification": "L'examen de la peau oriente immédiatement vers le mécanisme du choc (vasoplégie anaphylactique vs vasoconstriction de bas débit)." },
+    "exam_pulm": { "tier": 1, "res": "Julien : Auscultation pulmonaire retrouvant des sibilants bilatéraux diffus (bronchospasme sévère). Robert : Présence de râles crépitants bilatéraux crépitant jusqu'aux sommets pulmonaires.", "interpretation": "Julien : Bronchospasme anaphylactique associé. Robert : Œdème Aigu du Poumon (OAP) massif de surcharge par défaillance de pompe.", "justification": "CRITIQUE : Différencie le choc cardiogénique (crépitants d'OAP) des autres chocs. Remplir Robert aggraverait l'OAP." },
+    "ecg": { "tier": 1, "res": "Julien : Tachycardie sinusale à 138 bpm, pas de trouble de repolarisation. Robert : Rythme sinusal, sus-décalage du segment ST convexe vers le haut de 4 mm de V1 à V6 (STEMI antérieur étendu).", "interpretation": "Julien : Tachycardie sinusale réactionnelle. Robert : Choc cardiogénique secondaire à un infarctus du myocarde antérieur étendu.", "justification": "L'ECG est l'examen pivot devant tout état de choc pour éliminer une cause myocardique aiguë (STEMI)." },
+    "hgt": { "tier": 1, "res": "Glycémie capillaire normale à 5.4 mmol/L (Julien) / 7.1 mmol/L (Robert).", "interpretation": "Absence de cause métabolique pure au trouble de vigilance.", "justification": "Systématique devant tout état d'agitation ou de prostration pour exclure un mime." },
+    "lactates": { "tier": 1, "res": "Lactatémie artérielle mesurée à 5.2 mmol/L.", "interpretation": "Hyperlactatémie critique affirmant l'hypoperfusion tissulaire systémique.", "justification": "INDISPENSABLE : Affirme le diagnostic d'état de choc et la bascule vers le métabolisme anaérobie." },
+    "hemostase": { "tier": 2, "res": "Bilan d'hémostase normal, pas de coagulopathie de consommation initiale.", "interpretation": "Absence de CIVD.", "justification": "Bilan pré-réanimation standard pour éliminer une complication hématologique." },
+    "tdm_abdomen": { "tier": 3, "res": "Examen non réalisé en raison de l'instabilité extrême du patient.", "interpretation": "Contre-indiqué en phase aiguë d'un choc non stabilisé.", "justification": "FAUTE GRAVE : Déplacer un patient en état de choc non stabilisé au scanner pour une imagerie non ciblée est une cause majeure d'arrêt cardiaque iatrogène." }
+  }
+}
