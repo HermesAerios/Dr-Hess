@@ -1,0 +1,44 @@
+{
+  "itemId": "149",
+  "displayName": "Item 149 — Angines de l'Adulte/Enfant & Rhinopharyngites de l'Enfant",
+  "correctDiag": "Angine aiguë à Streptocoque",
+  "isMatrix": true,
+  "mandatoryExamsToRuleOut": ["hgt", "nfs", "crp"],
+  "lethalWrongDiags": ["Phlegmon péri-amygdalien", "Mononucléose infectieuse (MNI)", "Épiglottite aiguë"],
+  "correctDisposition": "discharge",
+  "rosHint": "Évaluez l'âge du patient. L'angine à SGA est exceptionnelle avant l'âge de 3 ans. Calculez rigoureusement le score de Mac Isaac pour guider l'indication du TDR.",
+  "examHint": "Examinez l'oropharynx avec soin. Cherchez des adénopathies cervicales satellites douloureuses et vérifiez l'absence de trismus, de déviation de la luette ou de voussure du pilier.",
+  "investigationsHint": "Le Test de Diagnostic Rapide (TDR) est l'examen pivot. Ne demandez pas de bilans biologiques lourds ou d'imageries pour une odynophagie isolée sans signe de gravité neuro-respiratoire.",
+  "possibleProfiles": [
+    {
+      "name": "Mathieu V., 4 ans",
+      "age": 4,
+      "terrain": "Développement normal, scolarisé en moyenne section de maternelle. Vaccinations à jour.",
+      "secret": "Ses parents lui ont administré des gouttes nasales vasoconstrictrices trouvées dans l'armoire à pharmacie familiale, ce qui est formellement contre-indiqué chez l'enfant.",
+      "baseVitals": { "fc": 105, "ta": "95/60", "spo2": 99, "fr": 20, "temp": 38.4, "dextro": 5.0, "isCritical": false },
+      "aspect": "Enfant en bon état général, nez qui coule (rhinorrhée bilatérale d'abord séreuse puis purulente), toux sèche de quinte nocturne.",
+      "desc": "Consultation pour fièvre modérée à 38.4°C, obstruction nasale et toux évoluant depuis 48 heures dans un contexte d'épidémie hivernale."
+    },
+    {
+      "name": "Chloé D., 22 ans",
+      "age": 22,
+      "terrain": "Étudiante, sans antécédent médical notable, non fumeuse.",
+      "secret": "Prend des corticoïdes oraux (Prednisolone) qu'il lui restait d'une ancienne ordonnance pour calmer l'odynophagie, risquant de masquer un phlegmon ou de flamber une infection bactérienne.",
+      "baseVitals": { "fc": 98, "ta": "118/75", "spo2": 98, "fr": 16, "temp": 38.9, "dextro": 4.8, "isCritical": false },
+      "aspect": "Patiente algique lors de la déglutition (odynophagie majeure), voix légèrement modifiée par la douleur, adénopathies cervicales bilatérales sensibles.",
+      "desc": "Consulte pour une douleur de gorge intense d'apparition brutale depuis 24 heures, accompagnée d'une fièvre à 38.9°C et de frissons."
+    }
+  ],
+  "dispositionsConfig": {
+    "discharge": { "label": "Retour à domicile avec prescription symptomatique (et antibiothérapie par Amoxicilline uniquement si TDR positif)", "score": 5, "rationale": "PARFAIT : Les angines érythémato-pultacées et les rhinopharyngites relèvent d'une prise en charge ambulatoire. L'antibiothérapie par Amoxicilline (6 jours) n'est indiquée dans l'angine qu'en cas de TDR positif pour le Streptocoque du groupe A, afin de prévenir les complications post-streptococciques (RTT, GNA). Devant une rhinopharyngite, le traitement est purement symptomatique (lavage de nez)." },
+    "admit_to_floor": { "label": "Hospitalisation en service de Médecine ou Pédiatrie", "score": -15, "rationale": "INUTILE : En l'absence de complications locales (phlegmon) ou systémiques (déshydratation par aphagie totale), l'hospitalisation est une surcharge injustifiée du système de soins." }
+  },
+  "usefulExams": {
+    "exam_head": { "tier": 1, "res": "Oropharynx : Amygdales augmentées de volume, érythémateuses, recouvertes d'un enduit blanchâtre punctiforme facilement détachable (angine érythémato-pultacée). Pas de déviation de la luette, pas de voussure du pilier amygdalien antérieur, absence de trismus. Présence de fausses membranes sur les muqueuses nasales chez l'enfant (rhinopharyngite).", "interpretation": "Angine érythémato-pultacée typique sans signe de phlegmon péri-amygdalien.", "justification": "L'inspection de l'oropharynx élimine les diagnostics de gravité (phlegmon, diphtérie) et oriente le score clinique." },
+    "exam_neck": { "tier": 1, "res": "Présence d'adénopathies cervicales sous-mandibulaires bilatérales, sensibles à la palpation, mobiles. Cou souple, thyroïde normale.", "interpretation": "Adénopathies satellites inflammatoires réactionnelles.", "justification": "Critère sémiologique classique intégrant le calcul du score de Mac Isaac." },
+    "exam_resp": { "tier": 1, "res": "Fréquence respiratoire normale. Voies aériennes supérieures perméables, pas de stridor, pas de tirage laryngé.", "interpretation": "Absence de détresse respiratoire haute.", "justification": "Élimine formellement une épiglottite ou une laryngite aiguë sous-glottique menaçante." },
+    "hgt": { "tier": 1, "res": "Résultat du Test de Diagnostic Rapide (TDR) Streptocoque Groupe A : POSITIF chez Chloé (adulte) / Non indiqué ou non réalisé chez Mathieu (rhinopharyngite).", "interpretation": "Confirmation microbiologique de l'origine bactérienne à SGA pour l'angine de l'adulte.", "justification": "Le TDR est obligatoire chez l'adulte si le score de Mac Isaac est >= 2. Il conditionne la prescription d'antibiotiques." },
+    "nfs": { "tier": 2, "res": "Hémogramme : Leucocytes à 9 200/mm3, pas de syndrome mononucléosique (absence de grands lymphocytes hyperbasophiles).", "interpretation": "Hémogramme normal. Élimine une mononucléose infectieuse (MNI) mimetique.", "justification": "Non systématique, utile uniquement en cas de suspicion de MNI (angine traînante avec asthénie majeure et splénomégalie)." },
+    "crp": { "tier": 2, "res": "CRP à 15 mg/L.", "interpretation": "Syndrome inflammatoire biologique modéré.", "justification": "La biologie standard n'a aucune place dans le diagnostic ou l'orientation thérapeutique d'une angine aiguë." }
+  }
+}
