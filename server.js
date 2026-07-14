@@ -66,16 +66,39 @@ const EXAM_CATALOG = {
     "lcr_proteino": "Protéinorachie"
 };
 
+// ROUTE DYNAMIQUE SÉCURISÉE : Scanne le dossier /cases et ignore les fichiers corrompus
 app.get('/api/available-cases', (req, res) => {
     const casesFolder = path.join(__dirname, 'cases');
-    if (!fs.existsSync(casesFolder)) fs.mkdirSync(casesFolder);
+    
+    // Si le dossier n'existe pas, on le crée
+    if (!fs.existsSync(casesFolder)) {
+        fs.mkdirSync(casesFolder);
+    }
+
     fs.readdir(casesFolder, (err, files) => {
-        if (err) return res.status(500).json({ error: "Erreur de lecture." });
+        if (err) {
+            console.error("Erreur de lecture du dossier /cases:", err);
+            return res.status(500).json({ error: "Impossible de lire le dossier des cas." });
+        }
+        
         const jsonFiles = files.filter(f => f.endsWith('.json'));
-        const dynamicList = jsonFiles.map(file => {
-            const parsed = JSON.parse(fs.readFileSync(path.join(casesFolder, file)));
-            return { itemId: parsed.itemId, displayName: parsed.displayName || parsed.type };
+        const dynamicList = [];
+
+        jsonFiles.forEach(file => {
+            try {
+                const rawData = fs.readFileSync(path.join(casesFolder, file), 'utf8');
+                const parsed = JSON.parse(rawData);
+                dynamicList.push({
+                    itemId: parsed.itemId,
+                    displayName: parsed.displayName || parsed.correctDiag || "Cas sans nom",
+                    fileName: file
+                });
+            } catch (jsonErr) {
+                // Si un fichier JSON est mal écrit, on l'affiche dans les logs du serveur mais on ne bloque pas l'application !
+                console.error(`⚠️ Fichier JSON corrompu ou mal structuré [${file}]:`, jsonErr.message);
+            }
         });
+
         res.json(dynamicList);
     });
 });
