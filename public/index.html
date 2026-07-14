@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScribECN Master Clone - Full Code Edition</title>
+    <title>ScribECN Core - Cockpit de Réanimation</title>
     <style>
         :root {
-            --bg-main: #070a12;
-            --bg-interface: #111827;
-            --bg-card: #1f2937;
-            --border-color: #374151;
+            --bg-main: #05070c;
+            --bg-interface: #0d111a;
+            --bg-card: #161e2e;
+            --border-color: #1f293d;
             --text-light: #f3f4f6;
             --text-muted: #9ca3af;
             --accent-cyan: #00e5ff;
             --accent-green: #10b981;
             --accent-red: #ef4444;
-            --accent-yellow: #f59e0b;
+            --accent-yellow: #eab308;
             --accent-purple: #a855f7;
         }
 
@@ -30,381 +30,272 @@
             flex-direction: column;
         }
 
-        /* Barre de Navigation Supérieure Premium */
+        /* Barre de Contrôle Supérieure */
         .main-navbar {
-            background-color: #030712;
+            background-color: #030508;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 24px;
-            height: 60px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            padding: 0 20px;
+            height: 55px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 50;
         }
         .nav-logo {
-            font-weight: 800;
-            color: var(--accent-cyan);
-            font-size: 1.3em;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 800; color: var(--accent-cyan); font-size: 1.25em; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 8px;
         }
-        .nav-tabs {
-            display: flex; gap: 8px; height: 100%; align-items: flex-end;
-        }
+        .nav-tabs { display: flex; gap: 5px; height: 100%; align-items: flex-end; }
         .nav-tab-btn {
             background: transparent; border: none; color: var(--text-muted);
-            padding: 12px 24px; font-weight: 700; font-size: 0.9em; cursor: pointer;
+            padding: 10px 18px; font-weight: 700; font-size: 0.85em; cursor: pointer;
             border-bottom: 3px solid transparent; transition: all 0.2s ease;
-            letter-spacing: 0.5px;
         }
         .nav-tab-btn:hover { color: #fff; background: rgba(255,255,255,0.02); }
         .nav-tab-btn.active {
-            color: var(--accent-cyan);
-            border-bottom-color: var(--accent-cyan);
+            color: var(--accent-cyan); border-bottom-color: var(--accent-cyan);
             background: rgba(0, 229, 255, 0.03);
         }
 
-        /* Zone d'affichage des vues */
-        .app-view {
-            display: none; flex: 1; height: calc(100vh - 60px); overflow: hidden;
-        }
+        .app-view { display: none; flex: 1; height: calc(100vh - 55px); overflow: hidden; }
         .app-view.active { display: flex; }
 
-        /* ==================== SCREEN 1 : DASHBOARD D'ACCUEIL PREMIUM ==================== */
+        /* ==================== SCREEN 1 : ACCUEIL & PROGRAMME ==================== */
         .dashboard-layout {
-            flex: 1; overflow-y: auto; padding: 35px;
-            display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 30px;
-            max-width: 1500px; margin: 0 auto; width: 100%; box-sizing: border-box;
-        }
-        .dash-section-title {
-            font-size: 1.2em; font-weight: 700; margin: 0 0 15px 0; color: #fff;
-            display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px;
+            flex: 1; overflow-y: auto; padding: 30px;
+            display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 25px;
+            max-width: 1400px; margin: 0 auto; width: 100%; box-sizing: border-box;
         }
         .dash-card {
             background: var(--bg-interface); border: 1px solid var(--border-color);
-            border-radius: 12px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 10px; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
-
-        /* Centre de sélection des épisodes (Grille de cas) */
-        .cases-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;
+        .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .case-card {
+            background: var(--bg-card); border: 1px solid #2d3748; border-radius: 8px; padding: 15px;
+            display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s;
         }
-        .case-episode-card {
-            background: var(--bg-card); border: 1px solid #4b5563; border-radius: 10px;
-            padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
-            transition: transform 0.2s, border-color 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .case-episode-card:hover {
-            transform: translateY(-4px); border-color: var(--accent-cyan);
-        }
-        .case-meta {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
-        }
-        .specialty-tag {
-            font-size: 0.75em; font-weight: 800; text-transform: uppercase;
-            padding: 4px 10px; border-radius: 20px; background: rgba(168,85,247,0.15); color: var(--accent-purple);
-        }
-        .difficulty-indicator {
-            font-size: 0.8em; font-weight: bold; font-family: monospace; color: var(--accent-yellow);
-        }
-        .case-p-name { margin: 0 0 6px 0; font-size: 1.15em; font-weight: 700; color: #fff; }
-        .case-p-type { margin: 0 0 15px 0; font-size: 0.9em; color: var(--text-muted); font-style: italic; }
-
-        /* Statistiques KPI */
-        .metric-row {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;
-        }
-        .metric-box {
-            background: #090d16; border: 1px solid var(--border-color); border-radius: 8px;
-            padding: 18px; text-align: center;
-        }
-        .metric-val { font-size: 2em; font-weight: 800; font-family: monospace; color: var(--accent-cyan); }
-        .metric-lbl { font-size: 0.75em; color: var(--text-muted); text-transform: uppercase; margin-top: 6px; font-weight: 600; }
-
-        /* Tableau de suivi du programme officiel */
-        .edn-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .edn-table th, .edn-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9em; }
-        .edn-table th { background: #0c101a; color: var(--accent-cyan); font-weight: 700; text-transform: uppercase; font-size: 0.8em; }
-        .status-badge { padding: 4px 10px; border-radius: 4px; font-size: 0.75em; font-weight: bold; font-family: monospace; }
-        .badge-validated { background: rgba(16,185,129,0.15); color: var(--accent-green); }
-        .badge-pending { background: rgba(245,158,11,0.15); color: var(--accent-yellow); }
-
-        /* Historic list logs */
-        .history-list { list-style: none; padding: 0; margin: 0; }
-        .history-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #2d3748; font-size: 0.9em; }
-
-        /* Buttons style */
-        .btn-action-premium {
+        .case-card:hover { border-color: var(--accent-cyan); transform: translateY(-2px); }
+        .btn-action {
             background: var(--accent-cyan); color: #000; border: none; font-weight: 700;
-            padding: 10px 16px; border-radius: 6px; cursor: pointer; transition: background 0.2s;
-            font-size: 0.88em; text-transform: uppercase; text-align: center;
+            padding: 8px 12px; border-radius: 5px; cursor: pointer; text-transform: uppercase; font-size: 0.8em;
         }
-        .btn-action-premium:hover { background: #00bccc; }
 
-        /* ==================== SCREEN 2 : SIMULATEUR CLINIQUE CLONE ==================== */
-        .top-bar { background-color: #030712; border-bottom: 2px solid #ff7a00; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; height: 35px; z-index: 40; }
-        .case-number { font-weight: bold; color: #ff7a00; font-family: monospace; font-size: 1.1em; }
-        .case-title { font-weight: 600; font-size: 0.95em; color: #fff; margin-left: 10px; }
-        .simulation-container { flex: 1; display: flex; position: relative; height: 100%; width: 100%; }
+        /* ==================== SCREEN 2 : WORKSPACE SIMULATEUR ==================== */
+        .top-bar { background-color: #030508; border-bottom: 2px solid #ff7a00; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 35px; }
+        .simulation-container { flex: 1; display: flex; position: relative; height: 100%; width: 100%; overflow: hidden; }
         
-        .sidebar-tabs-left, .sidebar-tabs-right { width: 45px; background-color: #030712; display: flex; flex-direction: column; gap: 8px; padding-top: 15px; border-right: 1px solid var(--border-color); }
-        .sidebar-tabs-right { border-right: none; border-left: 1px solid var(--border-color); }
+        /* Panneau de Contrôle Latéral Gauche (Navigation Clinique) */
+        .clinical-navigation-sidebar {
+            width: 250px; background-color: #090d14; border-right: 1px solid var(--border-color);
+            display: flex; flex-direction: column; gap: 4px; padding: 10px; box-sizing: border-box;
+        }
+        .nav-section-title {
+            font-size: 0.7em; font-weight: 800; color: var(--text-muted); text-transform: uppercase;
+            margin: 12px 0 4px 4px; letter-spacing: 0.8px;
+        }
+        .sidebar-btn {
+            background: #111827; border: 1px solid var(--border-color); color: var(--text-muted);
+            padding: 10px 14px; text-align: left; border-radius: 6px; cursor: pointer;
+            font-size: 0.85em; font-weight: 600; display: flex; align-items: center; gap: 8px;
+            transition: all 0.2s;
+        }
+        .sidebar-btn:hover { background: var(--bg-card); color: #fff; }
+        .sidebar-btn.active { background: #0284c7; color: #fff; border-color: #38bdf8; }
 
-        .v-tab { background: #111827; color: var(--text-muted); border: 1px solid var(--border-color); padding: 25px 5px; cursor: pointer; font-size: 0.72em; font-weight: bold; text-transform: uppercase; writing-mode: vertical-lr; transform: rotate(180deg); text-align: center; border-radius: 4px 0 0 4px; transition: all 0.2s; }
-        .sidebar-tabs-right .v-tab { border-radius: 0 4px 4px 0; transform: rotate(0deg); writing-mode: vertical-lr; }
-        .v-tab:hover { color: #fff; background: #1f2937; }
-        .v-tab.active { background: #0284c7; color: #fff; border-color: #38bdf8; }
-
-        .center-stage { flex: 1; position: relative; background: #0b0f19; display: flex; flex-direction: column; }
-        .patient-room { flex: 1.2; background: radial-gradient(circle, #1f293d 0%, #090d16 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; border-bottom: 1px solid var(--border-color); }
-        .patient-room-avatar { width: 100px; height: 100px; background: #374151; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2em; border: 4px solid var(--accent-cyan); box-shadow: 0 0 25px rgba(0,229,255,0.25); }
-
-        .scope-overlay { position: absolute; top: 15px; width: 92%; background: rgba(3,7,18,0.92); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; font-family: monospace; box-shadow: 0 10px 20px rgba(0,0,0,0.6); }
-        .scope-param { text-align: center; }
-        .scope-val { font-size: 1.3em; font-weight: bold; }
-        .scope-lbl { font-size: 0.6em; color: #6b7280; text-transform: uppercase; font-weight:bold; }
-
-        .action-drawer { position: absolute; top: 0; bottom: 0; width: 390px; background: var(--bg-interface); box-shadow: 0 0 40px rgba(0,0,0,0.8); z-index: 5; display: none; flex-direction: column; }
-        .action-drawer.left-side { left: 45px; border-right: 1px solid var(--border-color); }
-        .action-drawer.right-side { right: 45px; border-left: 1px solid var(--border-color); }
-        .action-drawer.show { display: flex; }
-        .drawer-header { padding: 16px; background: #0c101a; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .drawer-content { flex: 1; overflow-y: auto; padding: 16px; }
-
-        .console-log-panel { flex: 0.8; background: #030712; display: flex; flex-direction: column; border-top: 1px solid var(--border-color); }
-        .console-terminal { flex: 1; padding: 14px; font-family: monospace; font-size: 0.85em; overflow-y: auto; color: #9ca3af; line-height: 1.6; }
-
-        .accordion-item { border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 8px; overflow: hidden; }
-        .accordion-trigger { background: #1f2937; padding: 12px; width: 100%; text-align: left; border: none; color: #fff; font-weight: 600; font-size: 0.85em; display: flex; justify-content: space-between; cursor: pointer; }
-        .accordion-content { background: #111827; display: none; }
-        .accordion-content.open { display: block; }
-        .exam-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 0.85em; }
-        .exam-row:hover { background: #1f2937; }
-
-        .image-viewer-box { background: #000; border: 2px dashed #4b5563; border-radius: 8px; padding: 20px; margin-top: 15px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .image-placeholder-graphic { width: 85%; height: 100px; background: #111827; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: monospace; color: var(--accent-cyan); font-weight: bold; border: 1px solid #374151; margin-bottom: 12px; }
-        .whiteboard-box { background: #f9fafb; color: #111827; padding: 14px; border-radius: 6px; border-left: 6px solid var(--accent-cyan); margin-bottom: 15px; }
-        .wb-tag { background: #e5e7eb; color: #1f2937; padding: 4px 10px; font-weight: bold; border-radius: 4px; display: inline-block; margin: 3px; font-size: 0.8em; font-family: monospace; }
+        /* Scène Centrale */
+        .workspace-center { flex: 1; display: flex; flex-direction: column; background: #0b0f19; position: relative; }
         
-        .radio-tile-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-        .radio-tile { background: #0c101a; border: 1px solid var(--border-color); padding: 14px; border-radius: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 0.9em; transition: background 0.2s; }
-        .radio-tile:hover { background: #1f2937; border-color: var(--accent-cyan); }
+        /* Monitor Scope Haute Fidélité */
+        .resus-monitor {
+            background: #020408; border-bottom: 2px solid var(--border-color);
+            padding: 12px 20px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+            font-family: monospace; box-shadow: inset 0 0 15px rgba(0,229,255,0.05);
+        }
+        .monitor-param {
+            border-left: 3px solid var(--border-color); padding-left: 10px; display: flex; flex-direction: column; justify-content: center;
+        }
+        .monitor-param.hr { border-color: var(--accent-red); }
+        .monitor-param.bp { border-color: var(--accent-yellow); }
+        .monitor-param.sat { border-color: var(--accent-green); }
+        .monitor-param.rr { border-color: var(--accent-purple); }
+        .monitor-param.temp { border-color: #f97316; }
+        
+        .monitor-val { font-size: 1.8em; font-weight: 900; line-height: 1; }
+        .monitor-lbl { font-size: 0.6em; color: var(--text-muted); text-transform: uppercase; font-weight: bold; margin-top: 3px; }
 
-        /* Écran de Débriefing / Rationale Final */
-        .debriefing-view { display: none; flex-direction: column; flex: 1; padding: 35px; overflow-y: auto; background: #090d16; }
+        /* Zone de Rendu d'Informations et Vue Clinique */
+        .clinical-canvas { flex: 1.2; padding: 20px; display: flex; flex-direction: column; overflow-y: auto; box-sizing: border-box; }
+        .canvas-card { background: rgba(17, 24, 39, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 15px; }
+
+        /* Console Log Basse */
+        .console-panel { flex: 0.8; background: #030508; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; }
+        .console-header { background: #080c12; padding: 6px 15px; border-bottom: 1px solid var(--border-color); font-size: 0.75em; font-weight: bold; color: var(--text-muted); text-transform: uppercase; }
+        .console-terminal { flex: 1; padding: 12px; font-family: monospace; font-size: 0.82em; overflow-y: auto; color: #a3b3c9; line-height: 1.5; }
+
+        /* Écran de Débriefing */
+        .debriefing-view { display: none; flex-direction: column; flex: 1; padding: 30px; overflow-y: auto; background: #06090f; }
     </style>
 </head>
 <body>
 
-    <!-- NAV BARRE SUPÉRIEURE DE CONTROLE -->
+    <!-- NAV BARRE DU RECOMPTEUR -->
     <div class="main-navbar">
-        <div class="nav-logo">🩺 ScribECN Core <span style="font-size:0.55em; color:var(--text-muted); font-weight:normal;">Simulation Clinique</span></div>
+        <div class="nav-logo">🩺 SCRIBECN <span style="font-size:0.6em; color:var(--text-muted); font-weight: normal;">CLONE ENGINE</span></div>
         <div class="nav-tabs">
             <button class="nav-tab-btn active" id="main-nav-dash" onclick="switchMainView('dashboard')">🏠 TABLEAU DE BORD</button>
-            <button class="nav-tab-btn" id="main-nav-game" onclick="switchMainView('simulation')">🔬 ACCÈS SALLE DE DÉCHOCAGE</button>
+            <button class="nav-tab-btn" id="main-nav-game" onclick="switchMainView('simulation')">🔬 SALLE DE DÉCHOCAGE</button>
         </div>
     </div>
 
-    <!-- ==================== SCREEN 1 : PAGE D'ACCUEIL / TABLEAU DE BORD ==================== -->
+    <!-- ==================== SCREEN 1 : TABLEAU DE BORD ==================== -->
     <div id="view-dashboard" class="app-view active">
         <div class="dashboard-layout">
-            
-            <!-- BLOC GAUCHE : ADMISSION DES CAS CLINIQUES -->
-            <div style="display: flex; flex-direction: column; gap: 25px;">
-                <div>
-                    <h3 class="dash-section-title">🎬 Épisodes Cliniques Disponibles</h3>
-                    <!-- Grille de cartes générée dynamiquement par le serveur -->
-                    <div class="cases-grid" id="cases-dynamic-grid-target">
-                        <div style="color:var(--text-muted); font-style:italic;">Chargement de la banque de données...</div>
-                    </div>
+            <div>
+                <h3 style="margin-top:0;">📋 Dossiers Cliniques Disponibles</h3>
+                <div class="cases-grid" id="cases-target-grid">
+                    <div style="color:var(--text-muted)">Interrogation du serveur local...</div>
                 </div>
             </div>
-
-            <!-- BLOC DROITE : RATIONALE DE PROGRESSION ET SUIVI DES ITEMS -->
-            <div style="display: flex; flex-direction: column; gap: 25px;">
-                <!-- Centre de Compétences Stat -->
+            <div style="display:flex; flex-direction:column; gap:20px;">
                 <div class="dash-card">
-                    <h3 class="dash-section-title">📈 Centre de Compétences EDN</h3>
-                    <div class="metric-row">
-                        <div class="metric-box"><div class="metric-val" id="kpi-avg">16.5</div><div class="metric-lbl">Note Moyenne</div></div>
-                        <div class="metric-box"><div class="metric-val" id="kpi-prec">92%</div><div class="metric-lbl">Précision</div></div>
-                        <div class="metric-box"><div class="metric-val" id="kpi-count">2</div><div class="metric-lbl">Cas Clos</div></div>
-                    </div>
-                    
-                    <h4 style="margin: 15px 0 8px 0; font-size: 0.9em; color: var(--accent-cyan); text-transform:uppercase;">Dernières Évaluations</h4>
-                    <ul class="history-list" id="dash-history-list">
-                        <li class="history-item"><span>Dossier #158 (Mme Joly) - Sepsis grave</span><span style="color:var(--accent-green); font-weight:bold;">18/20</span></li>
-                        <li class="history-item"><span>Dossier #024 (Amandine L.) - Chorioamniotite</span><span style="color:var(--accent-yellow); font-weight:bold;">15/20</span></li>
-                    </ul>
-                </div>
-
-                <!-- Tableau de suivi des Items officiels du programme -->
-                <div class="dash-card">
-                    <h3 class="dash-section-title">📋 Suivi d'Avancement du Programme</h3>
-                    <div style="overflow-x: auto;">
-                        <table class="edn-table">
-                            <thead>
-                                <tr><th>Item</th><th>Intitulé Référentiel</th><th>Statut Validation</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td><b>Item 158</b></td><td>Sepsis et choc septique</td><td><span class="status-badge badge-validated">Validé (18/20)</span></td></tr>
-                                <tr><td><b>Item 024</b></td><td>Complications de la grossesse</td><td><span class="status-badge badge-validated">Validé (15/20)</span></td></tr>
-                                <tr><td><b>Item 339</b></td><td>Syndrome Coronarien Aigu</td><td><span class="status-badge badge-pending">Non tenté</span></td></tr>
-                                <tr><td><b>Item 054</b></td><td>Boiterie chez l'enfant</td><td><span class="status-badge badge-pending">Non tenté</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <h4 style="margin-top:0; color:var(--accent-cyan);">📈 Suivi et Progression</h4>
+                    <p style="font-size:0.9em; color:var(--text-muted);">Moyenne Générale : 16.5/20</p>
+                    <p style="font-size:0.9em; color:var(--text-muted);">Précision diagnostique : 94%</p>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- ==================== SCREEN 2 : INTERFACE DU SIMULATEUR CLONE ==================== -->
+    <!-- ==================== SCREEN 2 : SIMULATEUR COMPLET ==================== -->
     <div id="view-simulation" class="app-view" style="flex-direction: column;">
-        
-        <!-- Écran de garde intermédiaire (si aucun cas n'est ouvert) -->
-        <div id="simulation-setup" class="setup-screen">
-            <div style="background:var(--bg-interface); border:1px solid var(--border-color); padding:35px; border-radius:12px; width:400px; text-align:center; box-shadow: 0 15px 35px rgba(0,0,0,0.6);">
-                <div style="font-size:3.5em; margin-bottom:15px;">🏥</div>
-                <h3 style="margin-top:0; color:#fff; font-size:1.3em;">Aucun Patient Admis</h3>
-                <p style="color:var(--text-muted); font-size:0.9em; margin-bottom:25px; line-height:1.5;">Veuillez sélectionner un épisode clinique sur votre Page d'Accueil pour ouvrir un dossier et déclencher le monitorage réanimatoire.</p>
-                <button onclick="switchMainView('dashboard')" class="btn-action-premium" style="width:100%; padding:12px;">Aller au Tableau de Bord</button>
+        <div id="simulation-setup" style="display:flex; justify-content:center; align-items:center; height:100%; width:100%;">
+            <div style="background:var(--bg-interface); border:1px solid var(--border-color); padding:30px; border-radius:8px; width:350px; text-align:center;">
+                <h3>Aucun Patient Admis</h3>
+                <p style="color:var(--text-muted); font-size:0.85em; margin-bottom:20px;">Sélectionnez un cas sur la page d'accueil pour commencer.</p>
+                <button onclick="switchMainView('dashboard')" class="btn-action" style="width:100%;">Ouvrir le Tableau</button>
             </div>
         </div>
 
-        <!-- L'espace de simulation interactif masqué -->
         <div id="simulation-gameplay" style="display: none; flex-direction: column; flex: 1; height: 100%;">
             <div class="top-bar">
-                <div><span class="case-number" id="case-display-id">Case #--</span><span class="case-title" id="case-display-title">--</span></div>
-                <div style="font-family: monospace; color: var(--accent-yellow); font-weight: bold; font-size: 1.05em;" id="timer-display">TEMPS VIRTUEL : +0 min</div>
+                <span class="case-number" id="case-id-display">Case #--</span>
+                <span id="case-title-display" style="color:#fff; font-size:0.9em; font-weight:600;">--</span>
+                <span id="timer-display" style="color:var(--accent-yellow); font-family:monospace; font-weight:bold;">TEMPS VIRTUEL : +0 min</span>
             </div>
             
             <div class="simulation-container">
-                <!-- ONGLETS DE GAUCHE -->
-                <div class="sidebar-tabs-left">
-                    <div class="v-tab" id="tab-patient" onclick="handleTabClick('patient', 'left')">Patient</div>
-                    <div class="v-tab" id="tab-exam" onclick="handleTabClick('exam', 'left')">Exam</div>
-                    <div class="v-tab" id="tab-stabilize" onclick="handleTabClick('stabilize', 'left')">Stabilize</div>
-                    <div class="v-tab" id="tab-differential" onclick="handleTabClick('differential', 'left')">Differential</div>
-                </div>
-                
-                <div class="action-drawer left-side" id="drawer-left"><div class="drawer-header"><h3 id="drawer-left-title" style="margin:0; font-size:0.95em; text-transform:uppercase; color:var(--accent-cyan);">Menu</h3><button onclick="closeDrawer('left')" style="background:transparent; border:none; color:#fff; cursor:pointer; font-size:1.1em;">✕</button></div><div class="drawer-content" id="drawer-left-content"></div></div>
-                
-                <div class="center-stage">
-                    <div class="patient-room">
-                        <div class="scope-overlay">
-                            <div class="scope-param"><div class="scope-lbl">FC (Pouls)</div><div class="scope-val" id="scope-fc" style="color:var(--accent-red);">--</div></div>
-                            <div class="scope-param"><div class="scope-lbl">PA (Tension)</div><div class="scope-val" id="scope-ta" style="color:var(--accent-yellow);">--/--</div></div>
-                            <div class="scope-param"><div class="scope-lbl">SpO2 (Sat)</div><div class="scope-val" id="scope-spo2" style="color:var(--accent-green);">--</div></div>
-                            <div class="scope-param"><div class="scope-lbl">FR (Resp)</div><div class="scope-val" id="scope-fr" style="color:var(--accent-purple);">--</div></div>
-                            <div class="scope-param"><div class="scope-lbl">Temp</div><div class="scope-val" id="scope-temp" style="color:#f97316;">--</div></div>
-                            <div class="scope-param"><div class="scope-lbl">Dextro</div><div class="scope-val" id="scope-dextro" style="color:var(--accent-cyan);">--</div></div>
-                        </div>
-                        <div class="patient-avatar-box">
-                            <div class="patient-room-avatar">👤</div>
-                            <h3 id="patient-name-label" style="margin:12px 0 4px 0; color:#fff; font-size:1.2em;">--</h3>
-                            <p id="patient-aspect-label" style="font-size:0.85em; color:var(--text-muted); max-width:450px; margin:0 auto; line-height:1.4;"></p>
-                        </div>
-                    </div>
+                <!-- PANNEAU DE NAVIGATION CLINIQUE -->
+                <div class="clinical-navigation-sidebar">
+                    <div class="nav-section-title">Examen Clinique</div>
+                    <button class="sidebar-btn" id="btn-exam-primary" onclick="openClinicPanel('exam_primary')">🚨 Examen Primaire (ABCDE)</button>
+                    <button class="sidebar-btn" id="btn-exam-systemic" onclick="openClinicPanel('exam_systemic')">🩺 Examen Systémique</button>
                     
-                    <!-- VISUALISEUR D'IMAGERIE INTERACTIF CENTRAL RIGHT -->
-                    <div id="image-viewer-panel" class="image-viewer-box" style="display:none;">
-                        <div class="image-placeholder-graphic" id="iv-graphic-box">ASSET_IMAGE</div>
-                        <div style="font-size:0.85em; color:#fff; margin-bottom:10px;" id="iv-text-result">Analyse...</div>
-                        <button onclick="requestOfficialInterpretation()" style="background:var(--accent-yellow); border:none; color:#000; font-weight:bold; padding:8px 14px; border-radius:4px; cursor:pointer; font-size:0.8em;">🔍 DEMANDER L'AVIS DU CLINICIEN EXPERT (-2 pts)</button>
-                        <div id="iv-official-interpretation" style="margin-top:12px; font-size:0.85em; color:var(--accent-green); font-style:italic; max-width:550px; line-height:1.4;"></div>
+                    <div class="nav-section-title">Investigations</div>
+                    <button class="sidebar-btn" id="btn-invest-biology" onclick="openClinicPanel('invest_biology')">🔬 Labo & Biologie</button>
+                    <button class="sidebar-btn" id="btn-invest-imaging" onclick="openClinicPanel('invest_imaging')">☢️ Imagerie & ECG</button>
+                    
+                    <div class="nav-section-title">Thérapeutiques</div>
+                    <button class="sidebar-btn" id="btn-stabilize" onclick="openClinicPanel('stabilize')">⚡ Stabilisation (ABCDE)</button>
+                    <button class="sidebar-btn" id="btn-intervene" onclick="openClinicPanel('intervene')">💊 Pharmacopée & Geste</button>
+                    
+                    <div class="nav-section-title">Orientation</div>
+                    <button class="sidebar-btn" id="btn-communicate" onclick="openClinicPanel('communicate')">🗣️ Communication / Avis</button>
+                    <button class="sidebar-btn" id="btn-handoff" onclick="openClinicPanel('handoff')">🏥 Hand-off / Sortie</button>
+                </div>
+
+                <!-- ZONE CENTRALE DE TRAVAIL -->
+                <div class="workspace-center">
+                    <!-- Monitor Scope multiparamétrique interactif -->
+                    <div class="resus-monitor" id="resus-scope">
+                        <div class="monitor-param hr"><div class="monitor-val" id="val-fc" style="color:var(--accent-red)">--</div><div class="monitor-lbl">FC (bpm)</div></div>
+                        <div class="monitor-param bp"><div class="monitor-val" id="val-ta" style="color:var(--accent-yellow)">--/--</div><div class="monitor-lbl">PA (mmHg)</div></div>
+                        <div class="monitor-param sat"><div class="monitor-val" id="val-spo2" style="color:var(--accent-green)">--</div><div class="monitor-lbl">SpO2 (%)</div></div>
+                        <div class="monitor-param rr"><div class="monitor-val" id="val-fr" style="color:var(--accent-purple)">--</div><div class="monitor-lbl">FR (/min)</div></div>
+                        <div class="monitor-param temp"><div class="monitor-val" id="val-temp" style="color:#f97316">--</div><div class="monitor-lbl">T (°C)</div></div>
                     </div>
 
-                    <div class="console-log-panel"><div class="console-terminal" id="terminal-output"></div></div>
-                </div>
+                    <!-- Canevas Clinique Dynamique -->
+                    <div class="clinical-canvas" id="clinical-canvas-panel">
+                        <div class="canvas-card">
+                            <h3 id="patient-name-display" style="margin-top:0;">--</h3>
+                            <p id="patient-desc-display" style="color:var(--text-muted); font-size:0.9em; line-height:1.4;">Sélectionnez une option de navigation à gauche pour démarrer la prise en charge.</p>
+                        </div>
+                    </div>
 
-                <div class="action-drawer right-side" id="drawer-right"><div class="drawer-header"><h3 id="drawer-right-title" style="margin:0; font-size:0.95em; text-transform:uppercase; color:var(--accent-cyan);">Menu</h3><button onclick="closeDrawer('right')" style="background:transparent; border:none; color:#fff; cursor:pointer; font-size:1.1em;">✕</button></div><div class="drawer-content" id="drawer-right-content"></div></div>
-                
-                <div class="sidebar-tabs-right">
-                    <div class="v-tab" id="tab-investigations" onclick="handleTabClick('investigations', 'right')">Investigations</div>
-                    <div class="v-tab" id="tab-interventions" onclick="handleTabClick('interventions', 'right')">Interventions</div>
-                    <div class="v-tab" id="tab-handoff" onclick="handleTabClick('handoff', 'right')">Handoff</div>
+                    <!-- Console de Transmission Basse -->
+                    <div class="console-panel">
+                        <div class="console-header">Transmissions et Journal d'Action</div>
+                        <div class="console-terminal" id="console-terminal-log"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- ÉCRAN DE DEBRIEFING CLONE COMPLET -->
+        <!-- ÉCRAN DE DÉBRIEFING -->
         <div id="simulation-debriefing" class="debriefing-view">
-            <div class="debrief-card" style="text-align:center;">
-                <h1 style="color:var(--accent-cyan); font-size:2.2em; margin-bottom:5px; font-weight:800;">DEBRIEFING DOSCIMOLOGIQUE HAS</h1>
-                <h2 style="font-size:3.5em; color:var(--accent-yellow); font-family:monospace; margin:15px 0;" id="debrief-final-note">--/20</h2>
-                <p id="debrief-verdict-text" style="font-size:1.1em; color:#fff; margin-bottom:20px;"></p>
-                <button onclick="window.location.reload()" class="btn-action-premium" style="padding:12px 30px;">Retourner à l'Accueil de Garde</button>
+            <div class="canvas-card" style="text-align:center;">
+                <h1 style="color:var(--accent-cyan); font-size:2.2em; margin-bottom:5px;">SYNTHÈSE ET RATIONALE DE FIN DE CAS</h1>
+                <h2 style="font-size:3.5em; color:var(--accent-yellow);" id="debrief-note">--/20</h2>
+                <p id="debrief-text" style="color:var(--text-muted); font-size:1em; margin-bottom:20px;"></p>
+                <button onclick="window.location.reload()" class="btn-action" style="padding:10px 25px;">Retourner au Tableau de Garde</button>
             </div>
-            <h2 style="text-transform:uppercase; color:#fff; border-bottom:1px solid var(--border-color); padding-bottom:8px; font-size:1.1em; letter-spacing:0.5px;">Analyse Détaillée Rationale de vos Actes</h2>
-            <div id="debrief-actions-list"></div>
+            <h3>Rapport d'Analyse des Recommandations (HAS)</h3>
+            <div id="debrief-list"></div>
         </div>
-
     </div>
 
-    <!-- CODE LOGIQUE FRONTAL AUTONOME ET INTEGRÉ -->
+    <!-- CODE LOGIQUE INTERACTIF DU COCKPIT -->
     <script>
-        let gameState = { activeCase: null, whiteboard: [], currentExamKeyViewed: null, userHistoryNotes: [] };
-        let currentActiveLeftTab = null, currentActiveRightTab = null, timerInterval = null;
+        let gameState = { activeCase: null, currentPanel: null, totalTime: 0, audioCtx: null };
 
-        const EXAM_DATABASE = {
-            bedside: [
-                { id: "exam_vias", name: "Examen des Voies Aériennes (VAS)" },
-                { id: "exam_resp", name: "Examen de la Respiration / Fréquence" },
-                { id: "exam_circ", name: "Examen Circulatoire / TRC" },
-                { id: "exam_back", name: "Percussion Lombaire (Giordano)" },
-                { id: "exam_skin", name: "Inspection Cutanée (Marbrures)" },
-                { id: "bu", name: "Bandelette Urinaire (BU)" },
-                { id: "ecg", name: "Électrocardiogramme (ECG)" }
-            ],
-            biology: [
-                { id: "lactates", name: "Lactates Sanguins (Lactatémie)" },
-                { id: "hemocultures", name: "Hémocultures Périphériques (2 paires)" },
-                { id: "ionogramme", name: "Ionogramme Sanguin & Urée/Créat" },
-                { id: "lcr_num", name: "Numération cellulaire du LCR" }
-            ],
-            imaging: [
-                { id: "radio_thorax", name: "Radiographie Thoracique Face" },
-                { id: "tdm_abdomen", name: "Scanner Abdomino-pelvien" }
-            ]
-        };
-
-        // Scan dynamique du dossier /cases à l'ouverture de la page
-        window.addEventListener('DOMContentLoaded', async () => {
+        // Générateur de son synthétique du moniteur réanimatoire (Web Audio API)
+        function playBeep(frequency = 800, duration = 0.08) {
             try {
-                const res = await fetch('/api/available-cases');
-                const casesList = await res.json();
+                if (!gameState.audioCtx) gameState.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (gameState.audioCtx.state === 'suspended') gameState.audioCtx.resume();
                 
-                const gridTarget = document.getElementById('cases-dynamic-grid-target');
-                gridTarget.innerHTML = ""; // Clear
+                let osc = gameState.audioCtx.createOscillator();
+                let gain = gameState.audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.value = frequency;
+                gain.gain.setValueAtTime(0.04, gameState.audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, gameState.audioCtx.currentTime + duration);
+                
+                osc.connect(gain);
+                gain.connect(gameState.audioCtx.destination);
+                osc.start(); osc.stop(gameState.audioCtx.currentTime + duration);
+            } catch(e) { console.log("Audio non autorisé."); }
+        }
 
-                if (casesList.length === 0) {
-                    gridTarget.innerHTML = `<div style="color:var(--accent-red); grid-column:span 2; text-align:center; padding:20px; border:1px dashed var(--accent-red); border-radius:8px;">⚠️ Aucun fichier .json d'item EDN détecté dans le dossier /cases de l'instance Server.</div>`;
-                    return;
+        // Démarrage du bip-bip synchronisé
+        function startHeartbeatSound() {
+            setInterval(() => {
+                if (gameState.activeCase && gameState.activeCase.fc > 0) {
+                    let interval = (60 / gameState.activeCase.fc) * 1000;
+                    // Bip court, plus aigu si tachycardie, plus grave si bradycardie
+                    playBeep(gameState.activeCase.fc > 120 ? 950 : 800);
                 }
+            }, 800); // Répétition standard
+        }
 
-                casesList.forEach(c => {
-                    gridTarget.innerHTML += `
-                        <div class="case-episode-card">
-                            <div>
-                                <div class="case-meta">
-                                    <span class="specialty-tag">EDN Urgent / Réa</span>
-                                    <span class="difficulty-indicator">DFASM3 / Interne</span>
-                                </div>
-                                <h4 class="case-p-name">${c.displayName}</h4>
-                                <p class="case-p-type">Item clinique réglementaire</p>
-                            </div>
-                            <button onclick="admitTargetPatient('${c.itemId}')" class="btn-action-premium" style="width:100%; margin-top:10px;">ADMETTRE AU DÉCHOCAGE</button>
-                        </div>`;
-                });
-            } catch (err) {
-                console.error("Erreur de synchronisation : ", err);
-            }
+        window.addEventListener('DOMContentLoaded', async () => {
+            const res = await fetch('/api/available-cases');
+            const cases = await res.json();
+            const grid = document.getElementById('cases-target-grid');
+            grid.innerHTML = "";
+
+            cases.forEach(c => {
+                grid.innerHTML += `
+                    <div class="case-card">
+                        <h4 style="margin:0 0 5px 0; color:#fff;">${c.displayName}</h4>
+                        <p style="font-size:0.8em; color:var(--text-muted); margin:0 0 12px 0;">Item officiel de référence</p>
+                        <button onclick="admitPatient('${c.itemId}')" class="btn-action">Admettre au Déchocage</button>
+                    </div>`;
+            });
+            startHeartbeatSound();
         });
 
         function switchMainView(viewId) {
@@ -419,210 +310,215 @@
             }
         }
 
-        // Admission forcée par clic depuis la page d'accueil
-        function admitTargetPatient(itemId) {
+        async function admitPatient(itemId) {
             switchMainView('simulation');
-            setTimeout(async () => {
-                const res = await fetch('/api/start-case', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ itemId }) });
-                const data = await res.json();
-                gameState.activeCase = data.patient;
-                gameState.whiteboard = [];
+            const res = await fetch('/api/start-case', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ itemId }) });
+            const data = await res.json();
+            gameState.activeCase = data.patient;
 
-                document.getElementById('simulation-setup').style.display = 'none';
-                document.getElementById('simulation-gameplay').style.display = 'flex';
-                document.getElementById('case-display-id').innerText = `Case #${data.itemId}`;
-                document.getElementById('case-display-title').innerText = data.patient.type;
-                document.getElementById('patient-name-label').innerText = data.patient.name;
-                document.getElementById('patient-aspect-label').innerText = data.patient.aspect;
+            document.getElementById('simulation-setup').style.display = 'none';
+            document.getElementById('simulation-gameplay').style.display = 'flex';
+            document.getElementById('case-id-display').innerText = `Case #${data.itemId}`;
+            document.getElementById('case-title-display').innerText = data.patient.type;
+            document.getElementById('patient-name-display').innerText = data.patient.name;
+            document.getElementById('patient-desc-display').innerText = data.patient.desc;
 
-                updateScope(data.patient);
-                document.getElementById('timer-display').innerText = `TEMPS VIRTUEL : +0 min`;
-                document.getElementById('terminal-output').innerHTML = `<p style="color:var(--accent-green)">[Système] Prise en charge hyper-aiguë initialisée. Fichier JSON lu avec succès.</p>`;
-            }, 100);
+            updateScope(data.patient);
+            document.getElementById('console-terminal-log').innerHTML = `<p style="color:var(--accent-green)">[Système] Monitorage de réanimation stabilisé. Électrodes posées.</p>`;
+            openClinicPanel('exam_primary');
         }
 
         function updateScope(p) {
-            document.getElementById('scope-fc').innerText = p.fc; document.getElementById('scope-ta').innerText = p.ta;
-            document.getElementById('scope-spo2').innerText = p.spo2; document.getElementById('scope-fr').innerText = p.fr;
-            document.getElementById('scope-temp').innerText = p.temp + " °C"; document.getElementById('scope-dextro').innerText = p.dextro + " mmol/L";
+            document.getElementById('val-fc').innerText = p.fc;
+            document.getElementById('val-ta').innerText = p.ta;
+            document.getElementById('val-spo2').innerText = p.spo2;
+            document.getElementById('val-fr').innerText = p.fr;
+            document.getElementById('val-temp').innerText = p.temp;
         }
 
-        function handleTabClick(tabId, side) {
-            if(side === 'left') {
-                document.querySelectorAll('.sidebar-tabs-left .v-tab').forEach(t => t.classList.remove('active'));
-                if(currentActiveLeftTab === tabId) { closeDrawer('left'); return; }
-                currentActiveLeftTab = tabId; document.getElementById(`tab-${tabId}`).classList.add('active'); openDrawer('left', tabId);
-            } else {
-                document.querySelectorAll('.sidebar-tabs-right .v-tab').forEach(t => t.classList.remove('active'));
-                if(currentActiveRightTab === tabId) { closeDrawer('right'); return; }
-                currentActiveRightTab = tabId; document.getElementById(`tab-${tabId}`).classList.add('active'); openDrawer('right', tabId);
-            }
-        }
+        // Module de Navigation clinique interactif
+        function openClinicPanel(panelId) {
+            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${panelId.replace('_', '-')}`);
+            if (activeBtn) activeBtn.classList.add('active');
 
-        function closeDrawer(side) {
-            document.getElementById(`drawer-${side}`).classList.remove('show');
-            if(side === 'left') { document.querySelectorAll('.sidebar-tabs-left .v-tab').forEach(t => t.classList.remove('active')); currentActiveLeftTab = null; }
-            else { document.querySelectorAll('.sidebar-tabs-right .v-tab').forEach(t => t.classList.remove('active')); currentActiveRightTab = null; }
-        }
+            const canvas = document.getElementById('clinical-canvas-panel');
+            let html = "";
 
-        function openDrawer(side, tabId) {
-            const content = document.getElementById(`drawer-${side}-content`);
-            document.getElementById(`drawer-${side}-title`).innerText = tabId.toUpperCase();
-            document.getElementById(`drawer-${side}`).classList.add('show');
-
-            if(tabId === 'patient') {
-                content.innerHTML = `
-                    <div style="display:flex; flex-direction:column; gap:6px;">
-                        <button onclick="triggerAction('/api/interrogate')" style="padding:12px; background:#1e293b; color:#fff; cursor:pointer; border:1px solid var(--border-color); text-align:left; border-radius:6px; font-weight:600;">🕵️ Pousser l'interrogatoire</button>
-                        <button onclick="triggerAction('/api/search-home')" style="padding:12px; background:#1e293b; color:#fff; cursor:pointer; border:1px solid var(--border-color); text-align:left; border-radius:6px; font-weight:600;">🏚️ Perquisitionner le Domicile</button>
-                    </div>
-                    <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:12px;">
-                        <span style="font-size:0.85em; color:var(--text-muted); font-weight:bold;">💊 CONSEIL DU DR HESS (HINTS) :</span>
-                        <div class="hint-btn-group">
-                            <button onclick="fetchHint('rosHint')" style="font-size:0.8em; padding:6px; cursor:pointer;">Anamnèse</button>
-                            <button onclick="fetchHint('examHint')" style="font-size:0.8em; padding:6px; cursor:pointer;">Clinique</button>
-                            <button onclick="fetchHint('investigationsHint')" style="font-size:0.8em; padding:6px; grid-column: span 2; cursor:pointer;">Investigations</button>
-                        </div>
-                        <div id="hess-hint-text" style="margin-top:10px; font-size:0.85em; color:var(--accent-yellow); font-style:italic; line-height:1.4;"></div>
-                    </div>`;
-            }
-            else if(tabId === 'exam') {
-                content.innerHTML = `<p style="color:var(--text-muted); font-size:0.85em; line-height:1.4;">Prescrivez vos examens physiques structurés par appareil directement dans l'onglet <b>Investigations</b> à droite (Format Rigoureux Full Code).</p>`;
-            }
-            else if(tabId === 'stabilize') {
-                content.innerHTML = `
-                    <p style="color:var(--text-muted); font-size:0.85em;">Gestes de réanimation immédiate au déchocage :</p>
+            if (panelId === 'exam_primary') {
+                html = `
+                    <h3>🚨 Évaluation Primaire (ABCDE)</h3>
+                    <p style="color:var(--text-muted); font-size:0.85em; margin-bottom:15px;">Évaluez immédiatement les fonctions vitales d'urgence :</p>
                     <div style="display:flex; flex-direction:column; gap:8px;">
-                        <button onclick="triggerStabilize('peripheral_ivs')" style="padding:12px; background:#111827; border:1px solid var(--border-color); color:#fff; text-align:left; cursor:pointer; border-radius:6px; font-weight:600;">VVP - Accès Veineux Périphérique</button>
-                        <button onclick="triggerStabilize('oxygen')" style="padding:12px; background:#111827; border:1px solid var(--border-color); color:#fff; text-align:left; cursor:pointer; border-radius:6px; font-weight:600;">O2 - Oxygénothérapie Masque Haute Conc.</button>
-                        <button onclick="triggerStabilize('monitoring')" style="padding:12px; background:#111827; border:1px solid var(--border-color); color:#fff; text-align:left; cursor:pointer; border-radius:6px; font-weight:600;">MONITORAGE - Connexion scope continu</button>
+                        <button onclick="runExam('exam_vias')" class="sidebar-btn">💨 Airway (Voies Aériennes)</button>
+                        <button onclick="runExam('exam_resp')" class="sidebar-btn">🫁 Breathing (Respiration / Auscultation)</button>
+                        <button onclick="runExam('exam_circ')" class="sidebar-btn">❤️ Circulation (Pouls / TRC / Cœur)</button>
+                        <button onclick="runExam('exam_neuro')" class="sidebar-btn">🧠 Disability (Glasgow / Pupilles)</button>
+                        <button onclick="runExam('exam_skin')" class="sidebar-btn">🔍 Exposure (Exposition / Peau / Lésions)</button>
                     </div>`;
             }
-            else if(tabId === 'investigations') {
-                content.innerHTML = `
-                    <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="exam-search" oninput="filterRows()" placeholder="Filtrer un examen..." class="search-input"></div>
-                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-bedside')">⚡ Clinique & Au lit du Patient <span>▼</span></button><div class="accordion-content open" id="c-bedside">${renderCategoryRows(EXAM_DATABASE.bedside)}</div></div>
-                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-biology')">🔬 Labo Central / Biologie <span>▼</span></button><div class="accordion-content open" id="c-biology">${renderCategoryRows(EXAM_DATABASE.biology)}</div></div>
-                    <div class="accordion-item"><button class="accordion-trigger" onclick="toggleAccordion('c-imaging')">☢️ Imagerie & Scanner <span>▼</span></button><div class="accordion-content open" id="c-imaging">${renderCategoryRows(EXAM_DATABASE.imaging)}</div></div>`;
+            else if (panelId === 'exam_systemic') {
+                html = `
+                    <h3>🩺 Examen Physique Systémique</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                        <button onclick="runExam('exam_cardio')" class="sidebar-btn">🫀 Auscultation Cardiaque</button>
+                        <button onclick="runExam('exam_pulm')" class="sidebar-btn">🌬️ Auscultation Pulmonaire</button>
+                        <button onclick="runExam('exam_abd')" class="sidebar-btn">🧱 Abdomen & Palpation</button>
+                        <button onclick="runExam('exam_back')" class="sidebar-btn">🪵 Dos & Percussion lombaire</button>
+                    </div>`;
             }
-            else if(tabId === 'differential') {
-                content.innerHTML = `<div class="whiteboard-box"><h4>Tableau Clinique Actif</h4><div id="wb-tags-box"></div></div><div style="display:flex; gap:5px;"><input type="text" id="wb-in" style="flex:1; padding:8px; background:#0b0f17; border:1px solid var(--border-color); color:#fff; border-radius:4px;"><button onclick="submitWb()" style="background:var(--accent-cyan); border:none; padding:8px; font-weight:bold; color:#000; border-radius:4px; cursor:pointer;">Poser</button></div>`;
+            else if (panelId === 'invest_biology') {
+                html = `
+                    <h3>🔬 Analyses Biologiques (Laboratoire)</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                        <button onclick="runExam('nfs')" class="sidebar-btn">🩸 NFS (Hémogramme)</button>
+                        <button onclick="runExam('hemostase')" class="sidebar-btn">🧪 Hémostase (TP / TCA)</button>
+                        <button onclick="runExam('lactates')" class="sidebar-btn">🔥 Lactates Sanguins</button>
+                        <button onclick="runExam('ionogramme')" class="sidebar-btn">💧 Ionogramme sanguin</button>
+                        <button onclick="runExam('bu')" class="sidebar-btn">🚽 Bandelette Urinaire (BU)</button>
+                        <button onclick="runExam('hemocultures')" class="sidebar-btn">🧫 Hémocultures (2 paires)</button>
+                    </div>`;
             }
-            else if(tabId === 'interventions') {
-                content.innerHTML = `<button onclick="executeTherapeutic('Remplissage')" style="width:100%; padding:12px; background:#1e293b; color:#fff; border:1px solid var(--border-color); text-align:left; cursor:pointer; margin-bottom:6px; border-radius:6px; font-weight:600;">💧 Administrer Remplissage Vasculaire</button><button onclick="executeTherapeutic('Antibiothérapie')" style="width:100%; padding:12px; background:#1e293b; color:#fff; border:1px solid var(--border-color); text-align:left; cursor:pointer; border-radius:6px; font-weight:600;">💊 Injecter Antibiothérapie C3G IV</button>`;
+            else if (panelId === 'invest_imaging') {
+                html = `
+                    <h3>☢️ Imagerie Médicale & Électrocardiogramme</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                        <button onclick="runExam('ecg')" class="sidebar-btn">📈 ECG 12 dérivations</button>
+                        <button onclick="runExam('radio_thorax')" class="sidebar-btn">🩻 Radiographie du Thorax</button>
+                        <button onclick="runExam('tdm_abdomen')" class="sidebar-btn">🌀 Scanner Abdomino-Pelvien</button>
+                    </div>
+                    <div id="imaging-box-target" style="display:none; margin-top:15px; border:1px dashed var(--border-color); padding:15px; text-align:center;">
+                        <div style="background:#020408; height:100px; line-height:100px; color:var(--accent-cyan); font-weight:bold;" id="imaging-placeholder">TRACÉ / IMAGE</div>
+                        <p id="imaging-raw" style="font-size:0.85em; margin:10px 0;"></p>
+                        <button onclick="requestExpertHelp()" class="btn-action" style="font-size:0.75em;">Avis Expert (-2 pts)</button>
+                        <div id="expert-text" style="color:var(--accent-green); font-size:0.85em; margin-top:8px;"></div>
+                    </div>`;
             }
-            else if(tabId === 'handoff') {
-                content.innerHTML = `
-                    <input type="text" id="diag-final" placeholder="Saisir le diagnostic principal..." style="width:100%; padding:12px; background:#0b0f17; border:1px solid var(--border-color); color:#fff; border-radius:6px; margin-bottom:15px; box-sizing:border-box;">
-                    <span style="font-size:0.85em; color:var(--text-muted); font-weight:bold; display:block; margin-bottom:8px;">DISPOSITION / ORIENTATION DE TRIAGE :</span>
+            else if (panelId === 'stabilize') {
+                html = `
+                    <h3>⚡ Stabilisation Immédiate</h3>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <button onclick="applyStabilize('peripheral_ivs')" class="sidebar-btn">💉 Poser deux voies veineuses (VVP)</button>
+                        <button onclick="applyStabilize('oxygen')" class="sidebar-btn">🫁 Oxygénothérapie Masque Haute Conc.</button>
+                        <button onclick="applyStabilize('monitoring')" class="sidebar-btn">📺 Brancher le scope continu</button>
+                    </div>`;
+            }
+            else if (panelId === 'intervene') {
+                html = `
+                    <h3>💊 Pharmacopée et Gestes Spécialisés</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:15px;">
+                        <button onclick="applyIntervene('Remplissage vasculaire')" class="sidebar-btn">💧 Bolus Cristalloïdes (500ml)</button>
+                        <button onclick="applyIntervene('Antibiothérapie parentérale')" class="sidebar-btn">🦠 Antibiothérapie parentérale</button>
+                        <button onclick="applyIntervene('Adrénaline IM')" class="sidebar-btn">💉 Adrénaline IM d'urgence</button>
+                        <button onclick="applyIntervene('Aciclovir IV')" class="sidebar-btn">🦠 Aciclovir IV</button>
+                    </div>`;
+            }
+            else if (panelId === 'communicate') {
+                html = `
+                    <h3>🗣️ Communication et Recueil d'informations</h3>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <button onclick="applyCommunicate('/api/interrogate')" class="sidebar-btn">🕵️ Interrogatoire patient / famille</button>
+                        <button onclick="applyCommunicate('/api/search-home')" class="sidebar-btn">🏚️ Analyse du domicile / secouristes</button>
+                    </div>`;
+            }
+            else if (panelId === 'handoff') {
+                html = `
+                    <h3>🏥 Diagnostic final et Orientation (Hand-off)</h3>
+                    <input type="text" id="final-diag-input" placeholder="Saisir votre diagnostic principal..." style="width:100%; padding:10px; background:#05070c; border:1px solid var(--border-color); color:#fff; border-radius:6px; box-sizing:border-box; margin-bottom:15px;">
+                    <p style="font-size:0.85em; color:var(--text-muted); font-weight:bold; margin-bottom:10px;">ORIENTATION DE SORTIE :</p>
                     <div class="radio-tile-group">
-                        <label class="radio-tile"><input type="radio" name="disp-choice" value="icu_admission"> Hospitalisation en Réanimation / USC</label>
-                        <label class="radio-tile"><input type="radio" name="disp-choice" value="admit_to_floor"> Hospitalisation en Médecine</label>
-                        <label class="radio-tile"><input type="radio" name="disp-choice" value="prep_for_operating_room"> Transfert direct au Bloc Opératoire</label>
+                        <label class="radio-tile"><input type="radio" name="disp-choice" value="icu_admission"> Réanimation Médicale / Soins Intensifs</label>
+                        <label class="radio-tile"><input type="radio" name="disp-choice" value="admit_to_floor"> Hospitalisation conventionnelle (Floor)</label>
                         <label class="radio-tile"><input type="radio" name="disp-choice" value="discharge"> Retour direct à domicile (Sortie)</label>
                     </div>
-                    <button onclick="closeCaseAndShowDebrief()" class="btn-action-premium" style="width:100%; padding:14px; font-size:0.95em;">SOUMETTRE LE RAPPORT NATIONAL</button>`;
+                    <button onclick="submitFinalCase()" class="btn-action" style="width:100%; padding:12px;">Soumettre le Rapport de Garde</button>`;
             }
-            
-            // Synchronisation instantanée du tableau blanc si l'onglet s'ouvre
-            if(tabId === 'differential') syncWhiteboardUI();
+
+            canvas.innerHTML = html;
         }
 
-        function renderCategoryRows(arr) { return arr.map(i => `<div class="exam-row" data-name="${i.name.toLowerCase()}"><span style="color:#fff; font-weight:500;">${i.name}</span><button class="btn-order" onclick="prescribeExam('${i.id}', '${i.name}')">Prescrire</button></div>`).join(''); }
-        function toggleAccordion(id) { document.getElementById(id).classList.toggle('open'); }
-        function filterRows() { let q = document.getElementById('exam-search').value.toLowerCase(); document.querySelectorAll('.exam-row').forEach(r => { r.style.display = r.getAttribute('data-name').includes(q) ? 'flex' : 'none'; }); }
-
-        async function triggerAction(url) {
-            const res = await fetch(url, { method: 'POST' }); const data = await res.json();
-            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-yellow)">> ${data.outcome}</p>`;
-            updateScope(data.activeSim.patient);
-        }
-
-        async function triggerStabilize(actionKey) {
-            const res = await fetch('/api/stabilize-action', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ actionKey }) });
-            const data = await res.json();
-            document.getElementById('timer-display').innerText = `TEMPS VIRTUEL : +${data.activeSim.virtualMinutesElapsed} min`;
-            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-cyan)"><b>[Stabilize]</b> ${data.outcome}</p>`;
-            updateScope(data.activeSim.patient);
-        }
-
-        async function prescribeExam(examKey, examName) {
+        async function runExam(examKey) {
             const res = await fetch('/api/investigate', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ examKey }) });
             const data = await res.json();
+            gameState.activeCase = data.activeSim.patient;
 
-            gameState.currentExamKeyViewed = examKey;
-            document.getElementById('image-viewer-panel').style.display = 'flex';
-            document.getElementById('iv-graphic-box').innerText = `📷 IMAGE ASSET: ${data.image.toUpperCase()}`;
-            document.getElementById('iv-text-result').innerHTML = `<b>Donnée Brute Reçue :</b> ${data.rawResult}`;
-            document.getElementById('iv-official-interpretation').innerText = "";
-
+            document.getElementById('console-terminal-log').innerHTML += `<p style="color:var(--accent-green)">> Prescription / Examen : ${data.name} complété (+${data.minutesSpent} min).</p>`;
             document.getElementById('timer-display').innerText = `TEMPS VIRTUEL : +${data.activeSim.virtualMinutesElapsed} min`;
-            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-green)">📊 [Prescription] ${examName} complétée (Coût : +${data.minutesSpent} min).</p>`;
             updateScope(data.activeSim.patient);
-        }
 
-        async function requestOfficialInterpretation() {
-            if(!gameState.currentExamKeyViewed) return;
-            const res = await fetch('/api/reveal-interpretation', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ examKey: gameState.currentExamKeyViewed }) });
-            const data = await res.json();
-            document.getElementById('iv-official-interpretation').innerHTML = `<b>Interprétation Expert :</b> ${data.interpretation}<br><span style="font-size:0.95em; color:var(--text-muted)">Justification : ${data.justification}</span>`;
-        }
-
-        async function fetchHint(hintType) {
-            const res = await fetch('/api/get-hint', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ type: hintType }) });
-            const data = await res.json();
-            document.getElementById('hess-hint-text').innerText = `Dr Hess : "${data.hint}"`;
-        }
-
-        async function executeTherapeutic(order) {
-            const res = await fetch('/api/execute', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ order }) });
-            const data = await res.json();
-            document.getElementById('terminal-output').innerHTML += `<p style="color:var(--accent-yellow)">⚡ <b>Geste : ${order}</b> ➜ ${data.outcome}</p>`;
-            updateScope(data.activeSim.patient);
-        }
-
-        async function submitWb() {
-            let hypothesis = document.getElementById('wb-in').value.trim(); if(!hypothesis) return;
-            const res = await fetch('/api/whiteboard/add', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ hypothesis }) });
-            const data = await res.json(); gameState.whiteboard = data.activeSim.whiteboard;
-            syncWhiteboardUI(); document.getElementById('wb-in').value = '';
-        }
-
-        function syncWhiteboardUI() {
-            let tagsHtml = gameState.whiteboard.map(t => `<span class="wb-tag">📌 ${t}</span>`).join('');
-            if(document.getElementById('wb-tags-box')) {
-                document.getElementById('wb-tags-box').innerHTML = tagsHtml || 'Aucun.';
+            // Si c'est un examen visuel, on l'affiche
+            const box = document.getElementById('imaging-box-target');
+            if (box) {
+                box.style.display = "block";
+                document.getElementById('imaging-placeholder').innerText = `📷 ASSET: ${data.image.toUpperCase()}`;
+                document.getElementById('imaging-raw').innerHTML = `<b>Donnée brute :</b> ${data.rawResult}`;
+                document.getElementById('expert-text').innerText = "";
+                gameState.lastExamKey = examKey;
             }
         }
 
-        async function closeCaseAndShowDebrief() {
-            const hypothesis = document.getElementById('diag-final').value.trim();
+        async function requestExpertHelp() {
+            if (!gameState.lastExamKey) return;
+            const res = await fetch('/api/reveal-interpretation', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ examKey: gameState.lastExamKey }) });
+            const data = await res.json();
+            document.getElementById('expert-text').innerHTML = `<b>Avis d'expert :</b> ${data.interpretation}<br><small style="color:var(--text-muted)">Justification : ${data.justification}</small>`;
+        }
+
+        async function applyStabilize(actionKey) {
+            const res = await fetch('/api/stabilize-action', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ actionKey }) });
+            const data = await res.json();
+            gameState.activeCase = data.activeSim.patient;
+
+            document.getElementById('console-terminal-log').innerHTML += `<p style="color:var(--accent-cyan)"><b>[Réanimation]</b> ${data.outcome}</p>`;
+            document.getElementById('timer-display').innerText = `TEMPS VIRTUEL : +${data.activeSim.virtualMinutesElapsed} min`;
+            updateScope(data.activeSim.patient);
+        }
+
+        async function applyIntervene(order) {
+            const res = await fetch('/api/execute', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ order }) });
+            const data = await res.json();
+            gameState.activeCase = data.activeSim.patient;
+
+            document.getElementById('console-terminal-log').innerHTML += `<p style="color:var(--accent-yellow)"><b>[Thérapeutique]</b> ${data.outcome}</p>`;
+            updateScope(data.activeSim.patient);
+        }
+
+        async function applyCommunicate(endpoint) {
+            const res = await fetch(endpoint, { method: 'POST' });
+            const data = await res.json();
+            gameState.activeCase = data.activeSim.patient;
+
+            document.getElementById('console-terminal-log').innerHTML += `<p style="color:#a855f7"><b>[Rapport/Anamnèse]</b> ${data.outcome}</p>`;
+            updateScope(data.activeSim.patient);
+        }
+
+        async function submitFinalCase() {
+            const hypothesis = document.getElementById('final-diag-input').value.trim();
             const dispNode = document.querySelector('input[name="disp-choice"]:checked');
-            
-            if(!hypothesis) return alert("Veuillez formuler une conclusion diagnostique.");
-            if(!dispNode) return alert("Sélectionnez une orientation de sortie (Triage).");
-            
-            const dispositionKey = dispNode.value;
-            const res = await fetch('/api/diagnose', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ hypothesis, dispositionKey }) });
+
+            if (!hypothesis) return alert("Saisissez un diagnostic avant de fermer.");
+            if (!dispNode) return alert("Sélectionnez l'orientation de sortie du patient.");
+
+            const res = await fetch('/api/diagnose', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ hypothesis, dispositionKey: dispNode.value }) });
             const data = await res.json();
 
-            clearInterval(timerInterval);
             document.getElementById('simulation-gameplay').style.display = 'none';
             document.getElementById('simulation-debriefing').style.display = 'flex';
-            document.getElementById('debrief-final-note').innerText = `${data.finalNote}/20`;
-            document.getElementById('debrief-verdict-text').innerText = `Le diagnostic attendu par les lignes directrices de la HAS était : ${data.correctAnswer}.`;
+            document.getElementById('debrief-note').innerText = `${data.finalNote}/20`;
+            document.getElementById('debrief-text').innerText = `Le diagnostic attendu par la HAS était : ${data.correctAnswer}.`;
 
-            let listContainer = document.getElementById('debrief-actions-list');
-            listContainer.innerHTML = "";
+            const list = document.getElementById('debrief-list');
+            list.innerHTML = "";
             data.actionsHistory.forEach(act => {
-                let badgeClass = act.status === 1 ? 'badge-crit' : act.status === 2 ? 'badge-opt' : 'badge-wrong';
-                listContainer.innerHTML += `
-                    <div class="dash-card debrief-row" style="margin-bottom:15px; background:var(--bg-interface);">
+                let statusClass = act.status === 1 ? 'badge-validated' : 'badge-pending';
+                list.innerHTML += `
+                    <div class="canvas-card" style="margin-bottom:10px;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong style="color:#fff;">${act.name}</strong> <span class="action-badge ${badgeClass}">${act.tier.toUpperCase()}</span>
+                            <strong>${act.name}</strong>
+                            <span class="status-badge ${statusClass}">${act.tier.toUpperCase()}</span>
                         </div>
-                        <div style="color:var(--accent-cyan); font-size:0.9em;">➜ Mesure / Conclusion : ${act.res}</div>
-                        <div style="color:var(--text-muted); font-size:0.88em; font-style:italic; margin-top:4px;">💡 Rationale HAS/EDN : ${act.justification}</div>
+                        <p style="color:var(--accent-cyan); font-size:0.9em; margin:5px 0;">➜ Mesure / Action : ${act.res}</p>
+                        <small style="color:var(--text-muted); font-style:italic;">Rationale : ${act.justification}</small>
                     </div>`;
             });
         }
