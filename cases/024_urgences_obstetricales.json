@@ -1,0 +1,46 @@
+{
+  "itemId": "024",
+  "displayName": "Item 24 — Urgences Obstétricales Aiguës (3e Trimestre)",
+  "correctDiag": "Listeriose gravidique",
+  "isMatrix": true,
+  "mandatoryExamsToRuleOut": ["exam_skin", "bu", "hemocultures", "ecg"],
+  "lethalWrongDiags": ["Hématome rétroplacentaire", "Placenta prævia", "Choc anaphylactique"],
+  "correctDisposition": "icu_admission",
+  "rosHint": "Toute fièvre isolée ou syndromique chez une femme enceinte est une listériose jusqu'à preuve du contraire. Calculez précisément le terme en SA avant toute thérapeutique fœtale.",
+  "examHint": "Le toucher vaginal est strictement interdit en cas de saignement vaginal d'origine inconnue. Réalisez un examen au spéculum stérile pour évaluer l'origine du saignement ou la rupture des membranes.",
+  "investigationsHint": "Le monitorage par cardiotocographie (RCF) est l'examen pivot de la souffrance fœtale au 3e trimestre. Ne perdez pas de temps à demander des imageries lourdes (Scanner) face à une suspicion d'infection amniotique.",
+  "possibleProfiles": [
+    {
+      "name": "Élodie F., 29 ans",
+      "age": 29,
+      "terrain": "Primigeste, 28 SA + 4 jours, grossesse sans particularité jusqu'ici. Sérologie Toxoplasmose positive, Rubéole immunisée.",
+      "secret": "A consommé de la charcuterie artisanale et du fromage de chèvre au lait cru lors d'un repas de famille il y a 5 jours. Se plaint de frissons intenses et de céphalées.",
+      "baseVitals": { "fc": 114, "ta": "105/60", "spo2": 96, "fr": 22, "temp": 39.1, "dextro": 4.9, "isCritical": true },
+      "aspect": "Patiente fébrile, frissonnante sur le brancard, se plaignant de douleurs lombaires diffuses et de contractions utérines intermittentes.",
+      "desc": "Admise en salle de déchocage pour un syndrome pseudo-grippal aigu avec frissons et fièvre à 39.1°C à 28 SA, accompagné d'une activité contractile utérine."
+    },
+    {
+      "name": "Sarah M., 34 ans",
+      "age": 34,
+      "terrain": "Troisième geste, deux enfants nés par voie basse à terme. 32 SA + 2 jours. Tabagisme actif persistant (5 cig/jour).",
+      "secret": "Présente une hypertension artérielle gravidique méconnue, non suivie, car elle a manqué ses deux dernières consultations prénatales obligatoires.",
+      "baseVitals": { "fc": 125, "ta": "158/96", "spo2": 95, "fr": 24, "temp": 37.1, "dextro": 5.2, "isCritical": true },
+      "aspect": "Patiente prostrée, se tordant de douleur. Utérus dur comme du bois à la palpation (contracture utérine permanente). Saignement vaginal fait de sang noir, peu abondant.",
+      "desc": "Amenée en urgence par le SAMU pour une douleur abdominale brutale en 'coup de poignard' suivie de métrorragies de sang noir à 32 SA."
+    }
+  ],
+  "dispositionsConfig": {
+    "icu_admission": { "label": "Hospitalisation en Secteur Grossesses à Haut Risque / Réanimation (Maternité Type III)", "score": 5, "rationale": "PARFAIT : Toute suspicion de listériose ou de complication sévère avant 32 SA impose une prise en charge immédiate dans une maternité de type III disposant d'un service de réanimation néonatale. Le traitement pour la listériose repose sur l'antibiothérapie immédiate par Amoxicilline (3g/jour IV) éventuellement associée à la Gentamicine." },
+    "prep_for_operating_room": { "label": "Transfert en urgence absolue au bloc opératoire pour césarienne", "score": -5, "rationale": "PRÉMATURÉ si Élodie (Listériose) / CRITIQUE si Sarah (HRP) : Pour Sarah, l'utérus de bois associé à une hypertension et un sang noir signe un Hématome Rétroplacentaire (HRP), urgence chirurgicale vitale absolue pour extraction fœtale. Pour Élodie, l'antibiothérapie immédiate doit devancer l'extraction sauf si le RCF s'effondre." },
+    "discharge": { "label": "Retour à domicile sous antipyrétiques oraux", "score": -50, "rationale": "CRIMINEL : Méconnaître une listériose ou un HRP expose à une mort fœtale in utero (MFIU) imminente et à un risque de choc septique ou de CIVD maternelle." }
+  },
+  "usefulExams": {
+    "exam_skin": { "tier": 1, "res": "Élodie : Absence de purpura cutané, extrémités chaudes. Sarah : Pâleur intense des conjonctives, pas de purpura, infiltration des membres inférieurs.", "interpretation": "Élodie : Absence de purpura fulminans. Sarah : Signes de choc anaphylactique ou hémorragique d'aval avec anémie clinique.", "justification": "Élimine un purpura fulminans devant la fièvre et évalue le retentissement de l'hémorragie." },
+    "exam_gu": { "tier": 1, "res": "Toucher vaginal NON RÉALISÉ. Examen au spéculum stérile : Élodie : Absence de saignement, col fermé, pas de liquide amniotique visible. Sarah : Saignement d'origine endo-utérine fait de sang noir en quantité modérée, col centré fermé.", "interpretation": "Élodie : Pas de rupture des membranes évidente. Sarah : Métrorragie du 3e trimestre confirmant l'origine endo-utérine, utérus cicatriciel exclu.", "justification": "Le spéculum est obligatoire pour authentifier le saignement et éliminer un placenta prævia avant tout toucher vaginal." },
+    "ecg": { "tier": 1, "res": "Enregistrement Cardiotocographique (RCF) : Élodie : Rythme de base fœtal à 175 bpm (tachycardie fœtale), variabilité conservée, contractions utérines toutes les 6 minutes. Sarah : Bradycardie fœtale sévère et prolongée à 85 bpm (souffrance fœtale aiguë cataclysmique), contractions utérines permanentes (hypertonie).", "interpretation": "Élodie : Tachycardie fœtale adaptative à la fièvre maternelle (chorioamniotite/listériose débutante). Sarah : Souffrance fœtale aiguë majeure liée à une hypoxie d'amont (HRP).", "justification": "Le RCF est le reflet direct et obligatoire de la tolérance fœtale face aux agressions du 3e trimestre." },
+    "bu": { "tier": 1, "res": "Bandelette urinaire : Élodie : Normale. Sarah : Protéinurie massive (++), absence de leucocytes ou nitrites.", "interpretation": "Élodie : Pas de point d'appel urinaire. Sarah : Protéinurie pathologique signant une pré-éclampsie sous-jacente compliquée d'HRP.", "justification": "Dépiste la pré-éclampsie (protéinurie + HTA), grande pourvoyeuse d'Hématome Rétroplacentaire." },
+    "hemocultures": { "tier": 1, "res": "Prélèvement effectué en urgence. En cours de culture (Mise en évidence de Listeria monocytogenes à H+18).", "interpretation": "Bactériémie active à Listeria, affirmant la listériose gravidique.", "justification": "Obligatoire et systématique devant toute fièvre isolée ou syndromique chez la femme enceinte." },
+    "nfs": { "tier": 1, "res": "Élodie : Leucocytes à 16 200/mm3 à PNN. Sarah : Hémoglobine effondrée à 8.9 g/dL, Plaquettes abaissées à 92 000/mm3.", "interpretation": "Élodie : Hyperleucocytose infectieuse. Sarah : Anémie aiguë hémorragique et thrombopénie de consommation débutante.", "justification": "Documente le syndrome infectieux ou quantifie la spoliation sanguine et le risque de CIVD." },
+    "hemostase": { "tier": 1, "res": "Élodie : Normal. Sarah : TP abaissé à 52%, TCA allongé à 48s, Fibrinogène effondré à 1.2 g/L.", "interpretation": "Sarah : Coagulopathie Intravasculaire Disséminée (CIVD) sévère, complication classique et redoutable de l'HRP.", "justification": "Indispensable en urgence absolue devant un HRP pour guider la réanimation hémostatique (fibrogène, PFC)." }
+  }
+}
