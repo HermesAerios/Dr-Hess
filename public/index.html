@@ -282,19 +282,44 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            const res = await fetch('/api/available-cases');
-            const cases = await res.json();
             const grid = document.getElementById('cases-target-grid');
-            grid.innerHTML = "";
+            try {
+                const res = await fetch('/api/available-cases');
+                if (!res.ok) throw new Error(`Erreur serveur: ${res.status}`);
+                
+                const cases = await res.json();
+                grid.innerHTML = ""; // On efface le message d'attente "Interrogation..."
 
-            cases.forEach(c => {
-                grid.innerHTML += `
-                    <div class="case-card">
-                        <h4 style="margin:0 0 5px 0; color:#fff;">${c.displayName}</h4>
-                        <p style="font-size:0.8em; color:var(--text-muted); margin:0 0 12px 0;">Item officiel de référence</p>
-                        <button onclick="admitPatient('${c.itemId}')" class="btn-action">Admettre au Déchocage</button>
+                if (cases.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column: span 2; border: 1px dashed var(--border-color); padding: 25px; text-align: center; border-radius: 8px; background: rgba(255,255,255,0.01);">
+                            <p style="color: var(--accent-yellow); font-weight: bold; margin-top: 0;">⚠️ Aucun cas détecté</p>
+                            <p style="color: var(--text-muted); font-size: 0.85em; margin-bottom: 0;">
+                                Le dossier <code>/cases</code> à la racine de votre serveur est actuellement vide.<br>
+                                Déposez-y vos fichiers de matrices thématiques (ex: <code>024_urgences_obstetricales.json</code>) pour qu'ils s'affichent ici.
+                            </p>
+                        </div>`;
+                    return;
+                }
+
+                cases.forEach(c => {
+                    grid.innerHTML += `
+                        <div class="case-card">
+                            <h4 style="margin:0 0 5px 0; color:#fff;">${c.displayName}</h4>
+                            <p style="font-size:0.8em; color:var(--text-muted); margin:0 0 12px 0;">Item officiel de référence</p>
+                            <button onclick="admitPatient('${c.itemId}')" class="btn-action">Admettre au Déchocage</button>
+                        </div>`;
+                });
+            } catch (err) {
+                console.error("Erreur de synchronisation avec l'API :", err);
+                grid.innerHTML = `
+                    <div style="grid-column: span 2; border: 1px solid var(--accent-red); padding: 20px; text-align: center; border-radius: 8px; background: rgba(239, 68, 68, 0.05);">
+                        <p style="color: var(--accent-red); font-weight: bold; margin-top: 0;">❌ Impossible de joindre le serveur local</p>
+                        <p style="color: var(--text-muted); font-size: 0.85em; margin-bottom: 0;">
+                            Vérifiez que votre fichier <code>server.js</code> tourne bien en arrière-plan sur le port attendu (3000) et qu'aucune erreur ne bloque la console Node.js.
+                        </p>
                     </div>`;
-            });
+            }
             startHeartbeatSound();
         });
 
