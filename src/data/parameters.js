@@ -1,116 +1,667 @@
 // src/data/parameters.js
+// Dictionnaire Exhaustif de Référence des Paramètres Biologiques et Physiologiques du Moteur ScribECN
 
 export const LAB_PARAMETERS = {
-    // --- HÉMATOLOGIE ---
-    hemoglobine: {
-        name: "Hémoglobine",
-        unit: "g/dL",
-        normal: { male: [13.0, 17.0], female: [12.0, 16.0], child: [11.0, 14.0] }
-    },
-    hematocrite: {
-        name: "Hématocrite",
-        unit: "%",
-        normal: { male: [40, 52], female: [37, 47] }
-    },
-    leucocytes: {
-        name: "Leucocytes (Globules blancs)",
-        unit: "G/L",
-        normal: [4.0, 10.0]
-    },
-    plaquettes: {
-        name: "Plaquettes",
-        unit: "G/L",
-        normal: [150, 400]
-    },
-    vgm: {
-        name: "Volume Globulaire Moyen (VGM)",
-        unit: "fL",
-        normal: [80, 100]
-    },
-    
-    // --- HÉMOSTASE ---
-    tp: {
-        name: "Taux de Prothrombine (TP)",
-        unit: "%",
-        normal: [70, 130]
-    },
-    inr: {
-        name: "INR",
-        unit: "",
-        normal: [0.8, 1.2]
-    },
-    tca_ratio: {
-        name: "Ratio TCA (Patient/Témoin)",
-        unit: "",
-        normal: [0.8, 1.2]
-    },
-    fibrinogene: {
-        name: "Fibrinogène",
-        unit: "g/L",
-        normal: [2.0, 4.0]
-    },
-    ddimeres: {
-        name: "D-Dimères",
-        unit: "ng/mL",
-        normal: [0, 500] // Seuil d'exclusion classique, ajustable selon l'âge
-    },
+    // ==========================================
+    // 1. IMMUNOHÉMATOLOGIE
+    // ==========================================
+    groupe_abo: { name: "Groupe sanguin (Système ABO)", unit: "", normal: "Détermination biologique" },
+    groupe_rhesus: { name: "Groupe Rhésus (D)", unit: "", normal: "Positif / Négatif" },
+    phenotype_rh: { name: "Phénotype Rhésus complet (C, c, E, e)", unit: "", normal: "Phénotypage conforme" },
+    phenotype_kell: { name: "Phénotype Kell (K/k)", unit: "", normal: "Kell conforme" },
+    phenotype_duffy: { name: "Phénotype Duffy (Fy a / Fy b)", unit: "", normal: "Duffy conforme" },
+    phenotype_kidd: { name: "Phénotype Kidd (Jk a / Jk b)", unit: "", normal: "Kidd conforme" },
+    phenotype_mns: { name: "Phénotype MNS", unit: "", normal: "MNS conforme" },
+    rai: { name: "Recherche d'Agglutinines Irrégulières (RAI)", unit: "", normal: "Négatif" },
+    dat: { name: "Test Direct à l'Antiglobuline (Coombs Direct / DAT)", unit: "", normal: "Négatif" },
+    coombs_direct: { name: "Test de Coombs direct", unit: "", normal: "Négatif" },
+    coombs_indirect: { name: "Test de Coombs indirect", unit: "", normal: "Négatif" },
+    elution: { name: "Test d'élution d'anticorps", unit: "", normal: "Absence d'anticorps fixés" },
+    anticorps_irreguliers: { name: "Identification d'anticorps irréguliers", unit: "", normal: "Absence" },
 
-    // --- BIOCHIMIE & ÉLECTROLYTES ---
-    sodium: {
-        name: "Sodium (Na+)",
-        unit: "mmol/L",
-        normal: [135, 145]
-    },
-    potassium: {
-        name: "Potassium (K+)",
-        unit: "mmol/L",
-        normal: [3.5, 4.5]
-    },
-    chlore: {
-        name: "Chlore (Cl-)",
-        unit: "mmol/L",
-        normal: [95, 105]
-    },
-    uree: {
-        name: "Urée",
-        unit: "mmol/L",
-        normal: [2.5, 7.5]
-    },
-    creatinine: {
-        name: "Créatinine",
-        unit: "µmol/L",
-        normal: { male: [80, 115], female: [60, 90] }
-    },
-    crp: {
-        name: "Protéine C-Réactive (CRP)",
-        unit: "mg/L",
-        normal: [0, 5]
-    },
-    lactates: {
-        name: "Lactates artériels",
-        unit: "mmol/L",
-        normal: [0.5, 2.0]
-    },
+    // ==========================================
+    // 2. ÉRYTHROCYTES
+    // ==========================================
+    hemoglobine: { name: "Hémoglobine", unit: "g/dL", normal: { male: [13.0, 17.0], female: [12.0, 16.0] } },
+    hematocrite: { name: "Hématocrite", unit: "%", normal: { male: [40, 52], female: [37, 47] } },
+    hematies: { name: "Érythrocytes (RBC)", unit: "T/L", normal: { male: [4.5, 5.8], female: [3.8, 4.8] } },
+    reticulocytes: { name: "Réticulocytes", unit: "G/L", normal: [20, 80] },
+    reticulocytes_absolus: { name: "Réticulocytes absolus", unit: "/mm³", normal: [20000, 80000] },
+    reticulocytes_pourcentage: { name: "Réticulocytes %", unit: "%", normal: [0.5, 2.0] },
+    rdw: { name: "RDW (Indice d'anisocytose)", unit: "%", normal: [11.5, 14.5] },
+    vgm: { name: "Volume Globulaire Moyen (VGM)", unit: "fL", normal: [80, 100] },
+    tcmh: { name: "TCMH", unit: "pg", normal: [27, 32] },
+    ccmh: { name: "CCMH", unit: "g/dL", normal: [32, 36] },
+    erythroblastes: { name: "Érythroblastes", unit: "/100 leucocytes", normal: [0, 0] },
+    schizocytes: { name: "Schizocytes", unit: "%", normal: [0.0, 0.2] },
+    drepanocytes: { name: "Drépanocytes", unit: "", normal: "Absence" },
+    spherocytes: { name: "Spherocytes", unit: "", normal: "Absence" },
+    echinocytes: { name: "Échinocytes", unit: "", normal: "Absence" },
+    dacryocytes: { name: "Dacryocytes", unit: "", normal: "Absence" },
+    elliptocytes: { name: "Elliptocytes", unit: "", normal: "Absence" },
+    target_cells: { name: "Target cells (Hématies en cible)", unit: "", normal: "Absence" },
+    howell_jolly: { name: "Corps de Howell-Jolly", unit: "", normal: "Absence" },
+    ponctuations_basophiles: { name: "Hématies à ponctuations basophiles", unit: "", normal: "Absence" },
+    corps_heinz: { name: "Corps de Heinz", unit: "", normal: "Absence" },
+
+    // ==========================================
+    // 3. LEUCOCYTES & FORMULE LEUCOCYTAIRE
+    // ==========================================
+    leucocytes: { name: "Leucocytes (Globules blancs)", unit: "G/L", normal: [4.0, 10.0] },
+    neutrophiles: { name: "Polynucléaires neutrophiles", unit: "G/L", normal: [1.5, 7.0] },
+    neutrophiles_absolus: { name: "Neutrophiles absolus", unit: "/mm³", normal: [1500, 7000] },
+    neutrophiles_pourcentage: { name: "Neutrophiles %", unit: "%", normal: [40, 70] },
+    lymphocytes: { name: "Lymphocytes", unit: "G/L", normal: [1.5, 4.0] },
+    lymphocytes_absolus: { name: "Lymphocytes absolus", unit: "/mm³", normal: [1500, 4000] },
+    lymphocytes_pourcentage: { name: "Lymphocytes %", unit: "%", normal: [20, 40] },
+    monocytes: { name: "Monocytes", unit: "G/L", normal: [0.2, 1.0] },
+    monocytes_absolus: { name: "Monocytes absolus", unit: "/mm³", normal: [200, 1000] },
+    monocytes_pourcentage: { name: "Monocytes %", unit: "%", normal: [2, 10] },
+    eosinophiles: { name: "Polynucléaires éosinophiles", unit: "G/L", normal: [0.05, 0.5] },
+    eosinophiles_absolus: { name: "Éosinophiles absolus", unit: "/mm³", normal: [50, 500] },
+    eosinophiles_pourcentage: { name: "Éosinophiles %", unit: "%", normal: [1, 5] },
+    basophiles: { name: "Polynucléaires basophiles", unit: "G/L", normal: [0.01, 0.1] },
+    basophiles_absolus: { name: "Basophiles absolus", unit: "/mm³", normal: [10, 100] },
+    basophiles_pourcentage: { name: "Basophiles %", unit: "%", normal: [0, 1] },
+    blastes: { name: "Blastes", unit: "%", normal: [0, 0] },
+    promyelocytes: { name: "Promyélocytes", unit: "G/L", normal: [0, 0] },
+    myelocytes: { name: "Myélocytes", unit: "G/L", normal: [0, 0] },
+    metamyelocytes: { name: "Métamyélocytes", unit: "G/L", normal: [0, 0] },
+
+    // ==========================================
+    // 4. PLAQUETTES
+    // ==========================================
+    plaquettes: { name: "Plaquettes", unit: "G/L", normal: [150, 400] },
+    vpm: { name: "Volume Plaquettaire Moyen (VPM)", unit: "fL", normal: [7.5, 11.0] },
+    pdw: { name: "PDW (Indice de distribution des plaquettes)", unit: "%", normal: [10.0, 18.0] },
+    pct: { name: "Plaquettocrite (PCT)", unit: "%", normal: [0.15, 0.40] },
+    plaquettes_geantes: { name: "Plaquettes géantes", unit: "", normal: "Absence" },
+    agregats_plaquettaires: { name: "Agrégats plaquettaires", unit: "", normal: "Absence" },
+
+    // ==========================================
+    // 5. HÉMOSTASE & COAGULATION
+    // ==========================================
+    tp: { name: "Taux de Prothrombine (TP)", unit: "%", normal: [70, 130] },
+    inr: { name: "INR", unit: "", normal: [0.8, 1.2] },
+    tca: { name: "TCA (Ratio Patient/Témoin)", unit: "", normal: [0.8, 1.2] },
+    temps_quick: { name: "Temps de Quick", unit: "sec", normal: [11, 14] },
+    temps_thrombin: { name: "Temps de thrombine", unit: "sec", normal: [15, 20] },
+    temps_reptilase: { name: "Temps de reptilase", unit: "sec", normal: [18, 22] },
+    anti_xa: { name: "Activité Anti-Xa", unit: "UI/mL", normal: [0.0, 0.0] },
+    antithrombine_iii: { name: "Antithrombine III", unit: "%", normal: [80, 120] },
+    fibrinogene: { name: "Fibrinogène", unit: "g/L", normal: [2.0, 4.0] },
+    ddimeres: { name: "D-dimères", unit: "ng/mL", normal: [0, 500] },
+    proteine_c: { name: "Protéine C", unit: "%", normal: [70, 140] },
+    proteine_s: { name: "Protéine S", unit: "%", normal: [65, 140] },
+    lupus_anticoagulant: { name: "Lupus anticoagulant", unit: "", normal: "Absence / Négatif" },
+    vwf: { name: "Facteur von Willebrand", unit: "%", normal: [50, 150] },
+    facteur_ii: { name: "Facteur II", unit: "%", normal: [70, 120] },
+    facteur_v: { name: "Facteur V (Proaccélérine)", unit: "%", normal: [70, 120] },
+    facteur_viifacteur_vii: { name: "Facteur VII (Proconvertine)", unit: "%", normal: [70, 120] },
+    facteur_viii: { name: "Facteur VIII (Anti-hémophilique A)", unit: "%", normal: [70, 150] },
+    facteur_ix: { name: "Facteur IX (Anti-hémophilique B)", unit: "%", normal: [70, 120] },
+    facteur_x: { name: "Facteur X (Facteur Stuart)", unit: "%", normal: [70, 120] },
+    facteur_xi: { name: "Facteur XI", unit: "%", normal: [70, 120] },
+    facteur_xii: { name: "Facteur XII (Facteur Hageman)", unit: "%", normal: [70, 120] },
+    facteur_xiii: { name: "Facteur XIII", unit: "%", normal: [70, 120] },
+
+    // ==========================================
+    // 6. IONOGRAMME COMPLET & REINS
+    // ==========================================
+    sodium: { name: "Sodium (Na)", unit: "mmol/L", normal: [135, 145] },
+    potassium: { name: "Potassium (K)", unit: "mmol/L", normal: [3.5, 4.5] },
+    chlore: { name: "Chlore (Cl)", unit: "mmol/L", normal: [98, 107] },
+    bicarbonates: { name: "Bicarbonates (HCO3-)", unit: "mmol/L", normal: [22, 29] },
+    calcium_total: { name: "Calcium total", unit: "mmol/L", normal: [2.20, 2.60] },
+    calcium_ionise: { name: "Calcium ionisé", unit: "mmol/L", normal: [1.15, 1.30] },
+    magnesium: { name: "Magnésium", unit: "mmol/L", normal: [0.75, 1.05] },
+    phosphore: { name: "Phosphore", unit: "mmol/L", normal: [0.80, 1.45] },
+    osmolarite: { name: "Osmolarité", unit: "mOsm/kg", normal: [285, 295] },
+    trou_anionique: { name: "Trou anionique", unit: "mmol/L", normal: [12, 16] },
+    uree: { name: "Urée", unit: "mmol/L", normal: [2.5, 7.5] },
+    creatinine: { name: "Créatinine", unit: "µmol/L", normal: { male: [80, 115], female: [60, 90] } },
+    dfg: { name: "DFG (CKD-EPI)", unit: "mL/min/1.73m²", normal: [90, 140] },
+    clairance_creatinine: { name: "Clairance créatinine", unit: "mL/min", normal: [90, 120] },
+    cystatine_c: { name: "Cystatine C", unit: "mg/L", normal: [0.5, 1.0] },
+    acide_urique: { name: "Acide urique", unit: "µmol/L", normal: { male: [200, 420], female: [140, 340] } },
+    microalbuminurie: { name: "Microalbuminurie", unit: "mg/24h", normal: [0, 30] },
+    albuminurie: { name: "Albuminurie", unit: "mg/L", normal: [0, 20] },
+    rapport_albumine_creatinine: { name: "Rapport albumine/créatinine", unit: "mg/g", normal: [0, 30] },
+
+    // ==========================================
+    // 7. BIOCHIMIE HÉPATIQUE & PANCRÉATIQUE
+    // ==========================================
+    alat: { name: "ALAT (SGPT)", unit: "UI/L", normal: [10, 40] },
+    asat: { name: "ASAT (SGOT)", unit: "UI/L", normal: [10, 40] },
+    pal: { name: "Phosphatases alcalines (PAL)", unit: "UI/L", normal: [30, 120] },
+    ggt: { name: "Gamma-GT", unit: "UI/L", normal: [10, 45] },
+    ldh: { name: "LDH", unit: "UI/L", normal: [140, 280] },
+    bilirubine_totale: { name: "Bilirubine totale", unit: "µmol/L", normal: [2, 17] },
+    bilirubine_conjuguee: { name: "Bilirubine conjuguée", unit: "µmol/L", normal: [0, 3] },
+    bilirubine_non_conjuguee: { name: "Bilirubine non conjuguée", unit: "µmol/L", normal: [2, 14] },
+    albumine: { name: "Albumine", unit: "g/L", normal: [35, 50] },
+    proteines_totales: { name: "Protéines totales", unit: "g/L", normal: [65, 80] },
+    globulines: { name: "Globulines", unit: "g/L", normal: [20, 35] },
+    rapport_albumine_globulines: { name: "Rapport albumine/globulines", unit: "", normal: [1.2, 1.8] },
+    ammoniemie: { name: "Ammoniémie", unit: "µmol/L", normal: [15, 45] },
+    cholinesterase: { name: "Cholinestérase", unit: "UI/L", normal: [5000, 12000] },
+    acides_biliaires: { name: "Acides biliaires", unit: "µmol/L", normal: [0, 10] },
+    lipase: { name: "Lipase", unit: "UI/L", normal: [10, 60] },
+    amylase: { name: "Amylase", unit: "UI/L", normal: [20, 100] },
+    amylase_pancreatique: { name: "Amylase pancréatique", unit: "UI/L", normal: [10, 50] },
+    elastase_fecale: { name: "Élastase fécale", unit: "µg/g", normal: [200, 500] },
+
+    // ==========================================
+    // 8. GLUCIDES & LIPIDES
+    // ==========================================
+    glycemie: { name: "Glycémie", unit: "mmol/L", normal: [3.9, 5.5] },
+    glycemie_jeun: { name: "Glycémie à jeun", unit: "mmol/L", normal: [3.9, 5.5] },
+    glycemie_postprandiale: { name: "Glycémie postprandiale", unit: "mmol/L", normal: [3.9, 7.8] },
+    hba1c: { name: "HbA1c", unit: "%", normal: [4.0, 5.6] },
+    fructosamine: { name: "Fructosamine", unit: "µmol/L", normal: [200, 285] },
+    insuline: { name: "Insuline", unit: "mUI/L", normal: [2, 25] },
+    c_peptide: { name: "C-peptide", unit: "ng/mL", normal: [1.1, 4.4] },
+    cholesterol_total: { name: "Cholestérol total", unit: "mmol/L", normal: [3.0, 5.0] },
+    hdl: { name: "HDL", unit: "mmol/L", normal: [1.0, 2.0] },
+    ldl: { name: "LDL", unit: "mmol/L", normal: [1.5, 3.0] },
+    vldl: { name: "VLDL", unit: "mmol/L", normal: [0.2, 0.8] },
+    triglycerides: { name: "Triglycérides", unit: "mmol/L", normal: [0.5, 1.7] },
+    apoa1: { name: "ApoA1", unit: "g/L", normal: [1.2, 2.0] },
+    apob: { name: "ApoB", unit: "g/L", normal: [0.6, 1.2] },
+    lipoproteine_a: { name: "Lipoprotéine (a)", unit: "mg/dL", normal: [0, 30] },
+
+    // ==========================================
+    // 9. CARDIOLOGIE & MUSCLE & OS
+    // ==========================================
+    troponine_i: { name: "Troponine I", unit: "ng/L", normal: [0, 14] },
+    troponine_t: { name: "Troponine T", unit: "ng/L", normal: [0, 14] },
+    ck: { name: "CK (Créatine Kinase)", unit: "UI/L", normal: { male: [30, 200], female: [30, 170] } },
+    ck_mb: { name: "CK-MB", unit: "µg/L", normal: [0, 5] },
+    myoglobine: { name: "Myoglobine", unit: "µg/L", normal: [0, 70] },
+    bnp: { name: "BNP", unit: "pg/mL", normal: [0, 100] },
+    ntprobnp: { name: "NT-proBNP", unit: "pg/mL", normal: [0, 300] },
+    copeptine: { name: "Copeptine", unit: "pmol/L", normal: [0.0, 10.0] },
+    aldolasemyoglobine: { name: "Aldolase", unit: "UI/L", normal: [1, 7] },
+    osteocalcine: { name: "Ostéocalcine", unit: "ng/mL", normal: [10, 45] },
+    ctx: { name: "CTX (C-télopeptide)", unit: "ng/mL", normal: [0.1, 0.6] },
+    ntx: { name: "NTX (N-télopeptide)", unit: "nmol BCE/mmol créat", normal: [5, 65] },
+    phosphatases_alcalines_osseuses: { name: "Phosphatases alcalines osseuses", unit: "µg/L", normal: [5, 22] },
+
+    // ==========================================
+    // 10. INFLAMMATION & FER & VITAMINES
+    // ==========================================
+    crp: { name: "CRP", unit: "mg/L", normal: [0, 5] },
+    crp_ultrasensible: { name: "CRP ultrasensible", unit: "mg/L", normal: [0, 3] },
+    vs: { name: "VS (Vitesse de sédimentation)", unit: "mm/1h", normal: [2, 20] },
+    procalcitonine: { name: "Procalcitonine", unit: "µg/L", normal: [0.0, 0.1] },
+    fibrinogene: { name: "Fibrinogène", unit: "g/L", normal: [2.0, 4.0] },
+    il6: { name: "IL-6 (Interleukine 6)", unit: "pg/mL", normal: [0, 7] },
+    tnf_alpha: { name: "TNF-alpha", unit: "pg/mL", normal: [0.0, 8.0] },
+    fer_serique: { name: "Fer sérique", unit: "µmol/L", normal: [10, 30] },
+    ferritine: { name: "Ferritine", unit: "µg/L", normal: { male: [30, 300], female: [15, 150] } },
+    transferrine: { name: "Transferrine", unit: "g/L", normal: [2.0, 3.6] },
+    coefficient_saturation_transferrine: { name: "Coefficient saturation transferrine", unit: "%", normal: [20, 40] },
+    capacite_fixation_fer: { name: "Capacité fixation fer", unit: "µmol/L", normal: [50, 70] },
+    vitamine_a: { name: "Vitamine A", unit: "µmol/L", normal: [1.0, 3.0] },
+    vitamine_b1: { name: "Vitamine B1", unit: "nmol/L", normal: [70, 180] },
+    vitamine_b2: { name: "Vitamine B2", unit: "nmol/L", normal: [100, 500] },
+    vitamine_b6: { name: "Vitamine B6", unit: "nmol/L", normal: [20, 125] },
+    vitamine_b9: { name: "Vitamine B9 (Folates)", unit: "ng/mL", normal: [4.0, 20.0] },
+    vitamine_b12: { name: "Vitamine B12", unit: "pg/mL", normal: [200, 900] },
+    vitamine_c: { name: "Vitamine C", unit: "µmol/L", normal: [25, 80] },
+    vitamine_d: { name: "Vitamine D", unit: "ng/mL", normal: [30, 100] },
+    vitamine_e: { name: "Vitamine E", unit: "µmol/L", normal: [12, 40] },
+    vitamine_k: { name: "Vitamine K", unit: "µg/L", normal: [0.1, 2.2] },
+
+    // ==========================================
+    // 11. OLIGO-ÉLÉMENTS
+    // ==========================================
+    zinc: { name: "Zinc", unit: "µmol/L", normal: [11, 18] },
+    cuivre: { name: "Cuivre", unit: "µmol/L", normal: [12, 24] },
+    selenium: { name: "Sélénium", unit: "µmol/L", normal: [0.8, 1.6] },
+    chrome: { name: "Chrome", unit: "nmol/L", normal: [1, 5] },
+    manganese: { name: "Manganèse", unit: "nmol/L", normal: [70, 200] },
+    cobalt: { name: "Cobalt", unit: "nmol/L", normal: [2, 15] },
+    iode: { name: "Iode", unit: "µg/L", normal: [40, 80] },
+    fluor: { name: "Fluor", unit: "µmol/L", normal: [1, 4] },
+
+    // ==========================================
+    // 12. ÉLECTROPHORÈSE & COMPLÉMENT
+    // ==========================================
+    albumine_fraction: { name: "Albumine (Fraction %)", unit: "%", normal: [55, 65] },
+    alpha1: { name: "Alpha-1 globulines", unit: "%", normal: [2.0, 5.0] },
+    alpha2: { name: "Alpha-2 globulines", unit: "%", normal: [6.0, 12.0] },
+    beta1: { name: "Bêta-1 globulines", unit: "%", normal: [4.0, 8.0] },
+    beta2: { name: "Bêta-2 globulines", unit: "%", normal: [2.0, 6.0] },
+    gamma: { name: "Gamma globulines", unit: "%", normal: [12.0, 20.0] },
+    pic_monoclonal: { name: "Pic monoclonal", unit: "g/L", normal: "Absence" },
+    immunofixation: { name: "Immunofixation des protéines", unit: "", normal: "Profil polyclonal" },
+    chaine_legere_kappa: { name: "Chaîne légère Kappa libre", unit: "mg/L", normal: [3.3, 19.4] },
+    chaine_legere_lambda: { name: "Chaîne légère Lambda libre", unit: "mg/L", normal: [5.7, 26.3] },
+    rapport_kappa_lambda: { name: "Rapport Kappa/Lambda libre", unit: "", normal: [0.26, 1.65] },
+    c1q: { name: "C1q", unit: "mg/L", normal: [100, 250] },
+    c1_inhibiteur: { name: "C1 inhibiteur", unit: "mg/L", normal: [200, 400] },
+    c2: { name: "C2", unit: "mg/L", normal: [15, 30] },
+    c3: { name: "Complément C3", unit: "g/L", normal: [0.90, 1.80] },
+    c4: { name: "Complément C4", unit: "g/L", normal: [0.10, 0.40] },
+    c5: { name: "C5", unit: "mg/L", normal: [50, 150] },
+    c6: { name: "C6", unit: "mg/L", normal: [40, 100] },
+    c7: { name: "C7", unit: "mg/L", normal: [45, 110] },
+    c8: { name: "C8", unit: "mg/L", normal: [40, 120] },
+    c9: { name: "C9", unit: "mg/L", normal: [50, 160] },
+    ch50: { name: "CH50", unit: "U/mL", normal: [30, 60] },
+    ah50: { name: "AH50 (Voie alternative)", unit: "%", normal: [70, 130] },
+
+    // ==========================================
+    // 13. AUTO-IMMUNITÉ
+    // ==========================================
+    facteur_rhumatoide: { name: "Facteur rhumatoïde", unit: "UI/mL", normal: [0, 14] },
+    ana: { name: "ANA (Ac antinucléaires)", unit: "Titre", normal: "< 1/80" },
+    anti_dna: { name: "Ac anti-DNA natif", unit: "UI/mL", normal: [0, 10] },
+    ena: { name: "Ac anti-ENA", unit: "", normal: "Négatif" },
+    anti_ccp: { name: "Ac anti-CCP", unit: "U/mL", normal: [0, 5] },
+    anca: { name: "ANCA", unit: "", normal: "Négatif" },
+    anti_mpo: { name: "Ac anti-MPO", unit: "AU/mL", normal: [0, 5] },
+    anti_pr3: { name: "Ac anti-PR3", unit: "AU/mL", normal: [0, 5] },
+    anti_phospholipides: { name: "Ac anti-phospholipides", unit: "", normal: "Négatif" },
+    anticardiolipines: { name: "Ac anticardiolipines (IgG/IgM)", unit: "GPL/MPL", normal: "< 10" },
+    beta2gp1: { name: "Ac anti-Bêta2-GP1", unit: "U/mL", normal: "< 10" },
+    anti_ssa: { name: "Ac anti-SSA (Ro)", unit: "U/mL", normal: "< 10" },
+    anti_ssb: { name: "Ac anti-SSB (La)", unit: "U/mL", normal: "< 10" },
+    anti_sm: { name: "Ac anti-Sm", unit: "U/mL", normal: "< 10" },
+    anti_rnp: { name: "Ac anti-RNP", unit: "U/mL", normal: "< 10" },
+    anti_scl70: { name: "Ac anti-Scl70", unit: "U/mL", normal: "< 10" },
+    anti_centromere: { name: "Ac anti-centromère", unit: "U/mL", normal: "< 10" },
+    anti_jo1: { name: "Ac anti-Jo1", unit: "U/mL", normal: "< 10" },
+    anti_mitochondries: { name: "Ac anti-mitochondries (M2)", unit: "Titre", normal: "< 1/20" },
+    anti_muscle_lisse: { name: "Ac anti-muscles lisses", unit: "Titre", normal: "< 1/40" },
+    anti_lkm: { name: "Ac anti-LKM1", unit: "Titre", normal: "< 1/40" },
+    anti_parietales: { name: "Ac anti-cellules pariétales", unit: "Titre", normal: "< 1/40" },
+    anti_facteur_intrinseque: { name: "Ac anti-facteur intrinsèque", unit: "AU/mL", normal: "< 1.2" },
+    anti_transglutaminase: { name: "Ac anti-transglutaminase (IgA)", unit: "U/mL", normal: "< 10" },
+    anti_endomysium: { name: "Ac anti-endomysium (IgA)", unit: "", normal: "Négatif" },
+    anti_gliadine: { name: "Ac anti-gliadine déamidée", unit: "U/mL", normal: "< 10" },
+    anti_gbm: { name: "Ac anti-membrane basale glomérulaire", unit: "RU/mL", normal: "< 20" },
+    anti_ds_dna: { name: "Ac anti-ADN double brin", unit: "UI/mL", normal: "< 10" },
+    anti_histones: { name: "Ac anti-histones", unit: "U/mL", normal: "< 10" },
+    anti_nucleosomes: { name: "Ac anti-nucléosomes", unit: "U/mL", normal: "< 10" },
+
+    // ==========================================
+    // 14. ALLERGOLOGIE
+    // ==========================================
+    ige_totales: { name: "IgE totales", unit: "kUI/L", normal: [0, 100] },
+    ige_acariens: { name: "IgE spécifiques Acariens (d1/d2)", unit: "kUA/L", normal: "< 0.35" },
+    ige_chat: { name: "IgE spécifiques Chat (e1)", unit: "kUA/L", normal: "< 0.35" },
+    ige_chien: { name: "IgE spécifiques Chien (e5)", unit: "kUA/L", normal: "< 0.35" },
+    ige_bouleau: { name: "IgE spécifiques Bouleau (t3)", unit: "kUA/L", normal: "< 0.35" },
+    ige_graminees: { name: "IgE spécifiques Graminées (g6)", unit: "kUA/L", normal: "< 0.35" },
+    ige_armoise: { name: "IgE spécifiques Armoise (w6)", unit: "kUA/L", normal: "< 0.35" },
+    ige_olivier: { name: "IgE spécifiques Olivier (t9)", unit: "kUA/L", normal: "< 0.35" },
+    ige_latex: { name: "IgE spécifiques Latex (k82)", unit: "kUA/L", normal: "< 0.35" },
+    ige_arachide: { name: "IgE spécifiques Arachide (f13)", unit: "kUA/L", normal: "< 0.35" },
+    ige_noisette: { name: "IgE spécifiques Noisette (f17)", unit: "kUA/L", normal: "< 0.35" },
+    ige_lait: { name: "IgE spécifiques Lait de vache (f2)", unit: "kUA/L", normal: "< 0.35" },
+    ige_oeuf: { name: "IgE spécifiques Blanc d'œuf (f1)", unit: "kUA/L", normal: "< 0.35" },
+    ige_soja: { name: "IgE spécifiques Soja (f14)", unit: "kUA/L", normal: "< 0.35" },
+    ige_ble: { name: "IgE spécifiques Blé (f4)", unit: "kUA/L", normal: "< 0.35" },
+    ige_poisson: { name: "IgE spécifiques Poisson/Cabillaud (f3)", unit: "kUA/L", normal: "< 0.35" },
+    ige_crevette: { name: "IgE spécifiques Crevette (f24)", unit: "kUA/L", normal: "< 0.35" },
+    ige_penicilline: { name: "IgE spécifiques Pénicilline G (c1)", unit: "kUA/L", normal: "< 0.35" },
+    ige_guepe: { name: "IgE spécifiques Venin de guêpe (i3)", unit: "kUA/L", normal: "< 0.35" },
+    ige_abeille: { name: "IgE spécifiques Venin d'abeille (i1)", unit: "kUA/L", normal: "< 0.35" },
+
+    // ==========================================
+    // 15. MÉTABOLISME & MALADIES HÉRÉDITAIRES
+    // ==========================================
+    homocysteine: { name: "Homocystéine", unit: "µmol/L", normal: [5, 15] },
+    acide_folique: { name: "Acide folique", unit: "ng/mL", normal: [4, 20] },
+    methylmalonate: { name: "Acide méthylmalonique", unit: "µmol/L", normal: [0.1, 0.4] },
+    lactate: { name: "Lactate", unit: "mmol/L", normal: [0.5, 2.0] },
+    pyruvate: { name: "Pyruvate", unit: "µmol/L", normal: [30, 80] },
+    corps_cetoniques: { name: "Corps cétoniques", unit: "mmol/L", normal: "< 0.5" },
+    beta_hydroxybutyrate: { name: "Bêta-hydroxybutyrate", unit: "mmol/L", normal: [0.0, 0.3] },
+    phenylalanine: { name: "Phénylalanine", unit: "µmol/L", normal: [30, 80] },
+    tyrosine: { name: "Tyrosine", unit: "µmol/L", normal: [30, 90] },
+    galactose: { name: "Galactose plasmatique", unit: "mg/dL", normal: "< 5" },
+    ammoniaque: { name: "Ammoniaque (Ammoniémie)", unit: "µmol/L", normal: [15, 45] },
+    orotates: { name: "Orotates (Acide orotique urinaire)", unit: "mmol/mol créat", normal: [0.4, 2.5] },
+    succinylacetone: { name: "Succinylacétone", unit: "µmol/L", normal: "Absence" },
+
+    // ==========================================
+    // 16. ACIDES AMINÉS (bio_aa_)
+    // ==========================================
+    alanine: { name: "Alanine", unit: "µmol/L", normal: [200, 450] },
+    arginine: { name: "Arginine", unit: "µmol/L", normal: [40, 130] },
+    asparagine: { name: "Asparagine", unit: "µmol/L", normal: [30, 90] },
+    aspartate: { name: "Aspartate", unit: "µmol/L", normal: [0, 15] },
+    citrulline: { name: "Citrulline", unit: "µmol/L", normal: [15, 45] },
+    cystine: { name: "Cystine", unit: "µmol/L", normal: [5, 20] },
+    glutamine: { name: "Glutamine", unit: "µmol/L", normal: [400, 750] },
+    glycine: { name: "Glycine", unit: "µmol/L", normal: [150, 350] },
+    histidine: { name: "Histidine", unit: "µmol/L", normal: [60, 120] },
+    isoleucine: { name: "Isoleucine", unit: "µmol/L", normal: [40, 100] },
+    leucine: { name: "Leucine", unit: "µmol/L", normal: [70, 170] },
+    lysine: { name: "Lysine", unit: "µmol/L", normal: [110, 240] },
+    methionine: { name: "Méthionine", unit: "µmol/L", normal: [15, 40] },
+    ornithine: { name: "Ornithine", unit: "µmol/L", normal: [40, 130] },
+    proline: { name: "Proline", unit: "µmol/L", normal: [110, 300] },
+    serine: { name: "Sérine", unit: "µmol/L", normal: [70, 150] },
+    taurine: { name: "Taurine", unit: "µmol/L", normal: [30, 150] },
+    threonine: { name: "Thréonine", unit: "µmol/L", normal: [90, 200] },
+    tryptophane: { name: "Tryptophane", unit: "µmol/L", normal: [35, 85] },
+    valine: { name: "Valine", unit: "µmol/L", normal: [150, 310] },
+
+    // ==========================================
+    // 17. ACYLCARNITINES
+    // ==========================================
+    c0: { name: "Carnitine libre (C0)", unit: "µmol/L", normal: [25, 55] },
+    c2: { name: "Acétylcarnitine (C2)", unit: "µmol/L", normal: [5.0, 15.0] },
+    c3: { name: "Propionylcarnitine (C3)", unit: "µmol/L", normal: [0.1, 1.5] },
+    c4: { name: "Butyrylcarnitine (C4)", unit: "µmol/L", normal: [0.1, 0.8] },
+    c5: { name: "Isovalérylcarnitine (C5)", unit: "µmol/L", normal: [0.05, 0.40] },
+    c5dc: { name: "Glutarylcarnitine (C5DC)", unit: "µmol/L", normal: [0.01, 0.15] },
+    c6: { name: "Hexanoylcarnitine (C6)", unit: "µmol/L", normal: [0.01, 0.15] },
+    c8: { name: "Octanoylcarnitine (C8)", unit: "µmol/L", normal: [0.01, 0.20] },
+    c10: { name: "Décanoylcarnitine (C10)", unit: "µmol/L", normal: [0.02, 0.25] },
+    c12: { name: "Dodécanoylcarnitine (C12)", unit: "µmol/L", normal: [0.03, 0.35] },
+    c14: { name: "Myristoylcarnitine (C14)", unit: "µmol/L", normal: [0.05, 0.45] },
+    c16: { name: "Palmitoylcarnitine (C16)", unit: "µmol/L", normal: [0.10, 1.80] },
+    c18: { name: "Stéaroylcarnitine (C18)", unit: "µmol/L", normal: [0.05, 0.90] },
+
+    // ==========================================
+    // 18. GAZ DU SANG AVANCÉS
+    // ==========================================
+    ph: { name: "pH artériel", unit: "", normal: [7.35, 7.45] },
+    pao2: { name: "PaO2", unit: "mmHg", normal: [80, 100] },
+    paco2: { name: "PaCO2", unit: "mmHg", normal: [35, 45] },
+    hco3: { name: "Bicarbonates", unit: "mmol/L", normal: [22, 26] },
+    sao2: { name: "SaO2 (Saturation artérielle)", unit: "%", normal: [95, 100] },
+    saturation_arterielle: { name: "Saturation artérielle en O2", unit: "%", normal: [95, 100] },
+    saturation_veineuse: { name: "ScvO2 (Saturation veineuse centrale)", unit: "%", normal: [70, 75] },
+    fio2: { name: "FiO2 (Fraction inspirée en O2)", unit: "%", normal: [21, 100] },
+    rapport_pao2_fio2: { name: "Rapport PaO2/FiO2", unit: "mmHg", normal: [400, 500] },
+    co2_total: { name: "CO2 total", unit: "mmol/L", normal: [23, 27] },
+    base_excess: { name: "Base Excess (BE)", unit: "mmol/L", normal: [-2.0, 2.0] },
+    anion_gap: { name: "Trou anionique (Anion Gap)", unit: "mmol/L", normal: [12, 16] },
+    hematocrite_gds: { name: "Hématocrite (GDS)", unit: "%", normal: [37, 52] },
+    hemoglobine_gds: { name: "Hémoglobine (GDS)", unit: "g/dL", normal: [12.0, 17.0] },
+    lactates: { name: "Lactates artériels", unit: "mmol/L", normal: [0.5, 2.0] },
+    lactates_veineux: { name: "Lactates veineux", unit: "mmol/L", normal: [0.5, 2.2] },
+    carboxyhemoglobine: { name: "Carboxyhémoglobine (HbCO)", unit: "%", normal: [0, 2] },
+    methemoglobine: { name: "Méthémoglobine", unit: "%", normal: [0, 1] },
+
+    // ==========================================
+    // 19. FONCTION RESPIRATOIRE (EFR)
+    // ==========================================
+    fev1: { name: "VEMS (FEV1)", unit: "L / % théorique", normal: [80, 120] },
+    fvc: { name: "CVF (FVC)", unit: "L / % théorique", normal: [80, 120] },
+    fev1_fvc: { name: "Rapport de Tiffeneau (VEMS/CVF)", unit: "%", normal: [70, 85] },
+    pef: { name: "DEP (Débit Expiratoire de Pointe / PEF)", unit: "L/min", normal: [400, 600] },
+    tlc: { name: "CPT (Capacité Pulmonaire Totale / TLC)", unit: "% théorique", normal: [80, 120] },
+    rv: { name: "VR (Volume Résiduel / RV)", unit: "% théorique", normal: [80, 120] },
+    dlco: { name: "DLCO", unit: "% théorique", normal: [80, 120] },
+    kco: { name: "Rapport DLCO/VA (KCO)", unit: "% théorique", normal: [80, 120] },
+
+    // ==========================================
+    // 20. THYROÏDE & ENDOCRINOLOGIE AVANCÉE
+    // ==========================================
+    tsh: { name: "TSH us", unit: "mUI/L", normal: [0.4, 4.0] },
+    t3: { name: "T3 totale", unit: "nmol/L", normal: [1.2, 2.8] },
+    t3_libre: { name: "T3 libre", unit: "pmol/L", normal: [3.5, 6.5] },
+    t4: { name: "T4 totale", unit: "nmol/L", normal: [60, 140] },
+    t4_libre: { name: "T4 libre", unit: "pmol/L", normal: [10, 23] },
+    anti_tpo: { name: "Ac anti-TPO", unit: "UI/mL", normal: "< 34" },
+    anti_thyroglobuline: { name: "Ac anti-thyroglobuline", unit: "UI/mL", normal: "< 115" },
+    trak: { name: "Ac anti-récepteurs de la TSH (TRAK)", unit: "UI/L", normal: "< 1.5" },
+    thyroglobuline: { name: "Thyroglobuline", unit: "µg/L", normal: [2, 70] },
+    calcitonine: { name: "Calcitonine", unit: "ng/L", normal: [0, 10] },
+    cortisol: { name: "Cortisol (8h)", unit: "nmol/L", normal: [170, 540] },
+    cortisol_libre_urinaire: { name: "Cortisol libre urinaire (CLU)", unit: "nmol/24h", normal: [30, 145] },
+    acth: { name: "ACTH", unit: "pg/mL", normal: [10, 60] },
+    aldosterone: { name: "Aldostérone (orthostatisme)", unit: "pmol/L", normal: [100, 800] },
+    renine: { name: "Rénine active (orthostatisme)", unit: "mUI/L", normal: [5, 60] },
+    dhea: { name: "DHEA", unit: "ng/mL", normal: [2, 9] },
+    dheas: { name: "DHEA-S", unit: "µmol/L", normal: [2, 10] },
+    androstenedione: { name: "Androstènedione", unit: "ng/mL", normal: [0.5, 2.5] },
+    testosterone_totale: { name: "Testostérone totale", unit: "nmol/L", normal: { male: [10, 30], female: [0.5, 2.5] } },
+    testosterone_libre: { name: "Testostérone libre", unit: "pmol/L", normal: { male: [150, 700], female: [5, 30] } },
+    estradiol: { name: "Estradiol", unit: "pmol/L", normal: [100, 1500] },
+    progesterone: { name: "Progestérone", unit: "nmol/L", normal: [1, 50] },
+    beta_hcg: { name: "β-HCG plasmatique quantitative", unit: "UI/L", normal: "< 5" },
+    amh: { name: "AMH (Hormone anti-müllerienne)", unit: "ng/mL", normal: [2.0, 6.8] },
+    shbg: { name: "SHBG", unit: "nmol/L", normal: { male: [15, 55], female: [30, 100] } },
+    pth: { name: "PTH intacte", unit: "pg/mL", normal: [15, 65] },
+    lh: { name: "LH", unit: "UI/L", normal: [2, 10] },
+    fsh: { name: "FSH", unit: "UI/L", normal: [2, 10] },
+    prolactine: { name: "Prolactine", unit: "µg/L", normal: [5, 20] },
+    gh: { name: "GH (Hormone de croissance)", unit: "µg/L", normal: [0, 5] },
+    igf1: { name: "IGF-1", unit: "ng/mL", normal: [100, 300] },
+
+    // ==========================================
+    // 21. URINES 24H
+    // ==========================================
+    volume_24h: { name: "Volume urinaire des 24h", unit: "mL", normal: [1000, 2500] },
+    calciurie: { name: "Calciurie des 24h", unit: "mmol/24h", normal: [2.5, 8.0] },
+    natriurese: { name: "Natriurèse des 24h", unit: "mmol/24h", normal: [100, 220] },
+    kaliurese: { name: "Kaliurèse des 24h", unit: "mmol/24h", normal: [40, 100] },
+    chlorurie: { name: "Chlorurie des 24h", unit: "mmol/24h", normal: [100, 220] },
+    proteinurie_24h: { name: "Protéinurie des 24h", unit: "g/24h", normal: "< 0.15" },
+    uricurie: { name: "Uricurie des 24h", unit: "mmol/24h", normal: [1.5, 4.5] },
+    creatininurie_24h: { name: "Créatininurie des 24h", unit: "mmol/24h", normal: [9, 18] },
+    cortisol_24h: { name: "Cortisol urinaire libre des 24h", unit: "nmol/24h", normal: [30, 145] },
+
+    // ==========================================
+    // 22. LIQUIDE SÉMINAL & FONCTIONS REPRODUCTRICES
+    // ==========================================
+    volume: { name: "Volume de l'éjaculat", unit: "mL", normal: ">= 1.5" },
+    ph_seminal: { name: "pH séminal", unit: "", normal: [7.2, 8.0] },
+    concentration_spermatozoides: { name: "Concentration en spermatozoïdes", unit: "millions/mL", normal: ">= 15" },
+    mobilite_totalemobilite_totale: { name: "Mobilité totale (PR + NP)", unit: "%", normal: ">= 40" },
+    mobilite_progressive: { name: "Mobilité progressive (PR)", unit: "%", normal: ">= 32" },
+    vitalite: { name: "Vitalité (Spermatozoïdes vivants)", unit: "%", normal: ">= 58" },
+    morphologiefructose: { name: "Morphologie (Formes typiques - Kruger)", unit: "%", normal: ">= 4" },
+    fructose: { name: "Fructose séminal", unit: "µmol/éjaculat", normal: ">= 52" },
+    leucocytes: { name: "Leucocytes séminaux", unit: "millions/mL", normal: "< 1.0" },
+    compte_folliculaire: { name: "Compte des follicules antraux (CFA)", unit: "follicules", normal: [10, 20] },
+    inhibine_b: { name: "Inhibine B", unit: "pg/mL", normal: { male: [100, 300], female: [15, 100] } },
+    testosterone_biodisponible: { name: "Testostérone biodisponible", unit: "nmol/L", normal: [2.0, 10.0] },
+
+    // ==========================================
+    // 23. MARQUEURS TUMORAUX
+    // ==========================================
+    psa: { name: "PSA total", unit: "ng/mL", normal: [0.0, 4.0] },
+    psa_libre: { name: "PSA libre", unit: "ng/mL", normal: "Ratio libre/total > 25%" },
+    afp: { name: "Alpha-Fœtoprotéine (AFP)", unit: "ng/mL", normal: [0, 10] },
+    cea: { name: "ACE (Antigène Carcinoembryonnaire)", unit: "ng/mL", normal: [0, 5] },
+    ca125: { name: "CA 125", unit: "U/mL", normal: [0, 35] },
+    ca153: { name: "CA 15-3", unit: "U/mL", normal: [0, 30] },
+    ca199: { name: "CA 19-9", unit: "U/mL", normal: [0, 37] },
+    ca724: { name: "CA 72-4", unit: "U/mL", normal: [0.0, 6.9] },
+    ca242: { name: "CA 242", unit: "U/mL", normal: [0, 20] },
+    nse: { name: "NSE (Neuron-Specific Enolase)", unit: "µg/L", normal: [0.0, 16.3] },
+    cyfra21_1: { name: "CYFRA 21-1", unit: "µg/L", normal: [0.0, 3.3] },
+    beta2_microglobuline: { name: "Bêta-2 microglobuline", unit: "mg/L", normal: [0.7, 2.4] },
+    chromogranine_a: { name: "Chromogranine A", unit: "µg/L", normal: [20, 100] },
+
+    // ==========================================
+    // 24. CHIMIE URINAIRE RAPIDE (BU) & CHIMIE DES FLUIDES
+    // ==========================================
+    ph_urinairedensite: { name: "pH urinaire (BU)", unit: "", normal: [5.0, 7.0] },
+    densite: { name: "Densité urinaire", unit: "", normal: [1.010, 1.025] },
+    glucose_urinaire: { name: "Glucose urinaire", unit: "", normal: "Négatif" },
+    proteines_urinaires: { name: "Protéines urinaires", unit: "", normal: "Négatif" },
+    albumine_urinaire: { name: "Albuminurie", unit: "mg/L", normal: "< 20" },
+    creatinine_urinaire: { name: "Créatinine urinaire", unit: "mmol/L", normal: [4, 17] },
+    microalbuminurienitrites: { name: "Microalbuminurie", unit: "mg/g créat", normal: "< 30" },
+    nitrites: { name: "Nitrites", unit: "", normal: "Négatif" },
+    leucocytes_urinaires: { name: "Leucocytes urinaires", unit: "", normal: "Négatif" },
+    hematies_urinaires: { name: "Hématies / Sang urinaire", unit: "", normal: "Négatif" },
+    cetones: { name: "Corps cétoniques urinaires", unit: "", normal: "Négatif" },
+    bilirubine_urinaire: { name: "Bilirubine urinaire", unit: "", normal: "Négatif" },
+    urobilinogenesodium_urinaire: { name: "Urobilinogène", unit: "µmol/L", normal: "< 16" },
+    sodium_urinaire: { name: "Sodium urinaire", unit: "mmol/L", normal: "Variable selon apports" },
+    potassium_urinaire: { name: "Potassium urinaire", unit: "mmol/L", normal: "Variable selon apports" },
+    chlore_urinaire: { name: "Chlore urinaire", unit: "mmol/L", normal: "Variable selon apports" },
+    calcium_urinaire: { name: "Calcium urinaire", unit: "mmol/L", normal: "Variable selon apports" },
     
-    // --- GAZ DU SANG (GDS) ---
-    ph: {
-        name: "pH artériel",
-        unit: "",
-        normal: [7.35, 7.45]
-    },
-    pao2: {
-        name: "PaO2",
-        unit: "mmHg",
-        normal: [80, 100]
-    },
-    paco2: {
-        name: "PaCO2",
-        unit: "mmHg",
-        normal: [35, 45]
-    },
-    hco3: {
-        name: "Bicarbonates (HCO3-)",
-        unit: "mmol/L",
-        normal: [22, 26]
-    }
+    // Liquide céphalo-rachidien
+    proteines_lcr: { name: "Protéinorachie", unit: "g/L", normal: [0.15, 0.45] },
+    glucose_lcr: { name: "Glycorachie", unit: "mmol/L", normal: "60% de la glycémie veineuse" },
+    lactates_lcr: { name: "Lactates LCR", unit: "mmol/L", normal: [1.1, 2.4] },
+    cellules_lcrculture_lcr: { name: "Cellules LCR (Leucocytes)", unit: "/mm³", normal: "< 5" },
+    culture_lcr: { name: "Culture microbiologique du LCR", unit: "", normal: "Stérile" },
+    pcr_lcr: { name: "PCR syndromique LCR", unit: "", normal: "Négatif" },
+    
+    // Liquide pleural
+    ph_pleural: { name: "pH pleural", unit: "", normal: [7.60, 7.64] },
+    proteines_pleurales: { name: "Protéines pleurales", unit: "g/L", normal: "Transsudat < 30 / Exsudat > 30" },
+    ldh_pleural: { name: "LDH pleural", unit: "UI/L", normal: "Ratio pleural/sérique < 0.6" },
+    glucose_pleural: { name: "Glucose pleural", unit: "mmol/L", normal: "Égal à la glycémie" },
+    cellules_pleuralesculture_pleurale: { name: "Cellules pleurales", unit: "/mm³", normal: "< 1000" },
+    culture_pleurale: { name: "Culture du liquide pleural", unit: "", normal: "Stérile" },
+    
+    // Liquide d'ascite
+    proteines_ascite: { name: "Protéines (Ascite)", unit: "g/L", normal: "< 25" },
+    albumine_ascite: { name: "Albumine (Ascite)", unit: "g/L", normal: "Dépend du gradient" },
+    gradient_albumine: { name: "Gradient albumine sérum-ascite (SAAG)", unit: "g/L", normal: "Hypertension portale >= 11" },
+    cellules_ascite: { name: "Cellules d'ascite (Polynucléaires Neutrophiles)", unit: "/mm³", normal: "< 250" },
+    culture_ascite: { name: "Culture du liquide d'ascite", unit: "", normal: "Stérile" },
+    
+    // Liquide synovial
+    viscosite: { name: "Viscosité (Synovial)", unit: "", normal: "Élevée (Filante)" },
+    cristaux: { name: "Recherche de cristaux (Urate, Pyrophosphate)", unit: "", normal: "Absence" },
+    cellules_synoviales: { name: "Cellules synoviales (Leucocytes)", unit: "/mm³", normal: "< 200" },
+    culture_synovialeglucose_synovial: { name: "Culture du liquide synovial", unit: "", normal: "Stérile" },
+    glucose_synovial: { name: "Glucose synovial", unit: "mmol/L", normal: "Proche de la glycémie veineuse" },
+    proteines_synoviales: { name: "Protéines synoviales", unit: "g/L", normal: [10, 30] },
+
+    // ==========================================
+    // 25. PARASITOLOGIE & MYCOLOGIE & VIROLOGIE
+    // ==========================================
+    plasmodium: { name: "Recherche de Plasmodium (Frottis/Goutte Épaisse)", unit: "", normal: "Négatif" },
+    plasmodium_falciparum: { name: "Plasmodium falciparum", unit: "% parasitémie", normal: "Absence" },
+    plasmodium_vivax: { name: "Plasmodium vivax", unit: "", normal: "Absence" },
+    babesia: { name: "Babesia", unit: "", normal: "Absence" },
+    toxoplasma_pcr: { name: "PCR Toxoplasma gondii", unit: "", normal: "Négatif" },
+    leishmania: { name: "Leishmania (Examen direct/PCR)", unit: "", normal: "Négatif" },
+    trypanosoma: { name: "Trypanosoma", unit: "", normal: "Absence" },
+    schistosoma: { name: "Schistosoma (Recherche d'œufs)", unit: "", normal: "Absence" },
+    echinococcus: { name: "Sérologie Échinococcose", unit: "", normal: "Négatif" },
+    strongyloides: { name: "Strongyloides (Anguillulose)", unit: "", normal: "Absence" },
+    candida: { name: "Candida (Culture/Examen direct)", unit: "", normal: "Absence" },
+    aspergillus: { name: "Aspergillus (Culture/PCR)", unit: "", normal: "Absence" },
+    cryptococcus: { name: "Cryptococcus (Antigène/Encre de Chine)", unit: "", normal: "Négatif" },
+    histoplasma: { name: "Histoplasma", unit: "", normal: "Absence" },
+    pneumocystis: { name: "Pneumocystis jirovecii (IF/PCR)", unit: "", normal: "Négatif" },
+    galactomannane: { name: "Antigène Galactomannane", unit: "Index", normal: "< 0.5" },
+    beta_d_glucane: { name: "Bêta-D-Glucane", unit: "pg/mL", normal: "< 80" },
+    cmv_charge: { name: "Charge virale CMV (PCR ADN)", unit: "UI/mL / Log", normal: "Indétectable" },
+    ebv_charge: { name: "Charge virale EBV (PCR ADN)", unit: "copies/mL", normal: "Indétectable" },
+    hsv1_pcr: { name: "PCR HSV-1", unit: "", normal: "Négatif" },
+    hsv2_pcr: { name: "PCR HSV-2", unit: "", normal: "Négatif" },
+    vzv_pcr: { name: "PCR VZV", unit: "", normal: "Négatif" },
+    hhv6: { name: "PCR HHV-6", unit: "", normal: "Négatif" },
+    parvovirus_b19: { name: "PCR Parvovirus B19", unit: "", normal: "Négatif" },
+    enterovirus: { name: "PCR Entérovirus", unit: "", normal: "Négatif" },
+    adenovirus: { name: "PCR Adénovirus", unit: "", normal: "Négatif" },
+    norovirus: { name: "PCR Norovirus", unit: "", normal: "Négatif" },
+    rotavirus: { name: "Antigène Rotavirus fécaux", unit: "", normal: "Négatif" },
+    metapneumovirus: { name: "PCR Métapneumovirus", unit: "", normal: "Négatif" },
+    rsv: { name: "PCR VRS (Virus Respiratoire Syncytial)", unit: "", normal: "Négatif" },
+
+    // ==========================================
+    // 26. BACTÉRIOLOGIE & COMPTES-RENDUS
+    // ==========================================
+    staphylococcus_aureus: { name: "Staphylococcus aureus", unit: "", normal: "Absence" },
+    staphylococcus_epidermidis: { name: "Staphylococcus epidermidis", unit: "", normal: "Absence" },
+    streptococcus_pyogenes: { name: "Streptococcus pyogenes (Groupe A)", unit: "", normal: "Absence" },
+    streptococcus_pneumoniae: { name: "Streptococcus pneumoniae (Pneumocoque)", unit: "", normal: "Absence" },
+    enterococcus_faecalis: { name: "Enterococcus faecalis", unit: "", normal: "Absence" },
+    enterococcus_faecium: { name: "Enterococcus faecium", unit: "", normal: "Absence" },
+    escherichia_coli: { name: "Escherichia coli", unit: "", normal: "Absence" },
+    klebsiella: { name: "Klebsiella pneumoniae / oxytoca", unit: "", normal: "Absence" },
+    proteus: { name: "Proteus mirabilis", unit: "", normal: "Absence" },
+    serratia: { name: "Serratia marcescens", unit: "", normal: "Absence" },
+    enterobacter: { name: "Enterobacter cloacae", unit: "", normal: "Absence" },
+    pseudomonas: { name: "Pseudomonas aeruginosa (Pyocyanique)", unit: "", normal: "Absence" },
+    acinetobacter: { name: "Acinetobacter baumannii", unit: "", normal: "Absence" },
+    legionella: { name: "Legionella pneumophila", unit: "", normal: "Absence" },
+    salmonella: { name: "Salmonella enterica", unit: "", normal: "Absence" },
+    shigella: { name: "Shigella dysenteriae / flexneri", unit: "", normal: "Absence" },
+    yersinia: { name: "Yersinia enterocolitica", unit: "", normal: "Absence" },
+    campylobacter: { name: "Campylobacter jejuni", unit: "", normal: "Absence" },
+    clostridioides_difficile: { name: "Clostridioides difficile (Toxines A/B)", unit: "", normal: "Négatif" },
+    mycobacterium_tuberculosis: { name: "Mycobacterium tuberculosis (BK / PCR)", unit: "", normal: "Absence" },
+    gram: { name: "Coloration de Gram", unit: "", normal: "Examen direct" },
+    maldi_tof: { name: "Identification Spectrométrie de Masse (MALDI-TOF)", unit: "", normal: "Identification de certitude" },
+    cmi: { name: "Concentration Minimale Inhibitrice (CMI)", unit: "mg/L", normal: "Seuils thérapeutiques EUCAST" },
+    pcr_multiplex: { name: "PCR Multiplex syndromique", unit: "", normal: "Négatif" },
+
+    // ==========================================
+    // 27. GESTION DE L'ANTIBIOGRAMME GLOBAL (eucast_)
+    // ==========================================
+    amoxicilline: { name: "Amoxicilline", unit: "", normal: "Sensible (S)" },
+    amoxicilline_acide_clavulanique: { name: "Amoxicilline + Acide Clavulanique (Augmentin)", unit: "", normal: "Sensible (S)" },
+    ceftriaxone: { name: "Ceftriaxone", unit: "", normal: "Sensible (S)" },
+    cefotaxime: { name: "Céfotaxime", unit: "", normal: "Sensible (S)" },
+    cefepime: { name: "Céfépime", unit: "", normal: "Sensible (S)" },
+    ceftazidime: { name: "Ceftazidime", unit: "", normal: "Sensible (S)" },
+    imipenem: { name: "Imipénème", unit: "", normal: "Sensible (S)" },
+    meropenem: { name: "Méropénème", unit: "", normal: "Sensible (S)" },
+    ertapenem: { name: "Ertapénème", unit: "", normal: "Sensible (S)" },
+    vancomycine: { name: "Vancomycine", unit: "", normal: "Sensible (S)" },
+    teicoplanine: { name: "Teicoplanine", unit: "", normal: "Sensible (S)" },
+    linezolide: { name: "Linézoliode", unit: "", normal: "Sensible (S)" },
+    daptomycine: { name: "Daptomycine", unit: "", normal: "Sensible (S)" },
+    clindamycine: { name: "Clindamycine", unit: "", normal: "Sensible (S)" },
+    erythromycine: { name: "Érythromycine", unit: "", normal: "Sensible (S)" },
+    azithromycine: { name: "Azithromycine", unit: "", normal: "Sensible (S)" },
+    ciprofloxacine: { name: "Ciprofloxacine", unit: "", normal: "Sensible (S)" },
+    levofloxacine: { name: "Lévofloxacine", unit: "", normal: "Sensible (S)" },
+    moxifloxacine: { name: "Moxifloxacine", unit: "", normal: "Sensible (S)" },
+    gentamicine: { name: "Gentamicine", unit: "", normal: "Sensible (S)" },
+    amikacine: { name: "Amikacine", unit: "", normal: "Sensible (S)" },
+    tobramycine: { name: "Tobramycine", unit: "", normal: "Sensible (S)" },
+    colistine: { name: "Colistine", unit: "", normal: "Sensible (S)" },
+    tigecycline: { name: "Tigécycline", unit: "", normal: "Sensible (S)" },
+    rifampicine: { name: "Rifampicine", unit: "", normal: "Sensible (S)" },
+    fosfomycine: { name: "Fosfomycine", unit: "", normal: "Sensible (S)" },
+    nitrofurantoine: { name: "Nitrofurantoïne", unit: "", normal: "Sensible (S)" },
+    trimethoprime_sulfamethoxazole: { name: "Triméthoprime + Sulfaméthoxazole (Bactrim)", unit: "", normal: "Sensible (S)" },
+
+    // ==========================================
+    // 28. TOXICOLOGIE DE RÉANIMATION AVANCÉE & SÉROLOGIES COMPLÉMENTAIRES
+    // ==========================================
+    carbamazepine: { name: "Tégrétol (Carbamazépine)", unit: "mg/L", normal: [4, 12] },
+    phenytoine: { name: "Di-Hydan (Phénytoïne)", unit: "mg/L", normal: [10, 20] },
+    phenobarbital: { name: "Phénobarbital", unit: "mg/L", normal: [15, 40] },
+    theophylline: { name: "Théophylline", unit: "mg/L", normal: [10, 20] },
+    methotrexate: { name: "Méthotrexate plasmatique", unit: "µmol/L", normal: "Suivi thérapeutique" },
+    cyclo_sporine: { name: "Cyclosporine (Néoral)", unit: "ng/mL", normal: [100, 400] },
+    tacrolimus: { name: "Tacrolimus (Prograf)", unit: "ng/mL", normal: [5, 20] },
+    sirolimus: { name: "Sirolimus (Rapamune)", unit: "ng/mL", normal: [4, 12] },
+    cocaine: { name: "Dépistage urinaire : Cocaïne", unit: "", normal: "Négatif" },
+    amphetaminemethamphetamine: { name: "Dépistage urinaire : Amphétamines", unit: "", normal: "Négatif" },
+    cannabisthcmorphine: { name: "Dépistage urinaire : Cannabis / THC", unit: "", normal: "Négatif" },
+    heroinefentanyl: { name: "Dépistage urinaire : Opiacés / Morphine / Héroïne", unit: "", normal: "Négatif" },
+    methadonebuprenorphine: { name: "Dépistage urinaire : Méthadone / Buprénorphine", unit: "", normal: "Négatif" },
+    benzodiazepinesbarbituriques: { name: "Dépistage urinaire : Benzodiazépines", unit: "", normal: "Négatif" },
+    ecstasyketaminelsd: { name: "Dépistage urinaire : Ecstasy / Kétamine / LSD", unit: "", normal: "Négatif" },
+    vih_charge_virale: { name: "Charge virale VIH-1 (ARN)", unit: "copies/mL", normal: "Indétectable" },
+    hbs_aganti_hbsanti_hbchbe_aganti_hbe_complex: { name: "Bilan complet Sérologique Hépatite B", unit: "", normal: "Profil selon immunisation" },
+    cmv_pcrebv_igg_complex: { name: "PCR CMV et Virologie EBV quantitative", unit: "", normal: "Indétectable" },
+    toxoplasmose_iggtoxoplasmose_igm: { name: "Sérologie de la Toxoplasmose (IgG/IgM)", unit: "UI/mL", normal: "Dépistage" },
+    rubéole_iggrubéole_igm: { name: "Sérologie de la Rubéole", unit: "UI/mL", normal: "Statut d'immunisation" },
+    rougeole_iggrougeole_igm: { name: "Sérologie de la Rougeole", unit: "", normal: "Statut d'immunisation" },
+    syphilis_tphasyphilis_vdrl: { name: "Bilan Syphilis (TPHA / VDRL)", unit: "Titrage", normal: "Négatif" },
+    lyme_elisalyme_western_blot: { name: "Bilan maladie de Lyme (ELISA confirmatif WB)", unit: "", normal: "Négatif" },
+    covid_pcrcovid_antigenegrippe_pcr: { name: "Panel PCR multiplex virologique respiratoire", unit: "", normal: "Négatif" },
+
+    // ==========================================
+    // 29. GENÉTIQUE & ANATOMOPATHOLOGIE STRUCTURÉE
+    // ==========================================
+    caryotype: { name: "Caryotype constitutionnel métaphasique", unit: "", normal: "46,XX ou 46,XY (Absence d'anomalie clonale)" },
+    fish: { name: "Hybridation in situ en fluorescence (FISH)", unit: "", normal: "Absence de réarrangement ciblé pathologique" },
+    pcr_genetique: { name: "PCR moléculaire génétique", unit: "", normal: "Absence de mutation délétère ciblée" },
+    ngs_exome_genome: { name: "Séquençage haut débit NGS (Exome / Génome)", unit: "", normal: "Absence de variant pathologique de classe 4 ou 5" }
 };
