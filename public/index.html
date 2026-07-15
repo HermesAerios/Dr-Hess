@@ -394,29 +394,46 @@
             }
             else if (panelId === 'invest_biology') {
                 html = `
-                    <h3>🔬 Analyses Biologiques (Laboratoire)</h3>
+                    <h3>🔬 Analyses Biologiques (Laboratoire Clinique)</h3>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                        <button onclick="runExam('nfs')" class="sidebar-btn">🩸 NFS (Hémogramme)</button>
-                        <button onclick="runExam('hemostase')" class="sidebar-btn">🧪 Hémostase (TP / TCA)</button>
-                        <button onclick="runExam('lactates')" class="sidebar-btn">🔥 Lactates Sanguins</button>
-                        <button onclick="runExam('ionogramme')" class="sidebar-btn">💧 Ionogramme sanguin</button>
+                        <button onclick="runExam('nfs')" class="sidebar-btn">🩸 NFS (Hémogramme complet)</button>
+                        <button onclick="runExam('frottis_sanguin')" class="sidebar-btn">🔬 Frottis Sanguin (Schizocytes)</button>
+                        <button onclick="runExam('hemostase')" class="sidebar-btn">🧪 Hémostase (TP, TCA, INR)</button>
+                        <button onclick="runExam('fibrinogene')" class="sidebar-btn">🧪 Fibrinogène pondéral</button>
+                        <button onclick="runExam('ddimeres')" class="sidebar-btn">🧪 Dosage des D-Dimères</button>
+                        <button onclick="runExam('gds')" class="sidebar-btn">💨 GDS Artériels (pH, HCO3-)</button>
+                        <button onclick="runExam('lactates')" class="sidebar-btn">🔥 Lacticémie artérielle</button>
+                        <button onclick="runExam('ionogramme')" class="sidebar-btn">💧 Ionogramme & Urée</button>
+                        <button onclick="runExam('creatininemie')" class="sidebar-btn">💧 Créatininémie & Clairance</button>
+                        <button onclick="runExam('calcemie_ion')" class="sidebar-btn">🧪 Calcémie ionisée</button>
+                        <button onclick="runExam('magnesemie')" class="sidebar-btn">🧪 Magnésémie plasmatique</button>
+                        <button onclick="runExam('bilan_hepatique')" class="sidebar-btn">🧼 Bilan hépatique complet</button>
                         <button onclick="runExam('bu')" class="sidebar-btn">🚽 Bandelette Urinaire (BU)</button>
+                        <button onclick="runExam('ecbu')" class="sidebar-btn">🚽 ECBU & Sédiment</button>
                         <button onclick="runExam('hemocultures')" class="sidebar-btn">🧫 Hémocultures (2 paires)</button>
+                        <button onclick="runExam('prelevement_vaginal')" class="sidebar-btn">🧫 Prélèvement Vaginal</button>
+                        <button onclick="runExam('groupage_rai')" class="sidebar-btn">🩸 Groupe, Rhésus & RAI</button>
                     </div>`;
             }
             else if (panelId === 'invest_imaging') {
                 html = `
-                    <h3>☢️ Imagerie Médicale & Électrocardiogramme</h3>
+                    <h3>☢️ Imagerie Médicale & Monitorages fœtaux</h3>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                        <button onclick="runExam('ecg')" class="sidebar-btn">📈 ECG 12 dérivations</button>
+                        <button onclick="runExam('ecg')" class="sidebar-btn">📈 Monitorage RCF / ECG</button>
+                        <button onclick="runExam('echo_obstetricale')" class="sidebar-btn">🔊 Écho obstétricale & Doppler</button>
                         <button onclick="runExam('radio_thorax')" class="sidebar-btn">🩻 Radiographie du Thorax</button>
-                        <button onclick="runExam('tdm_abdomen')" class="sidebar-btn">🌀 Scanner Abdomino-Pelvien</button>
+                        <button onclick="runExam('asp')" class="sidebar-btn">🩻 Abdomen Sans Préparation</button>
+                        <button onclick="runExam('radio_bassin')" class="sidebar-btn">🩻 Radiographie du Bassin</button>
+                        <button onclick="runExam('tdm_cerveau')" class="sidebar-btn">🌀 Scanner cérébral</button>
+                        <button onclick="runExam('angio_tdm_pulm')" class="sidebar-btn">🌀 Angio-TDM pulmonaire</button>
+                        <button onclick="runExam('tdm_tap')" class="sidebar-btn">🌀 Scanner TAP complet</button>
+                        <button onclick="runExam('echo_coeur_foc')" class="sidebar-btn">🔊 Écho cardiaque (POCUS)</button>
                     </div>
-                    <div id="imaging-box-target" style="display:none; margin-top:15px; border:1px dashed var(--border-color); padding:15px; text-align:center;">
-                        <div style="background:#020408; height:100px; line-height:100px; color:var(--accent-cyan); font-weight:bold;" id="imaging-placeholder">TRACÉ / IMAGE</div>
-                        <p id="imaging-raw" style="font-size:0.85em; margin:10px 0;"></p>
-                        <button onclick="requestExpertHelp()" class="btn-action" style="font-size:0.75em;">Avis Expert (-2 pts)</button>
-                        <div id="expert-text" style="color:var(--accent-green); font-size:0.85em; margin-top:8px;"></div>
+                    <div id="imaging-box-target" style="display:none; margin-top:15px; border:1px dashed var(--border-color); padding:15px; text-align:center; background:#020408;">
+                        <div style="height:100px; line-height:100px; color:var(--accent-cyan); font-weight:bold; border:1px solid #1e293b;" id="imaging-placeholder">TRACÉ / IMAGE</div>
+                        <p id="imaging-raw" style="font-size:0.85em; margin:10px 0; color:#cbd5e1;"></p>
+                        <button onclick="requestExpertHelp()" class="btn-action" style="font-size:0.75em; padding:6px 12px;">🔍 Demander l'avis clinique du radiologue (-2 pts)</button>
+                        <div id="expert-text" style="color:var(--accent-green); font-size:0.85em; margin-top:8px; line-height:1.4;"></div>
                     </div>`;
             }
             else if (panelId === 'stabilize') {
