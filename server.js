@@ -13,57 +13,81 @@ app.use(express.static('public'));
 let activeSim = {};
 
 const EXAM_CATALOG = {
-    "exam_vias": "Examen des voies aériennes supérieures",
-    "exam_resp": "Examen de la respiration / ventilation",
-    "exam_circ": "Examen circulatoire (pouls, TRC, hémodynamique)",
-    "exam_head": "Examen Tête, Yeux, Oreilles, Nez, Gorge (HEENT)",
-    "exam_neck": "Examen du cou (souplesse, thyroïde, ganglions)",
-    "exam_cardio": "Examen cardiovasculaire (auscultation, œdèmes)",
-    "exam_pulm": "Examen pulmonaire (auscultation)",
-    "exam_abd": "Examen abdominal (palpation, percussion)",
-    "exam_gu": "Examen génito-urinaire",
-    "exam_back": "Examen du dos et des flancs (percussion lombaire)",
-    "exam_loco": "Appareil locomoteur / musculosquelettique",
-    "exam_skin": "Examen cutané (éruptions, purpura)",
-    "exam_neuro": "Examen neurologique complet",
-    "exam_psych": "Examen psychiatrique / état psychologique",
-    "ecg": "Électrocardiogramme (ECG)",
-    "hgt": "Glycémie capillaire (HGT)",
-    "dep": "Mesure du débit expiratoire de pointe (DEP)",
-    "echo_aorte": "Échographie de l'aorte",
-    "echo_coeur_foc": "Échographie cardiaque focalisée",
-    "echo_fast": "Échographie FAST (épanchements)",
-    "echo_tvp": "Échographie veineuse des MI (Thrombose)",
-    "echo_pulm": "Échographie pleuropulmonaire",
-    "echo_renal": "Échographie rénale et des voies urinaires",
-    "echo_hépato": "Échographie hépato-biliaire",
-    "echo_mou": "Échographie des tissus mous",
-    "gds": "Gaz du sang artériel (GDS)",
-    "ionogramme": "Ionogramme sanguin standard",
-    "groupage_rai": "Groupage sanguin et Recherche de RAI",
+    // === EXAMEN CLINIQUE (A-B-C-D-E) ===
+    "exam_vias": "Examen Airway / Liberté des voies aériennes",
+    "exam_resp": "Examen Breathing / Respiration & Auscultation pulmonaire d'urgence",
+    "exam_circ": "Examen Circulation / Pouls, TRC, hémodynamique globale",
+    "exam_neuro": "Examen Disability / Glasgow, pupilles & orientation rapide",
+    "exam_skin": "Examen Exposure / Peau nue, recherche de purpura et lésions",
+    
+    // === SYSTEMIQUE ===
+    "exam_cardio": "Auscultation cardiovasculaire avancée",
+    "exam_pulm": "Auscultation pleuropulmonaire exhaustive",
+    "exam_abd": "Palpation et auscultation abdominale",
+    "exam_neuro_comp": "Examen neurologique complet (moteur, sensitif, paires crâniennes)",
+    "exam_back": "Palpation rachidienne & percussion des fosses lombaires (Giordano)",
+    "exam_gu": "Examen gynéco-obstétrical (Spéculum / Toucher vaginal)",
+    "exam_psych": "Évaluation de l'état mental et comportemental",
+
+    // === BIOLOGIE : HEMATOLOGIE & HEMOSTASE ===
+    "nfs": "Numération Formule Sanguine (NFS / Hémogramme complet)",
+    "frottis_sanguin": "Frottis sanguin sur lame (recherche de schizocytes/parasites)",
+    "hemostase": "Bilan d'hémostase standard (TP, TCA, INR)",
+    "fibrinogene": "Dosage pondéral du fibrinogène",
+    "ddimeres": "Dosage des D-Dimères",
+    "pdf_fm": "Produits de Dégradation de la Fibrine (PDF) & Complexes solubles",
+
+    // === BIOLOGIE : GAZOMÉTRIE & LACTATES ===
+    "gds": "Gaz du sang artériel (GDS) avec pH, PaO2, PaCO2, HCO3-",
+    "lactates": "Lacticémie artérielle (Lactates)",
+
+    // === BIOLOGIE : BIOCHIMIE, ÉLECTROLYTES & REINS ===
+    "ionogramme": "Ionogramme sanguin standard (Sodium, Potassium, Chlore, Urée)",
+    "creatininemie": "Créatininémie & Clairance de la créatinine (DFG)",
     "calcemie_ion": "Calcémie ionisée",
     "calcemie_tot": "Calcémie totale",
-    "hemostase": "Bilan de l'hémostase (TP, TCA, INR)",
-    "nfs": "Numération Formule Sanguine (NFS)",
-    "ddimeres": "D-Dimères",
-    "lactates": "Lactates sanguins",
-    "lipasemie": "Lipasémie",
-    "bilan_hepatique": "Bilan hépatique complet",
-    "magnesemie": "Dosage du magnésium",
-    "phosphatemie": "Dosage du phosphore",
-    "probnp": "pro-BNP (Peptide natriurétique)",
-    "troponine_t": "Troponine T",
-    "paracetamol": "Dosage du paracétamol",
-    "amylasemie": "Amylasémie",
-    "crp": "Protéine C-Réactive (CRP)",
-    "cpk": "Créatine Kinase (CK / CPK)",
-    "alcoolemie": "Alcoolémie / Dosage éthanol",
-    "hemocultures": "Hémocultures (2 paires)",
-    "analyse_urine": "Analyse d'urine (bandelette / sédiment)",
-    "lcr_num": "Numération cellulaire du LCR",
-    "lcr_glyco": "Glycorachie",
-    "lcr_gram": "Coloration de Gram sur le LCR",
-    "lcr_proteino": "Protéinorachie"
+    "magnesemie": "Dosage de la magnésémie",
+    "phosphatemie": "Dosage de la phosphorémie",
+    "lipasemie": "Dosage de la lipasémie",
+    "amylasemie": "Dosage de l'amylasémie",
+    "bilan_hepatique": "Bilan hépatique complet (ASAT, ALAT, PAL, Bilirubine libre/conjuguée, LDH)",
+
+    // === BIOLOGIE : ENDOCRINOLOGIE & METABOLISME ===
+    "hgt": "Glycémie capillaire instantanée au lit du patient (Fingerstick)",
+    "glycemie_veineuse": "Glycémie veineuse à jeun",
+    "tsh": "Dosage de la TSH ultra-sensible",
+
+    // === BIOLOGIE : TOXICOLOGIE & DOSAGES ===
+    "tox_urinaire": "Dépistage toxicologique urinaire multi-drogues",
+    "paracetamol": "Dosage plasmatique du paracétamol (Paracétamolémie)",
+    "salicyles": "Dosage plasmatique des salicylés",
+    "alcoolemie": "Dosage de l'alcoolémie veineuse (EtOH)",
+
+    // === BIOLOGIE : INFECTIOLOGIE & URINES ===
+    "bu": "Bandelette Urinaire (BU) qualitative d'urgence",
+    "ecbu": "Examen Cyto-Bactériologique des Urines (ECBU) avec sédiment",
+    "hemocultures": "Hémocultures (2 paires : flacons aérobies / anaérobies)",
+    "prelevement_vaginal": "Prélèvement vaginal microbiologique",
+    "test_covid": "Test PCR Rapide Grippe / COVID / VRS",
+
+    // === AUTRES BIOLOGIES ===
+    "beta_hcg": "Dosage plasmatique quantitatif de la bêta-hCG",
+    "groupage_rai": "Groupage sanguin (2 déterminations), phénotype Rh-Kell & RAI",
+
+    // === EXPLORATIONS FONCTIONNELLES & IMAGERIE ===
+    "ecg": "Électrocardiogramme (ECG) 12 dérivations",
+    "radio_thorax": "Radiographie du thorax de face (lit ou debout)",
+    "asp": "Radiographie de l'Abdomen Sans Préparation (ASP)",
+    "radio_bassin": "Radiographie du bassin de face",
+    "tdm_cerveau": "Tomodensitométrie (TDM) cérébrale sans injection",
+    "tdm_rachis_cervical": "TDM du rachis cervical",
+    "angio_tdm_pulm": "Angio-TDM pulmonaire (recherche d'embolie pulmonaire)",
+    "angio_tdm_aorte": "Angio-TDM de l'aorte thoracique et abdominale",
+    "tdm_tap": "TDM Thoraco-Abdomino-Pelvienne (TAP)",
+    "echo_fast": "Échographie ciblée de traumatologie (E-FAST)",
+    "echo_coeur_foc": "Échographie cardiaque focalisée au lit du patient (POCUS)",
+    "echo_obstetricale": "Échographie obstétricale de contrôle avec Doppler",
+    "irm_cerebrale": "Imagerie par Résonance Magnétique (IRM) cérébrale"
 };
 
 // ROUTE DYNAMIQUE SÉCURISÉE : Scanne le dossier /cases et ignore les fichiers corrompus
