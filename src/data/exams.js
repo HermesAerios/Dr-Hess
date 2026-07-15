@@ -1,4 +1,22 @@
 // src/data/exams.js
+// src/data/exams.js
+// Index centralisateur des modèles d'examens médicaux de l'application ScribECN
+
+import { LABORATORY_EXAMS } from './laboratory.js';
+import { IMAGING_EXAMS } from './imaging.js';
+// Les futurs modules (specialties.js, pathology.js, genetic.js) seront importés ici au fur et à mesure.
+
+export const COMPLETE_MEDICAL_EXAMS_DATABASE = [
+    ...LABORATORY_EXAMS,
+    ...IMAGING_EXAMS
+];
+
+// Helper d'interrogation rapide pour le moteur de simulation
+export function getExamById(examId) {
+    return COMPLETE_MEDICAL_EXAMS_DATABASE.find(exam => exam.id === examId) || null;
+}
+
+export default COMPLETE_MEDICAL_EXAMS_DATABASE;
 // Catalogue exhaustif de tous les examens, procédures et explorations du moteur ScribECN
 
 export const EXAM_CATALOG = {
